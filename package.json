@@ -9,16 +9,24 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ant-design/nextjs-registry": "^1.0.1",
+    "antd": "^5.20.6",
+    "axios": "^1.7.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "mysql2": "^3.11.1",
+    "next": "14.2.8",
     "react": "^18",
     "react-dom": "^18",
-    "next": "14.2.8"
+    "urlencode": "^2.0.0"
   },
   "devDependencies": {
-    "typescript": "^5",
+    "@types/cors": "2.8.5",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "eslint": "^8",
-    "eslint-config-next": "14.2.8"
+    "eslint-config-next": "14.2.8",
+    "typescript": "^5"
   }
 }

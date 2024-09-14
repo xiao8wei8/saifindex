@@ -1,95 +1,91 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client";
+import React, { useEffect, useState } from "react";
+import { Button, Input, Table } from "antd";
+import TextArea from "antd/es/input/TextArea";
+import axios from "axios";
+axios.defaults.withCredentials = true;
+axios.defaults.timeout = 50000;
+const Home = () => {
+    const handleSearch = async () => {
+    
+        
 
-export default function Home() {
-  return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>src/app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    let data = JSON.stringify({
+        "input": "查询平安银行2022年9月1日股价",
+        "tableSize": "10",
+        "dataSourceCollectionId": 2839
+      });
+      const config = {
+        headers: {'Content-Type': 'application/json' },
+        
+      };
+    
+      try {
+        const response = await axios.post(
+         '/api/mapping_a',
+         data,
+          config // Include the config object as the third argument
+        );
+    
+        console.log(response.data);
+   
+      } catch (error:any) {
+      
+        console.log(error);
+      }
+         
+    };
+    useEffect(() => {
+        handleSearch();
+    }, []);
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+    const [value, setValue] = useState("");
+    const dataSource = [
+        {
+            key: "1",
+            name: "胡彦斌",
+            age: 32,
+            address: "西湖区湖底公园1号",
+        },
+        {
+            key: "2",
+            name: "胡彦祖",
+            age: 42,
+            address: "西湖区湖底公园1号",
+        },
+    ];
+
+    const columns = [
+        {
+            title: "姓名",
+            dataIndex: "name",
+            key: "name",
+        },
+        {
+            title: "年龄",
+            dataIndex: "age",
+            key: "age",
+        },
+        {
+            title: "住址",
+            dataIndex: "address",
+            key: "address",
+        },
+    ];
+    return (
+        <div className="App">
+            <Input placeholder="Basic usage" />
+            <div style={{ margin: "24px 0" }} />
+            <TextArea
+                value={value}
+                onChange={(e) => setValue(e.target.value)}
+                placeholder="Controlled autosize"
+                autoSize={{ minRows: 3, maxRows: 5 }}
             />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
+            <div style={{ margin: "24px 0" }} />
+            <Table dataSource={dataSource} columns={columns} />;
         </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
-}
+    );
+};
+
+export default Home;
