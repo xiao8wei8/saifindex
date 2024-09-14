@@ -109,10 +109,11 @@ const getPrompt_a = async (tableSchemas: []) => {
         } else {
             console.error("[schema error]", schema);
         }
-        if (cb) cb();
+        return cb();
+         
     };
     const run = () => {
-        itemFn(() => {
+        return itemFn(() => {
             if (tableSchemas.length) {
                 if (table.length) {
                     return end();
