@@ -4,8 +4,9 @@ import axios from "axios";
 import urlencode from "urlencode";
 export const dynamic = "force-dynamic";
 import mysql from "mysql2/promise";
+import mockData from './mock'
 
-const input = "做为数据库专家，请查询平安银行的股票代码";
+let input = ""//"请查询平安银行的股票代码。做为数据库专家，请优化查询到的SQL语句";
 const token = "sk-LEWwEyfUgRH8E4ASUeQ7hsz5MQG1KMu48_c8Ngya8Oo";
 const urlmapping_a = "https://app.chat2db-ai.com/api/ai/rest/mapping_a";
 const urlprompt_a = "https://api.chat2db-ai.com/api/ai/rest/prompt_a";
@@ -20,12 +21,43 @@ const config = {
 const axiosinstance = axios.create({
     timeout: 600000,
 });
-export async function POST(req: NextRequest) {
+export async function POST(request: NextRequest) {
+    const { input } = await request.json()
+    // const { messages = [] }: Partial<{ messages: Array<any> }> = await request.json();
+    // input = messages//[messages.length-1]?.content||"";
+    console.log("[input]", input);
+    // const data = await response.json();
+    // return NextResponse.json({
+    //     output:{
+    //         text: "hello world",
+    //     }
+    // });
+
+    // return new NextResponse(JSON.stringify({outpu:{
+    //     text:"this is server::"+messages[0].content
+    // }}), {
+    //     status: 200,
+    // });
     let data = {
+        // input: {
+        //     messages: [
+        //       {
+        //         role: 'system',
+        //         content: 'You are a helpful assistant.',
+        //       },
+        //       ...messages,
+        //     ],
+        //   },
         input: input,
         tableSize: "100",
         dataSourceCollectionId: 2839,
     };
+    const mockData1={
+        data:123}
+    // return new NextResponse(JSON.stringify(mockData), {
+    //     status: 200,
+    // });
+
     //1、获取mapping
     try {
         const response = await axiosinstance.post(
@@ -36,9 +68,7 @@ export async function POST(req: NextRequest) {
 
         if (!response.data.data) {
             console.log("[urlmapping_a error]", response.data);
-            return new NextResponse(JSON.stringify(response), {
-                status: 200,
-            });
+            return new NextResponse(JSON.stringify(response));
         } else {
             const dataprompt_a = await getPrompt_a(response.data.data);
             console.log("[dataprompt_a]",dataprompt_a)
@@ -94,17 +124,26 @@ const getPrompt_a = async (tableSchemas: []) => {
                     .replaceAll(/"data":/g, "");
 
                 console.log("[sql]origin", sql);
-                sql = JSON.parse(sql);
-                //         // res.status(200).json(response.data);
-                console.log("[sql]", sql);
-                if (sql.content) {
-                    const sqlStr = sql.content;
-                    console.log("[sqlStr]", sqlStr);
-                    table = await loopTable(sqlStr, databaseName);
-                    console.log("[table]", table);
-                }else{
-                    console.error("[sql.content] is empty");
+                let flag = true;
+                try {
+                    sql = JSON.parse(sql);
+                } catch (error) {
+                    console.log("[JSON.parse]error:", error)
+                    flag = false
                 }
+                if (flag) {
+                    //         // res.status(200).json(response.data);
+                    console.log("[sql]", sql);
+                    if (sql.content) {
+                        const sqlStr = sql.content;
+                        console.log("[sqlStr]", sqlStr);
+                        table = await loopTable(sqlStr, databaseName);
+                        console.log("[table]", table);
+                    } else {
+                        console.error("[sql.content] is empty");
+}
+                }
+
             }
         } else {
             console.error("[schema error]", schema);

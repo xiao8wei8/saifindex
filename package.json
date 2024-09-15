@@ -10,7 +10,11 @@
   },
   "dependencies": {
     "@ant-design/nextjs-registry": "^1.0.1",
+    "@ant-design/pro-chat": "^1.15.2",
+    "@ant-design/pro-editor": "^0.38.0",
+    "@types/urlencode": "^1.1.4",
     "antd": "^5.20.6",
+    "antd-style": "^3.6.3",
     "axios": "^1.7.7",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",

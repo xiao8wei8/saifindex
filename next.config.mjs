@@ -5,7 +5,15 @@ const nextConfig = { env:{
     'MYSQL_DATABASE':'lg',
     'MYSQL_USER':'root',
     'MYSQL_PASSWORD':'root'
-}};
+},
+    transpilePackages: [
+        'shiki',
+        '@ant-design/pro-editor',
+        '@ant-design/pro-chat',
+        'react-intersection-observer',
+    ],
+};
 
 
 export default nextConfig;
+
