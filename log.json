@@ -1,0 +1,139 @@
+{
+    "fbcbcb46bd03be6a909fcb5d8594339a": {
+        "tableResponse": {
+            "success": true,
+            "errorCode": null,
+            "errorMessage": null,
+            "data": [
+                {
+                    "dataSourceId": 43460,
+                    "databaseName": "stockmarket",
+                    "schemaName": null,
+                    "tableName": "stock_amarket_industry",
+                    "tableSchema": "CREATE TABLE `stockmarket`.`stock_amarket_industry` (\n\t`updateDate` DATE   NOT NULL    COMMENT '记录上市公司行业变更日期' ,\n\t`codeno` MEDIUMINT   NOT NULL    COMMENT '股票代码 定义为整型用于数据库关联检索' ,\n\t`symbol` CHAR(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '股票代码' ,\n\t`stockcode` CHAR(9) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '证券代码 [股票代码.市场]' ,\n\t`stockmarketarea` CHAR(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '股票所属市场 例如:上证指数，深证指数，科创板，创业板' ,\n\t`stockmarketareacode` CHAR(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '股票所属编码 例如:sh_index,sz_index' ,\n\t`stockmarketareano` SMALLINT   NOT NULL    COMMENT '股票所属市场编号检索字段 例如:1上海，2深圳，3科创板，4创业板' ,\n\t`stockname` CHAR(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '股票名称' ,\n\t`industry` VARCHAR(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '所属行业' ,\n\t`industryClassification` VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL    COMMENT '行业分类' ,\n\tPRIMARY KEY  (`updateDate`,`codeno`)  \n) ENGINE=InnoDB COLLATE=utf8mb4_general_ci COMMENT='A股市场行业分类';\n",
+                    "type": "TABLE"
+                },
+                {
+                    "dataSourceId": 43460,
+                    "databaseName": "stockmarket",
+                    "schemaName": null,
+                    "tableName": "stock_basic_ash",
+                    "tableSchema": "CREATE TABLE `stockmarket`.`stock_basic_ash` (\n\t`codeno` MEDIUMINT   NOT NULL    COMMENT '股票代码  股票代码 定义为整型用于数据库关联检索' ,\n\t`stockcode` CHAR(9) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '证券代码 [股票代码.市场]' ,\n\t`symbol` CHAR(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '股票代码' ,\n\t`stockmarketarea` CHAR(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '股票所属市场 例如:上证指数，深证指数，科创板，创业板' ,\n\t`stockmarketareacode` CHAR(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '股票所属编码 例如:sh_index,sz_index' ,\n\t`stockmarketareano` SMALLINT   NOT NULL    COMMENT '股票所属市场编号检索字段 例如:1上海，2深圳，3科创板，4创业板' ,\n\t`stockname` CHAR(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '股票名称' ,\n\t`area` CHAR(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '所在地域' ,\n\t`industry` VARCHAR(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '所属行业' ,\n\t`stockfullname` VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '股票全称' ,\n\t`stockenfullname` VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '英文全称' ,\n\t`stockmarkettype` CHAR(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '市场类型 （主板/中小板/创业板/科创板/CDR）' ,\n\t`exchange` CHAR(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '交易所代码' ,\n\t`curr_type` CHAR(3) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '交易货币' ,\n\t`list_status` CHAR(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '上市状态： L上市 D退市 P暂停上市' ,\n\t`list_date` DATE   NOT NULL    COMMENT '上市日期' ,\n\t`delist_date` DATE   NULL    COMMENT '退市日期' ,\n\t`is_hs` CHAR(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '是否沪深港通标的，N否 H沪股通 S深股通' ,\n\tPRIMARY KEY  (`codeno`)  \n) ENGINE=InnoDB COLLATE=utf8mb4_general_ci COMMENT='股票基本信息';\n",
+                    "type": "TABLE"
+                },
+                {
+                    "dataSourceId": 43460,
+                    "databaseName": "stockmarket",
+                    "schemaName": null,
+                    "tableName": "cache_r_industry_stock_sw",
+                    "tableSchema": "CREATE TABLE `stockmarket`.`cache_r_industry_stock_sw` (\n\t`codeno` MEDIUMINT   NOT NULL    COMMENT '股票编码 定义为整型用于数据库关联检索' ,\n\t`symbol` CHAR(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL    COMMENT '股票代码' ,\n\t`stockcode` CHAR(9) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL    COMMENT '证券代码 [股票代码.市场]' ,\n\t`stockname` CHAR(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL    COMMENT '股票名称' ,\n\t`indexcode` MEDIUMINT   NULL    COMMENT '指数编码' ,\n\tPRIMARY KEY  (`codeno`)  \n) ENGINE=InnoDB COLLATE=utf8mb4_general_ci COMMENT='申万行业指数与个股缓存表';\n",
+                    "type": "TABLE"
+                },
+                {
+                    "dataSourceId": 43460,
+                    "databaseName": "stockmarket",
+                    "schemaName": null,
+                    "tableName": "ts_sw_index_r_member",
+                    "tableSchema": "CREATE TABLE `stockmarket`.`ts_sw_index_r_member` (\n\t`indexcodeprefix` MEDIUMINT   NOT NULL    COMMENT '指数代码前缀' ,\n\t`codeno` MEDIUMINT   NOT NULL    COMMENT '股票编码 定义为整型用于数据库关联检索' ,\n\t`indexcode` CHAR(9) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL    COMMENT '指数代码 [指数代码.发布机构]' ,\n\t`indexcodesuffix` CHAR(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL    COMMENT '指数代码后缀' ,\n\t`industryname` CHAR(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL    COMMENT '行业名称' ,\n\t`stockcode` CHAR(9) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL    COMMENT '证券代码 [股票代码.市场]' ,\n\t`symbol` CHAR(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '股票代码' ,\n\t`stockmarketareacode` CHAR(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '股票所属编码 例如:sh,sz' ,\n\t`stockname` CHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '股票名称' ,\n\t`indate` DATE   NULL    COMMENT '纳入日期' ,\n\t`outdate` DATE   NULL    COMMENT '剔除日期' ,\n\t`isnew` CHAR(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL    COMMENT '是否最新Y是N否' ,\n\tPRIMARY KEY  (`indexcodeprefix`,`codeno`)  \n) ENGINE=InnoDB COLLATE=utf8mb4_general_ci COMMENT='TS申万行业成分';\n",
+                    "type": "TABLE"
+                },
+                {
+                    "dataSourceId": 43460,
+                    "databaseName": "stockmarket",
+                    "schemaName": null,
+                    "tableName": "ts_new_share",
+                    "tableSchema": "CREATE TABLE `stockmarket`.`ts_new_share` (\n\t`stockcode` CHAR(9) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT 'ts证券代码 [股票代码.市场]' ,\n\t`symbol` CHAR(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '股票代码' ,\n\t`stockmarketarea` CHAR(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '股票所属市场 例如:上证指数，深证指数，科创板，创业板' ,\n\t`stockmarketareacode` CHAR(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '股票所属编码 例如:sh_index,sz_index' ,\n\t`stockmarketareano` SMALLINT   NOT NULL    COMMENT '股票所属市场编号检索字段 例如:1上海，2深圳，3科创板，4创业板' ,\n\t`subcode` CHAR(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL    COMMENT '申购代码' ,\n\t`subname` VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL    COMMENT '名称' ,\n\t`ipodate` DATE   NULL    COMMENT '上网发行日期' ,\n\t`issuedate` CHAR(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL    COMMENT '上市日期' ,\n\t`amount` DECIMAL(12,3)   NULL    COMMENT '发行总量（万股）' ,\n\t`marketamount` DECIMAL(12,3)   NULL    COMMENT '上网发行总量（万股）' ,\n\t`price` DECIMAL(8,2)   NULL    COMMENT '发行价格' ,\n\t`peTTM` DECIMAL(8,2)   NULL    COMMENT '市盈率' ,\n\t`limitamount` DECIMAL(8,2)   NULL    COMMENT '个人申购上限（万股）' ,\n\t`funds` DECIMAL(9,3)   NULL    COMMENT '募集资金（亿元）' ,\n\t`ballot` DECIMAL(5,2)   NULL    COMMENT '中签率' ,\n\tPRIMARY KEY  (`stockcode`)  \n) ENGINE=InnoDB COLLATE=utf8mb4_general_ci COMMENT='TSIPO新股列表';\n",
+                    "type": "TABLE"
+                },
+                {
+                    "dataSourceId": 43460,
+                    "databaseName": "stockmarket",
+                    "schemaName": null,
+                    "tableName": "stock_basic_ash_postpone",
+                    "tableSchema": "CREATE TABLE `stockmarket`.`stock_basic_ash_postpone` (\n\t`stockcode` CHAR(9) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '证券代码 [股票代码.市场]' ,\n\t`symbol` CHAR(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '股票代码' ,\n\t`stockmarketarea` CHAR(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '股票所属市场 例如:上证指数，深证指数，科创板，创业板' ,\n\t`stockmarketareacode` CHAR(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '股票所属编码 例如:sh_index,sz_index' ,\n\t`stockmarketareano` SMALLINT   NOT NULL    COMMENT '股票所属市场编号检索字段 例如:1上海，2深圳，3科创板，4创业板' ,\n\t`stockname` CHAR(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '股票名称' ,\n\t`area` CHAR(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '所在地域' ,\n\t`industry` VARCHAR(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '所属行业' ,\n\t`stockfullname` VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '股票全称' ,\n\t`stockenfullname` VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '英文全称' ,\n\t`stockmarkettype` CHAR(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '市场类型 （主板/中小板/创业板/科创板/CDR）' ,\n\t`exchange` CHAR(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '交易所代码' ,\n\t`curr_type` CHAR(3) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '交易货币' ,\n\t`list_status` CHAR(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '上市状态： L上市 D退市 P暂停上市' ,\n\t`list_date` DATE   NOT NULL    COMMENT '上市日期' ,\n\t`delist_date` DATE   NULL    COMMENT '退市日期' ,\n\t`is_hs` CHAR(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '是否沪深港通标的，N否 H沪股通 S深股通' ,\n\tPRIMARY KEY  (`stockcode`)  \n) ENGINE=InnoDB COLLATE=utf8mb4_general_ci COMMENT='股票基本信息(延期上市)';\n",
+                    "type": "TABLE"
+                }
+            ],
+            "traceId": null,
+            "errorDetail": null,
+            "solutionLink": null
+        },
+        "sqlResponse": {
+            "success": true,
+            "errorCode": null,
+            "errorMessage": null,
+            "errorDetail": null,
+            "solutionLink": null,
+            "data": {
+                "token": "n33gNiRXG5Wky26Tkzb/89hSrE2Rl+ml3LzF1gaPb+w=",
+                "chatId": 21370,
+                "questionId": 66264,
+                "dashboardSchema": null,
+                "errorCode": null,
+                "errorMessage": null
+            },
+            "traceId": null
+        },
+        "chatResponse": "id:202409171201498d2c2825fd5145d2\ndata:{\"role\":\"assistant\",\"content\":\"\"}\nretry:3000\n\nid:202409171201498d2c2825fd5145d2\ndata:{\"role\":\"assistant\",\"content\":\"\"}\nretry:3000\n\nid:202409171201498d2c2825fd5145d2\ndata:{\"role\":\"assistant\",\"content\":\"\\nSELECT\"}\nretry:3000\n\nid:202409171201498d2c2825fd5145d2\ndata:{\"role\":\"assistant\",\"content\":\" `\"}\nretry:3000\n\nid:202409171201498d2c2825fd5145d2\ndata:{\"role\":\"assistant\",\"content\":\"stock\"}\nretry:3000\n\nid:202409171201498d2c2825fd5145d2\ndata:{\"role\":\"assistant\",\"content\":\"code\"}\nretry:3000\n\nid:202409171201498d2c2825fd5145d2\ndata:{\"role\":\"assistant\",\"content\":\"`\"}\nretry:3000\n\nid:202409171201498d2c2825fd5145d2\ndata:{\"role\":\"assistant\",\"content\":\" FROM\"}\nretry:3000\n\nid:202409171201498d2c2825fd5145d2\ndata:{\"role\":\"assistant\",\"content\":\" `\"}\nretry:3000\n\nid:202409171201498d2c2825fd5145d2\ndata:{\"role\":\"assistant\",\"content\":\"stock\"}\nretry:3000\n\nid:202409171201498d2c2825fd5145d2\ndata:{\"role\":\"assistant\",\"content\":\"market\"}\nretry:3000\n\nid:202409171201498d2c2825fd5145d2\ndata:{\"role\":\"assistant\",\"content\":\"`.`\"}\nretry:3000\n\nid:202409171201498d2c2825fd5145d2\ndata:{\"role\":\"assistant\",\"content\":\"stock\"}\nretry:3000\n\nid:202409171201498d2c2825fd5145d2\ndata:{\"role\":\"assistant\",\"content\":\"_basic\"}\nretry:3000\n\nid:202409171201498d2c2825fd5145d2\ndata:{\"role\":\"assistant\",\"content\":\"_\"}\nretry:3000\n\nid:202409171201498d2c2825fd5145d2\ndata:{\"role\":\"assistant\",\"content\":\"ash\"}\nretry:3000\n\nid:202409171201498d2c2825fd5145d2\ndata:{\"role\":\"assistant\",\"content\":\"`\"}\nretry:3000\n\nid:202409171201498d2c2825fd5145d2\ndata:{\"role\":\"assistant\",\"content\":\" WHERE\"}\nretry:3000\n\nid:202409171201498d2c2825fd5145d2\ndata:{\"role\":\"assistant\",\"content\":\" `\"}\nretry:3000\n\nid:202409171201498d2c2825fd5145d2\ndata:{\"role\":\"assistant\",\"content\":\"stock\"}\nretry:3000\n\nid:202409171201498d2c2825fd5145d2\ndata:{\"role\":\"assistant\",\"content\":\"name\"}\nretry:3000\n\nid:202409171201498d2c2825fd5145d2\ndata:{\"role\":\"assistant\",\"content\":\"`\"}\nretry:3000\n\nid:202409171201498d2c2825fd5145d2\ndata:{\"role\":\"assistant\",\"content\":\" =\"}\nretry:3000\n\nid:202409171201498d2c2825fd5145d2\ndata:{\"role\":\"assistant\",\"content\":\" '\"}\nretry:3000\n\nid:202409171201498d2c2825fd5145d2\ndata:{\"role\":\"assistant\",\"content\":\"农业\"}\nretry:3000\n\nid:202409171201498d2c2825fd5145d2\ndata:{\"role\":\"assistant\",\"content\":\"银行\"}\nretry:3000\n\nid:202409171201498d2c2825fd5145d2\ndata:{\"role\":\"assistant\",\"content\":\"'\\n\"}\nretry:3000\n\nid:202409171201498d2c2825fd5145d2\ndata:{\"role\":\"assistant\",\"content\":\"\"}\nretry:3000\n\nid:[DONE]\ndata:[DONE]\nretry:3000\n\n",
+        "executeResponse": {
+            "success": true,
+            "errorCode": null,
+            "errorMessage": null,
+            "data": [
+                {
+                    "sql": null,
+                    "originalSql": "SELECT `stockcode` FROM `stockmarket`.`stock_basic_ash` WHERE `stockname` = '农业银行'",
+                    "description": "Execution successful",
+                    "message": null,
+                    "success": true,
+                    "updateCount": null,
+                    "headerList": [
+                        {
+                            "dataType": "CHAT2DB_ROW_NUMBER",
+                            "name": "Row Number",
+                            "primaryKey": null,
+                            "comment": null,
+                            "defaultValue": null,
+                            "autoIncrement": null,
+                            "nullable": null,
+                            "columnSize": null,
+                            "decimalDigits": null
+                        },
+                        {
+                            "dataType": "STRING",
+                            "name": "stockcode",
+                            "primaryKey": null,
+                            "comment": null,
+                            "defaultValue": null,
+                            "autoIncrement": null,
+                            "nullable": null,
+                            "columnSize": null,
+                            "decimalDigits": null
+                        }
+                    ],
+                    "dataList": [
+                        [
+                            "1",
+                            "601288.SH"
+                        ]
+                    ],
+                    "sqlType": "SELECT",
+                    "hasNextPage": false,
+                    "pageNo": 1,
+                    "pageSize": 200,
+                    "fuzzyTotal": "1",
+                    "duration": 69,
+                    "canEdit": true,
+                    "tableName": "`stockmarket`.`stock_basic_ash`",
+                    "extra": null,
+                    "dataAccess": false,
+                    "scriptAccess": false,
+                    "noPermissionDetail": null
+                }
+            ],
+            "traceId": null,
+            "errorDetail": null,
+            "solutionLink": null
+        }
+    }
+}

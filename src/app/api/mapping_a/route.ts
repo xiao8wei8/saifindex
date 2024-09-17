@@ -1,10 +1,10 @@
-import Cors from "cors";
+
 import { NextRequest, NextResponse } from "next/server";
 import axios from "axios";
 import urlencode from "urlencode";
 export const dynamic = "force-dynamic";
 import mysql from "mysql2/promise";
-import mockData from './mock'
+// import mockData from './mock'
 
 let input = ""//"请查询平安银行的股票代码。做为数据库专家，请优化查询到的SQL语句";
 const token = "sk-LEWwEyfUgRH8E4ASUeQ7hsz5MQG1KMu48_c8Ngya8Oo";
@@ -21,6 +21,7 @@ const config = {
 const axiosinstance = axios.create({
     timeout: 600000,
 });
+let after=""//";请优化前面查询到的sql"
 export async function POST(request: NextRequest) {
     const { input } = await request.json()
     // const { messages = [] }: Partial<{ messages: Array<any> }> = await request.json();
@@ -48,7 +49,7 @@ export async function POST(request: NextRequest) {
         //       ...messages,
         //     ],
         //   },
-        input: input,
+        input: input+after,
         tableSize: "100",
         dataSourceCollectionId: 2839,
     };
@@ -171,7 +172,7 @@ const getPrompt_a = async (tableSchemas: []) => {
 const loopTableSchemas = async (item: any, fn: any) => {
     let data = {
         questionType: "NL_2_SQL",
-        input: input,
+        input: input+after,
         databaseType: "MYSQL",
         tableSchemas: [item], // [(tableSchemas as any)[0],(tableSchemas as any)[tableSchemas.length-1]],
         language: "en",

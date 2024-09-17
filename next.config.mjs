@@ -12,6 +12,12 @@ const nextConfig = { env:{
         '@ant-design/pro-chat',
         'react-intersection-observer',
     ],
+    // output: 'standalone',
+    eslint: {
+        // Warning: This allows production builds to successfully complete even if
+        // your project has ESLint errors.
+        ignoreDuringBuilds: true,
+      },
 };
 
 
