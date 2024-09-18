@@ -27,11 +27,13 @@ const Home = () => {
     const [step2value, setStep2value] = useState<ReactNode | string>(step2Tip);
     const [step3value, setStep3value] = useState<ReactNode | string>(step3Tip);
     const [step4value, setStep4value] = useState<ReactNode | string>(step4Tip);
-
+    let timer:any = null
     const clear = () => {
         // setColumns([]);
         // setDataSource([]);
         // setErrormsg("");
+        clearTimeout(timer)
+        timer = null
         setStep0value(step0Tip)
         setStep1value(step1value)
         setStep2value(step2value)
@@ -140,6 +142,17 @@ const Home = () => {
                 );
                 return;
             } else {
+              
+                setStep0value(
+                    <>
+                        <div>{step0Tip}</div>
+                        <Alert
+                            type="info"
+                            message={"建立链接成功"}
+                            banner
+                        />
+                    </>
+                );
                 setp1();
             }
         };
@@ -178,8 +191,15 @@ const Home = () => {
                 setStep1value(
                     <>
                         <div>{step1Tip}</div>
-                        <div>将会从如下数据表中查询：</div>
-                        <div>{ret2.join("\n")}</div>
+                        <Alert
+                            type="info"
+                            message={"获取数据库表结构成功"}
+                            banner
+                        />
+                        {ret2.length?<> <div>将会从如下数据表中查询：</div>
+                            <div>{ret2.join("\n")}</div></>:null}
+                       
+                       
                     </>
                 );
              
@@ -219,7 +239,7 @@ const Home = () => {
                         <div>{step2Tip}</div>
                        
                         <Alert
-                            type="success"
+                            type="info"
                             message={"与AP建立成功"}
                             banner
                         />
@@ -262,6 +282,11 @@ const Home = () => {
                 setStep3value(
                     <>
                         <div>{step3Tip}</div>
+                        <Alert
+                            type="info"
+                            message={"生成SQL语句成功"}
+                            banner
+                        />
                         <div>生成SQL语句如下：</div>
                         <div>{sql}</div>
                        
@@ -330,7 +355,12 @@ const Home = () => {
                 setStep4value(
                     <>
                         <div>{step4Tip}</div>
-                        <div>查询成功，数据如下：</div>
+                        <Alert
+                            type="info"
+                            message={"查询成功"}
+                            banner
+                        />
+                        <div>数据如下：</div>
                         <Table dataSource={_dataSource} columns={_columns} />
                     </>
                 );
@@ -421,7 +451,7 @@ const Home = () => {
         }
     };
 
-    let timer:any = null
+ 
     const searchChange = ( event: any,) => {
         console.log( event.target.value,);
         const val = event.target.value;
@@ -429,7 +459,7 @@ const Home = () => {
         timer = null
         timer = setTimeout(() => {
             handleSearch(val)
-        },1000)
+        },2000)
     };
     const handleSearchClick = useCallback(handleSearch, []);
     const handleSearchChange = useCallback(searchChange, []);
