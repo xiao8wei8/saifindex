@@ -1,5 +1,5 @@
 "use client";
-import Reactfrom "react";
+import React from "react";
 
 
 const Home = () => {
