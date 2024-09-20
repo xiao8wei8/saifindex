@@ -71,6 +71,21 @@ axiosinstance.interceptors.response.use(
         return Promise.reject(error);
     }
 );
+const devData = {
+    dataSourceId: 43460,
+    dataSourceName: "47.100.65.64",
+    dataSourceCollectionId: 2839,
+}
+const proData = {
+    dataSourceId: 46845,
+    dataSourceName: "101.34.245.222",
+    dataSourceCollectionId: 3115
+}
+
+const environment:any = "pro";//dev
+const environmentData = environment === "dev" ? devData : proData
+
+
 /**
  * 0、默认参数{"message":"查询农业银行的股票代码","dataSourceId":43460,"dataSourceCollectionId":2839}
  * 1、调用table接口，并将0的参数传入，获取table的数据表结构定义
@@ -84,8 +99,8 @@ const cookie =
 const table = "https://app.chat2db-ai.com/api/ai/magic/prompt/mapping/tables";
 let tablePayload = {
     message: "查询农业银行的股票代码",
-    dataSourceId: 43460,
-    dataSourceCollectionId: 2839,
+    dataSourceId: environmentData.dataSourceId,
+    dataSourceCollectionId: environmentData.dataSourceCollectionId,
 };
 const tableResponse = {
     success: true,
@@ -96,7 +111,7 @@ const tableResponse = {
     solutionLink: null,
     data: [
         {
-            dataSourceId: 43460,
+            dataSourceId: environmentData.dataSourceId,
             databaseName: "stockmarket",
             schemaName: null,
             tableName: "stock_amarket_industry",
@@ -110,11 +125,11 @@ const sql_generate =
     "https://app.chat2db-ai.com/api/ai/slash_magic/sql_generate";
 let sql_generate_paload = {
     source: "DATASOURCE_CHAT",
-    dataSourceId: 43460,
+    dataSourceId: environmentData.dataSourceId,
     message: "查询平安银行的股票代码",
     tableList: [
         {
-            dataSourceId: 43460,
+            dataSourceId: environmentData.dataSourceId,
             databaseName: "stockmarket",
             schemaName: null,
             tableName: "stock_amarket_industry",
@@ -123,7 +138,7 @@ let sql_generate_paload = {
             type: "TABLE",
         },
     ],
-    dataSourceCollectionId: 2839,
+    dataSourceCollectionId: environmentData.dataSourceCollectionId,
 };
 const sql_gernrate_response = {
     token: "u69O/49lylxmpbb+wHH/N9Y3vOkiMumT3FgTiOFK0ss=",
@@ -269,8 +284,8 @@ let executePayload = {
     pageSize: 200,
     total: 0,
     hasNextPage: true,
-    dataSourceId: 43460,
-    dataSourceName: "47.100.65.64",
+    dataSourceId: environmentData.dataSourceId,
+    dataSourceName: environmentData.dataSourceName,//"47.100.65.64",
     databaseType: "MYSQL",
     databaseName: "stockmarket",
     schemaName: "",
