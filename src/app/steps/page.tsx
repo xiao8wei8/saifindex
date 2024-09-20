@@ -16,7 +16,7 @@ export default () => {
     let ptg = -10;
 
     const interval = setInterval(() => {
-      ptg += 5;
+      ptg += 30;
       setPercent(ptg);
 
       if (ptg > 120) {
