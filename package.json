@@ -6,8 +6,7 @@
     "dev": "next dev",
     "build": "next build && PORT=3000 npm start",
     "start": "next start",
-    "lint": "next lint",
-    "serve": "node server.js"
+    "lint": "next lint"
   },
   "dependencies": {
     "@ant-design/icons": "5.0.1",

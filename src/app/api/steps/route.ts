@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import axios from "axios";
 import urlencode from "urlencode";
 export const dynamic = "force-dynamic";
-import mysql from "mysql2/promise";
+// import mysql from "mysql2/promise";
 import md5 from "@/libs/md5";
 import fs from "fs";
 import path from "path";
