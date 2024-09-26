@@ -37,6 +37,7 @@ export default () => {
       }}
     >
       <ProLayout
+      layout="top"
         menuItemRender={(item:any, dom:any) => (
           <div
             style={{
@@ -83,7 +84,7 @@ export default () => {
         }}
       >
          <Spin spinning={spinning} percent={percent} fullscreen />
-        {showcontent?<PageContainer content="欢迎使用"><Welcome /></PageContainer>:null}
+        {showcontent?<PageContainer content=" "><Welcome /></PageContainer>:null}
       </ProLayout>
     </div>
   );

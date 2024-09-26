@@ -9,8 +9,8 @@ export default {
     routes: [
       {
         path: '/welcome',
-        name: '自然语言查询',
-        icon: <DatabaseFilled />,
+        name: 'NL2SQL',
+        icon: <DatabaseFilled onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />,
         component: './welcome',
       },
       // {
