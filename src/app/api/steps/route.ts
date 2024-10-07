@@ -7,6 +7,7 @@ import md5 from "@/libs/md5";
 import fs from "fs";
 import path from "path";
 import { getDatabase, filterSql, getDatabaseList } from "@/libs/util";
+import qwen from "@/libs/qwen";
 let input = ""; //"请查询平安银行的股票代码。做为数据库专家，请优化查询到的SQL语句";
 const token = "sk-LEWwEyfUgRH8E4ASUeQ7hsz5MQG1KMu48_c8Ngya8Oo";
 const urlmapping_a = "https://app.chat2db-ai.com/api/ai/rest/mapping_a";
@@ -75,16 +76,15 @@ const devData = {
     dataSourceId: 43460,
     dataSourceName: "47.100.65.64",
     dataSourceCollectionId: 2839,
-}
+};
 const proData = {
     dataSourceId: 46845,
     dataSourceName: "101.34.245.222",
-    dataSourceCollectionId: 3115
-}
+    dataSourceCollectionId: 3115,
+};
 
-const environment:any = "pro";//dev
-const environmentData = environment === "dev" ? devData : proData
-
+const environment: any = "pro"; //dev
+const environmentData = environment === "dev" ? devData : proData;
 
 /**
  * 0、默认参数{"message":"查询农业银行的股票代码","dataSourceId":43460,"dataSourceCollectionId":2839}
@@ -285,7 +285,7 @@ let executePayload = {
     total: 0,
     hasNextPage: true,
     dataSourceId: environmentData.dataSourceId,
-    dataSourceName: environmentData.dataSourceName,//"47.100.65.64",
+    dataSourceName: environmentData.dataSourceName, //"47.100.65.64",
     databaseType: "MYSQL",
     databaseName: "stockmarket",
     schemaName: "",
@@ -365,13 +365,14 @@ export async function POST(request: NextRequest) {
     let message = "",
         isforce = false;
     let step = 0;
-//step 0 
+    let trailMessage = ";请将查询内容去重，并且返回中文。";
+    //step 0
     try {
         const queryData = await request.json();
         console.log("[queryData]", queryData);
-        message = queryData.message||"";
-        isforce = queryData.isforce||false;
-        step = queryData.step||0;
+        message = queryData.message || "";
+        isforce = queryData.isforce || false;
+        step = queryData.step || 0;
     } catch (error: any) {
         console.log("[error]", error);
         return new NextResponse(
@@ -395,17 +396,13 @@ export async function POST(request: NextRequest) {
             }
         );
     }
-
+    message = message.trim()+trailMessage;
     //如果message不为空，在进行下面的操作
     const callbackid = md5(message);
 
     mapResponse[callbackid] = isforce ? {} : mapResponse[callbackid] || {};
 
-   
-
-
-
-    const setp0=async()=>{
+    const setp0 = async () => {
         return new NextResponse(
             JSON.stringify({
                 message: "step1 ok",
@@ -415,11 +412,11 @@ export async function POST(request: NextRequest) {
                 status: 200,
             }
         );
-    }
+    };
     //---------1、table------------
     //获取数据表结构
-    
-    const setp1 = async()=>{
+
+    const setp1 = async () => {
         let table_response = mapResponse[callbackid]["tableResponse"] || {};
         if (Object.keys(table_response).length == 0) {
             //获取用户传入的值
@@ -434,7 +431,7 @@ export async function POST(request: NextRequest) {
                 "[table_response]table_response.data.success",
                 table_response.data.success
             );
-    
+
             // const table_response_data = await table_response.join()
             // 获取失败则直接返回
             if (table_response.data.success == false) {
@@ -443,15 +440,15 @@ export async function POST(request: NextRequest) {
                 });
             } else {
                 mapResponse[callbackid]["tableResponse"] = table_response.data;
-                
             }
         }
-        return new NextResponse(JSON.stringify(mapResponse[callbackid]["tableResponse"]), {
-            status: 200,
-        });
-    }
-
-    
+        return new NextResponse(
+            JSON.stringify(mapResponse[callbackid]["tableResponse"]),
+            {
+                status: 200,
+            }
+        );
+    };
 
     // console.log("[table_response.data]",table_response.data)
 
@@ -463,8 +460,8 @@ export async function POST(request: NextRequest) {
     // );
 
     //---------2、sql_generate------------
-    
-    const setp2 = async()=>{
+
+    const setp2 = async () => {
         let sql_response = mapResponse[callbackid]["sqlResponse"] || {};
         if (Object.keys(sql_response).length == 0) {
             //获取1中的tableList
@@ -490,11 +487,13 @@ export async function POST(request: NextRequest) {
                 mapResponse[callbackid]["sqlResponse"] = sql_response.data;
             }
         }
-        return new NextResponse(JSON.stringify(mapResponse[callbackid]["sqlResponse"]), {
-            status: 200,
-        });
-    }
-   
+        return new NextResponse(
+            JSON.stringify(mapResponse[callbackid]["sqlResponse"]),
+            {
+                status: 200,
+            }
+        );
+    };
 
     // fs.writeFileSync(
     //     path.join(__dirname, "../../../../../log.json"),
@@ -508,19 +507,25 @@ export async function POST(request: NextRequest) {
     // );
 
     //---------3、chat------------
-    
-    const setp3 = async()=>{
+
+    const setp3 = async () => {
         let chat_response = mapResponse[callbackid]["chatResponse"] || {};
         if (Object.keys(chat_response).length == 0) {
             //获取1中的tableList
-    
-            chatPayload.chatId = mapResponse[callbackid]["sqlResponse"].data.chatId;
+
+            chatPayload.chatId =
+                mapResponse[callbackid]["sqlResponse"].data.chatId;
             chatPayload.questionId =
                 mapResponse[callbackid]["sqlResponse"].data.questionId;
-            chatPayload.token = mapResponse[callbackid]["sqlResponse"].data.token;
-    
+            chatPayload.token =
+                mapResponse[callbackid]["sqlResponse"].data.token;
+
             chat_response = await axiosinstance.get(
-                chat(chatPayload.chatId, chatPayload.questionId, chatPayload.token),
+                chat(
+                    chatPayload.chatId,
+                    chatPayload.questionId,
+                    chatPayload.token
+                ),
                 // chatPayload,
                 config // Include the config object as the third argument
             );
@@ -538,30 +543,32 @@ export async function POST(request: NextRequest) {
                 mapResponse[callbackid]["chatResponse"] = chat_response.data;
             }
         }
-        return new NextResponse(JSON.stringify(mapResponse[callbackid]["chatResponse"]), {
-            status: 200,
-        });
-    }
-    
+        return new NextResponse(
+            JSON.stringify(mapResponse[callbackid]["chatResponse"]),
+            {
+                status: 200,
+            }
+        );
+    };
 
     //--------------4、execute------------
-    
-    const setp4 = async()=>{
+
+    const setp4 = async () => {
         let chatResponse = mapResponse[callbackid]["chatResponse"];
         let sql = filterSql(chatResponse);
         let tableResponse = mapResponse[callbackid]["tableResponse"];
-    
+
         let databaseList = getDatabaseList(tableResponse);
         let database = getDatabase(sql, databaseList);
-    
+
         let execute_response = mapResponse[callbackid]["executeResponse"] || {};
-    
+
         if (Object.keys(execute_response).length == 0) {
             //获取1中的tableList
-    
+
             executePayload.sql = sql;
             executePayload.databaseName = database;
-    
+
             execute_response = await axiosinstance.post(
                 execute,
                 executePayload,
@@ -578,16 +585,173 @@ export async function POST(request: NextRequest) {
                     status: 200,
                 });
             } else {
-                mapResponse[callbackid]["executeResponse"] = execute_response.data;
+                mapResponse[callbackid]["executeResponse"] =
+                    execute_response.data;
             }
         }
-        return new NextResponse(JSON.stringify(mapResponse[callbackid]["executeResponse"]), {
-            status: 200,
-        });
-    
-    }
-  
-    fs.writeFileSync(
+        return new NextResponse(
+            JSON.stringify(mapResponse[callbackid]["executeResponse"]),
+            {
+                status: 200,
+            }
+        );
+    };
+
+    const setp5 = async () => {
+        const dashboardGenerate =
+            "https://app.chat2db-ai.com/api/ai/slash_magic/dashboard_generate";
+        const dashboardGeneratePayload = {
+            chatId: 22428,
+            message: "中国与美国 1999年至今的GDP 对比折线图",
+            source: "CHAT",
+            tableList: [
+                {
+                    dataSourceId: 46845,
+                    databaseName: "stockmarket",
+                    schemaName: null,
+                    tableName: "df_global_gdp",
+                    tableSchema:
+                        "CREATE TABLE `stockmarket`.`df_global_gdp` (\n\t`countrycode` CHAR(3) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '国家编码 格式 [国标]' ,\n\t`year` CHAR(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '年分 日期格式 [YYYY]' ,\n\t`countryname_cn` VARCHAR(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL    COMMENT '国家中文名称' ,\n\t`countryname_en` VARCHAR(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL    COMMENT '国家英文名称' ,\n\t`indicatorname` VARCHAR(3) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL    COMMENT '指标名称' ,\n\t`indicatorcode` VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL    COMMENT '指标代码' ,\n\t`unit_en` VARCHAR(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL    COMMENT '计量单位英文' ,\n\t`unit_cn` VARCHAR(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL    COMMENT '计量单位中文' ,\n\t`gdp` DECIMAL(21,2)   NULL    COMMENT 'GDP值' ,\n\t`gdp_growth_ratio` DECIMAL(21,6)   NULL    COMMENT 'GDP年增长率' ,\n\tPRIMARY KEY  (`countrycode`,`year`)  \n) ENGINE=InnoDB COLLATE=utf8mb4_general_ci COMMENT='全球GDP数据';\n",
+                    type: "TABLE",
+                },
+                {
+                    dataSourceId: 46845,
+                    databaseName: "stockmarket",
+                    schemaName: null,
+                    tableName: "df_global_gdp_pcap",
+                    tableSchema:
+                        "CREATE TABLE `stockmarket`.`df_global_gdp_pcap` (\n\t`countrycode` CHAR(3) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '国家编码 格式 [国标]' ,\n\t`year` CHAR(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '年分 日期格式 [YYYY]' ,\n\t`countryname_cn` VARCHAR(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL    COMMENT '国家中文名称' ,\n\t`countryname_en` VARCHAR(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL    COMMENT '国家英文名称' ,\n\t`indicatorname` VARCHAR(14) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL    COMMENT '指标名称' ,\n\t`indicatorcode` VARCHAR(14) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL    COMMENT '指标代码' ,\n\t`unit_en` VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL    COMMENT '计量单位英文' ,\n\t`unit_cn` VARCHAR(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL    COMMENT '计量单位中文' ,\n\t`per_capita_gdp` DECIMAL(21,2)   NULL    COMMENT '人均GDP' ,\n\t`per_capita_gdp_growth_ratio` DECIMAL(21,6)   NULL    COMMENT '人均GDP年增长率' ,\n\tPRIMARY KEY  (`countrycode`,`year`)  \n) ENGINE=InnoDB COLLATE=utf8mb4_general_ci COMMENT='全球人均GDP数据';\n",
+                    type: "TABLE",
+                },
+                {
+                    dataSourceId: 46845,
+                    databaseName: "stockmarket",
+                    schemaName: null,
+                    tableName: "df_foreigndirectinvestment_netflow",
+                    tableSchema:
+                        "CREATE TABLE `stockmarket`.`df_foreigndirectinvestment_netflow` (\n\t`countrycode` CHAR(3) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '国家编码 格式 [国标]' ,\n\t`year` CHAR(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '年分 日期格式 [YYYY]' ,\n\t`countryname_cn` VARCHAR(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL    COMMENT '国家中文名称' ,\n\t`countryname_en` VARCHAR(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL    COMMENT '国家英文名称' ,\n\t`indicatorname_cn` VARCHAR(9) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL    COMMENT '指标名称' ,\n\t`indicatorname_en` VARCHAR(44) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL    COMMENT '指标名称' ,\n\t`indicatorcode` VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL    COMMENT '指标代码' ,\n\t`unit_en` VARCHAR(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL    COMMENT '计量单位英文' ,\n\t`unit_cn` VARCHAR(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL    COMMENT '计量单位中文' ,\n\t`total_investment_amount` DECIMAL(21,2)   NULL    COMMENT '人均GDP' ,\n\t`total_inv_growth_ratio` DECIMAL(21,6)   NULL    COMMENT '人均GDP年增长率' ,\n\tPRIMARY KEY  (`countrycode`,`year`)  \n) ENGINE=InnoDB COLLATE=utf8mb4_general_ci COMMENT='外国直接投资净流入';\n",
+                    type: "TABLE",
+                },
+                {
+                    dataSourceId: 46845,
+                    databaseName: "stockmarket",
+                    schemaName: null,
+                    tableName: "df_central_gov_debt_total",
+                    tableSchema:
+                        "CREATE TABLE `stockmarket`.`df_central_gov_debt_total` (\n\t`countrycode` CHAR(3) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '国家编码 格式 [国标]' ,\n\t`year` CHAR(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '年分 日期格式 [YYYY]' ,\n\t`countryname_cn` VARCHAR(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL    COMMENT '国家中文名称' ,\n\t`countryname_en` VARCHAR(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL    COMMENT '国家英文名称' ,\n\t`indicatorname_cn` VARCHAR(9) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL    COMMENT '指标名称' ,\n\t`indicatorname_en` VARCHAR(44) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL    COMMENT '指标名称' ,\n\t`indicatorcode` VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL    COMMENT '指标代码' ,\n\t`unit_en` VARCHAR(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL    COMMENT '计量单位英文' ,\n\t`unit_cn` VARCHAR(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL    COMMENT '计量单位中文' ,\n\t`total_gov_debt` DECIMAL(21,2)   NULL    COMMENT '政府总体债务' ,\n\t`total_gov_debt_ratio` DECIMAL(21,6)   NULL    COMMENT '政府总体债务率' ,\n\tPRIMARY KEY  (`countrycode`,`year`)  \n) ENGINE=InnoDB COLLATE=utf8mb4_general_ci COMMENT='中央政府债务(总额)';\n",
+                    type: "TABLE",
+                },
+                {
+                    dataSourceId: 46845,
+                    databaseName: "stockmarket",
+                    schemaName: null,
+                    tableName: "ts_index_daily",
+                    tableSchema:
+                        "CREATE TABLE `stockmarket`.`ts_index_daily` (\n\t`indexcode` VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '指数代码 格式 [指数代码.发布机构缩写]' ,\n\t`tradedate` DATE   NOT NULL    COMMENT '交易日期 （日期格式：YYYY-MM-DD）' ,\n\t`indexprefix` VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL    COMMENT '指数代码前缀' ,\n\t`indexsuffix` CHAR(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL    COMMENT '指数代码后缀' ,\n\t`indexshortname` VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL    COMMENT '指数简称' ,\n\t`market` CHAR(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL    COMMENT '指数市场 (MSCI:明晟指数;CSI:    中证指数;SSE:上交所指数;SZSE:深交所指数;CICC中金指数;SW:申万指数;OTH:其他指数)' ,\n\t`publisher` VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL    COMMENT '指数发布方' ,\n\t`category` VARCHAR(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL    COMMENT '指数类别' ,\n\t`base_point` DECIMAL(9,4)   NULL    COMMENT '基点' ,\n\t`close` DECIMAL(11,4)   NULL    COMMENT '今日收盘点位' ,\n\t`open` DECIMAL(11,4)   NULL    COMMENT '今日开盘点位' ,\n\t`high` DECIMAL(11,4)   NULL    COMMENT '今日最高点位;' ,\n\t`low` DECIMAL(11,4)   NULL    COMMENT '今日最低点位' ,\n\t`pre_close` DECIMAL(11,4)   NULL    COMMENT '今日昨日收盘点' ,\n\t`change_point` DECIMAL(11,4)   NULL    COMMENT '今日涨跌点' ,\n\t`pct_chg` DECIMAL(11,4)   NULL    COMMENT '当日涨跌幅' ,\n\t`vol` DECIMAL(16,2)   NULL    COMMENT '当日成交量（手）' ,\n\t`amount` DECIMAL(16,5)   NULL    COMMENT '当日成交额（千元）' ,\n\tPRIMARY KEY  (`indexcode`,`tradedate`)  \n) ENGINE=InnoDB COLLATE=utf8mb4_general_ci COMMENT='指数日线行情';\n",
+                    type: "TABLE",
+                },
+                {
+                    dataSourceId: 43460,
+                    databaseName: "stockmarket",
+                    schemaName: null,
+                    tableName: "ts_daily_befadjust",
+                    tableSchema:
+                        "CREATE TABLE `stockmarket`.`ts_daily_befadjust` (\n\t`stockcode` CHAR(9) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT 'ts证券代码 [股票代码.市场]' ,\n\t`tradedate` DATE   NOT NULL    COMMENT '交易日期' ,\n\t`symbol` CHAR(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '股票代码' ,\n\t`stockname_cn` CHAR(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL    COMMENT '股票名称（中文）' ,\n\t`stockmarketarea` CHAR(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '股票所属市场 例如:上证指数，深证指数' ,\n\t`stockmarketareacode` CHAR(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '股票所属编码 例如:sh,sz' ,\n\t`stockmarketareano` SMALLINT   NOT NULL    COMMENT '股票所属市场板块编号检索字段 例如:1上海，2深圳，3科创板，4创业板' ,\n\t`stockmarket` CHAR(3) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL    COMMENT '股票所属市场板块名称 例如:1上海，2深圳，3科创板，4创业板' ,\n\t`open` DECIMAL(11,4)   NULL    COMMENT '当日开盘价' ,\n\t`high` DECIMAL(11,4)   NULL    COMMENT '当日最高价' ,\n\t`low` DECIMAL(11,4)   NULL    COMMENT '当日最低价' ,\n\t`close` DECIMAL(11,4)   NULL    COMMENT '当日收盘价' ,\n\t`pre_close` DECIMAL(11,4)   NULL    COMMENT '昨日收盘价' ,\n\t`change_price` DECIMAL(11,4)   NULL    COMMENT '当日涨跌额' ,\n\t`pct_chg` DECIMAL(11,4)   NULL    COMMENT '当日涨跌幅' ,\n\t`vol` DECIMAL(11,2)   NULL    COMMENT '当日成交量' ,\n\t`amount` DECIMAL(16,5)   NULL    COMMENT '当日成交额' ,\n\t`turnover_rate` DECIMAL(8,2)   NULL    COMMENT '当日换手率' ,\n\t`turnover_rate_f` DECIMAL(8,2)   NULL    COMMENT '当日自由流通股换手率' ,\n\t`volume_ratio` DECIMAL(8,2)   NULL    COMMENT '量比' ,\n\t`pe` DECIMAL(10,4)   NULL    COMMENT '市盈率（总市值/净利润， 亏损的PE为空）' ,\n\t`pe_ttm` DECIMAL(10,4)   NULL    COMMENT '滚动市盈率（TTM，亏损的PE为空）最近报告的12个月(四个季度)的净利润或者每股收益为基础来计算' ,\n\t`pb` DECIMAL(10,4)   NULL    COMMENT '市净率（总市值/净资产）' ,\n\t`ps` DECIMAL(12,4)   NULL    COMMENT '市销率' ,\n\t`ps_ttm` DECIMAL(12,4)   NULL    COMMENT '滚动市销率（TTM）最近报告的12个月(四个季度)基础来计算' ,\n\t`dv_ratio` DECIMAL(10,4)   NULL    COMMENT '股息率 （%）' ,\n\t`dv_ttm` DECIMAL(10,4)   NULL    COMMENT '滚动股息率（TTM）' ,\n\t`total_share` BIGINT   NULL    COMMENT '总股本 （股）' ,\n\t`float_share` BIGINT   NULL    COMMENT '流通股本 （股）' ,\n\t`free_share` BIGINT   NULL    COMMENT '自由流通股本 （元）' ,\n\t`total_mv` DECIMAL(21,2)   NULL    COMMENT '总市值 （元）' ,\n\t`circ_mv` DECIMAL(21,2)   NULL    COMMENT '流通市值（元）' ,\n\tPRIMARY KEY  (`stockcode`,`tradedate`)  \n) ENGINE=InnoDB COLLATE=utf8mb4_general_ci COMMENT='日线行情(前复权) 与每日基础指标合并';\n",
+                    type: "TABLE",
+                },
+            ],
+        };
+
+        
+        const dashboard_response = await axiosinstance.get(
+            chat(
+                chatPayload.chatId,
+                chatPayload.questionId,
+                chatPayload.token
+            ),
+            // chatPayload,
+            config // Include the config object as the third argument
+        );
+
+        const answer =
+            "https://app.chat2db-ai.com/api/ai/chat/list/answer?questionId=73105";
+        const updataAnswer =
+            "https://app.chat2db-ai.com/api/ai/chat/update/answer";
+        const updataAnswerPayload = {
+            id: 69228,
+            chatId: 22428,
+            questionId: 73105,
+            content:
+                '[{"schema":"{\\"chartType\\":\\"Line\\",\\"xField\\":\\"year\\",\\"yField\\":\\"gdp\\"}","ddl":"SELECT year, gdp FROM df_global_gdp WHERE countryname_cn IN (\'中国\', \'美国\') AND year >= \'1999\' ORDER BY year;","dataSourceId":46845,"databaseName":"stockmarket","connectable":true,"name":"中国与美国GDP对比"}]',
+            dashboardId: null,
+            dashboard: null,
+            type: "DASHBOARD",
+            goodFeedback: false,
+            badFeedback: false,
+            noFeedBack: true,
+            regenerate: false,
+        };
+        const execute = "https://app.chat2db-ai.com/api/rdb/dml/execute";
+        const executePayload = {
+            schema: '{"chartType":"Line","xField":"year","yField":"gdp"}',
+            ddl: "SELECT year, gdp FROM df_global_gdp WHERE countryname_cn IN ('中国', '美国') AND year >= '1999' ORDER BY year;",
+            dataSourceId: 46845,
+            databaseName: "stockmarket",
+            connectable: true,
+            name: "中国与美国GDP对比",
+            sql: "SELECT year, gdp FROM df_global_gdp WHERE countryname_cn IN ('中国', '美国') AND year >= '1999' ORDER BY year;",
+        };
+
+        let dashboard_generate =
+            mapResponse[callbackid]["dashboardGenerate"] || {};
+        if (Object.keys(dashboard_generate).length == 0) {
+            //获取1中的tableList
+            sql_generate_paload.tableList =
+                mapResponse[callbackid]["tableResponse"].data;
+            sql_generate_paload.message = message;
+            dashboard_generate = await axiosinstance.post(
+                sql_generate,
+                sql_generate_paload,
+                config // Include the config object as the third argument
+            );
+            console.log("[sql_response]", dashboard_generate.data);
+            console.log(
+                "[sql_response]sql_response.data.success",
+                dashboard_generate.data.success
+            );
+            //获取失败则直接返回
+            if (dashboard_generate.data.success == false) {
+                return new NextResponse(
+                    JSON.stringify(dashboard_generate.data),
+                    {
+                        status: 200,
+                    }
+                );
+            } else {
+                mapResponse[callbackid]["sqlResponse"] =
+                    dashboard_generate.data;
+            }
+        }
+        return new NextResponse(
+            JSON.stringify(mapResponse[callbackid]["sqlResponse"]),
+            {
+                status: 200,
+            }
+        );
+    };
+
+    const setp6 = async () => {
+        const qwenResponse =  await qwen( message);
+        mapResponse[callbackid]["qwenResponse"] = qwenResponse;
+        return new NextResponse(
+            JSON.stringify(mapResponse[callbackid]["qwenResponse"]),
+            {
+                status: 200,
+            }
+        );
+
+    };
+    fs.writeFileSync(   
         path.join(__dirname, "../../../../../log.json"),
         JSON.stringify(mapResponse, null, 4)
     );
@@ -603,20 +767,25 @@ export async function POST(request: NextRequest) {
             return await setp0();
             break;
         case 1:
-            return await  setp1()
+            return await setp1();
             break;
         case 2:
-            return await setp2()
+            return await setp2();
             break;
 
         case 3:
-            return await setp3()
+            return await setp3();
             break;
 
         case 4:
-            return await setp4()
+            return await setp4();
             break;
-
+        case 5:
+            return await setp5();
+            break;
+        case 6:
+            return await setp6();
+            break;
         default:
             break;
     }
@@ -629,7 +798,6 @@ export async function POST(request: NextRequest) {
     //     status: 200,
     // });
 }
-
 
 const tablesFn = async (data: any) => {};
 const chatFn = async (data: any) => {

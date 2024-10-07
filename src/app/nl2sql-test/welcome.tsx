@@ -1,7 +1,7 @@
 "use client";
 import React, { ReactNode, useCallback, useRef, useState } from "react";
 //@ts-ignore
-import { Input, Table, Alert, Steps, LoadingOutlined ,Spin, theme} from "antd";
+import { Input, Table, Alert, Steps, LoadingOutlined ,Spin} from "antd";
 
 import axios from "axios";
 import { format } from 'sql-formatter'
@@ -145,14 +145,12 @@ const Home = () => {
                 // setValue("");
                 setStep0value(
                     <>
-                   
-                        {/* <div              style={tipsStyle} >{step0Tip}</div> */}
+                        <div>{step0Tip}</div>
                         <Alert
                             type="error"
                             message={JSON.stringify(response.data, null, 4)}
                             banner
                         />
-                    
                     </>
                 );
                 return;
@@ -160,8 +158,7 @@ const Home = () => {
               
                 setStep0value(
                     <>
-                    
-                        {/* <div style={tipsStyle} >{step0Tip}</div> */}
+                        <div>{step0Tip}</div>
                         <Alert
                             type="info"
                             message={"建立链接成功"}
@@ -195,7 +192,7 @@ const Home = () => {
                 // setValue("");
                 setStep1value(
                     <>
-                        {/* <div style={tipsStyle} >{step1Tip}</div> */}
+                        <div>{step1Tip}</div>
                         <Alert
                             type="error"
                             message={JSON.stringify(response.data, null, 4)}
@@ -212,13 +209,13 @@ const Home = () => {
                 })
                 setStep1value(
                     <>
-                        {/* <div style={tipsStyle} >{step1Tip}</div> */}
+                        <div>{step1Tip}</div>
                         <Alert
                             type="info"
                             message={"获取数据库表结构成功"}
                             banner
                         />
-                        {ret2.length?<> 
+                        {ret2.length?<> <div>将会从如下数据表中查询：</div>
                             <div>  <Highlight  language="javascript" style={{
                              display: "block",
                              borderRadius: "5px",
@@ -226,7 +223,7 @@ const Home = () => {
                              lineHeight: '18px'
                         }}>{JSON.stringify(ret2, null, 4)}</Highlight></div></>:null}
                           
-                
+                       
                        
                     </>
                 );
@@ -257,7 +254,7 @@ const Home = () => {
                 // setValue("");
                 setStep2value(
                     <>
-                        {/* <div style={tipsStyle} >{step2Tip}</div> */}
+                        <div>{step2Tip}</div>
                         <Alert
                             type="error"
                             message={JSON.stringify(response.data, null, 4)}
@@ -270,7 +267,7 @@ const Home = () => {
           
                 setStep2value(
                     <>
-                        {/* <div style={tipsStyle} >{step2Tip}</div> */}
+                        <div>{step2Tip}</div>
                        
                         <Alert
                             type="info"
@@ -306,7 +303,7 @@ const Home = () => {
                 // setValue("");
                 setStep3value(
                     <>
-                        {/* <div style={tipsStyle} >{step3Tip}</div> */}
+                        <div>{step3Tip}</div>
                         <Alert
                             type="error"
                             message={JSON.stringify(response.data, null, 4)}
@@ -321,13 +318,13 @@ const Home = () => {
                 let sql = filterSql(items);
                 setStep3value(
                     <>
-                        {/* <div style={tipsStyle} >{step3Tip}</div> */}
+                        <div>{step3Tip}</div>
                         <Alert
                             type="info"
                             message={"生成SQL语句成功"}
                             banner
                         />
-                        {/* <div style={tipsStyle} >生成SQL语句如下：</div> */}
+                        <div>生成SQL语句如下：</div>
                         {/* <div>{sql}</div> */}
                         <div>
                         <Highlight style={{
@@ -366,7 +363,7 @@ const Home = () => {
                 // setValue("");
                 setStep4value(
                     <>
-                        {/* <div style={tipsStyle} >{step4Tip}</div> */}
+                        <div>{step4Tip}</div>
                         <Alert
                             type="error"
                             message={JSON.stringify(response.data, null, 4)}
@@ -423,14 +420,14 @@ const Home = () => {
                 // setDataSource(_dataSource);
                 setStep4value(
                     <>
-                        {/* <div style={tipsStyle} >{step4Tip}</div> */}
+                        <div>{step4Tip}</div>
                         <Alert
                             type="info"
                             message={"查询成功"}
                             banner
                         />
-                        {/* <div style={tipsStyle} >数据如下：</div> */}
-                        <Table dataSource={_dataSource} columns={_columns} scroll={(headerList.length>3?{ x: 1500, }:{ })}/>
+                        <div>数据如下：</div>
+                        <Table dataSource={_dataSource} columns={_columns} scroll={(headerList.length>3?{ x: 1500, y: 300 }:{})}/>
                     </>
                 );
             }
@@ -524,14 +521,11 @@ const Home = () => {
     const searchChange = ( event: any,) => {
         console.log( event.target.value,);
         const val = event.target.value;
-        if(!val){
-            return;
-        }
         clearTimeout(timer)
         timer = null
         timer = setTimeout(() => {
             handleSearch(val)
-        },3000)
+        },2000)
     };
     const handleSearchClick = useCallback(handleSearch, []);
     const handleSearchChange = useCallback(searchChange, []);
@@ -574,55 +568,7 @@ const Home = () => {
     //         key: "address",
     //     },
     // ];
-    const steps = [
-        {
-            title: "Step 0",
-            description: <div>{step0value}</div>,
-            
-        },
-        {
-            title: "Step 1",
-            description: <div>{step1value}</div>,
-        },
-        {
-            title: "Step 2",
-            description: <div>{step2value}</div>,
-        },
-        {
-            title: "Step 3",
-            description: <div>{step3value}</div>,
-        },
-        {
-            title: "Step 4",
-            description: <div>{step4value}</div>,
-        },
-    ]
-    
-    const { token } = theme.useToken();
-    const contentStyle: React.CSSProperties = {
-        // lineHeight: '260px',
-        textAlign: 'left',
-        color: token.colorTextTertiary,
-        backgroundColor: token.colorFillAlter,
-        borderRadius: token.borderRadiusLG,
-        border: `1px dashed ${token.colorBorder}`,
-        marginTop: 16,
-        // paddingLeft: 16,
-        // paddingTop: 16,
-        minHeight: 700,
-        minWidth: 500,
-      };
-      const tipsStyle: React.CSSProperties = {
-        lineHeight: 'normal',
-        textAlign: 'left',
-        color: token.colorTextTertiary,
-        backgroundColor: token.colorFillAlter,
-        borderRadius: token.borderRadiusLG,
-        border: `1px dashed ${token.colorBorder}`,
-        marginTop: 16,
-      };
-      const items = steps.map((item) => ({ key: item.title, title: item.title }));
-    
+
     return (
         <div className="App">
             <Search
@@ -633,21 +579,35 @@ const Home = () => {
                 // value={value}
                 onChange={handleSearchChange}
             />
-            <div style={{
-                width: '100%',
-                height: '10px',
-            }}></div>
-               <Steps current={current} items={items} />
-               <div style={contentStyle}>{steps[current].description}</div>
-
-            {/* <Steps
+            <Steps
                 progressDot
                 current={current}
                 direction="vertical"
-                items={items}
-            /> */}
+                items={[
+                    {
+                        title: "Step 0",
+                        description: <div>{step0value}</div>,
+                    },
+                    {
+                        title: "Step 1",
+                        description: <div>{step1value}</div>,
+                    },
+                    {
+                        title: "Step 2",
+                        description: <div>{step2value}</div>,
+                    },
+                    {
+                        title: "Step 3",
+                        description: <div>{step3value}</div>,
+                    },
+                    {
+                        title: "Step 4",
+                        description: <div>{step4value}</div>,
+                    },
+                ]}
+            />
             {/* <Input placeholder="Basic usage" onKeyPress={handleSearch} /> */}
-            {/* {columns.length ? (
+            {columns.length ? (
                 <div style={{ margin: "24px 0" }}>
                     <TextArea rows={4} value={sqlvalue} />
                 </div>
@@ -657,7 +617,7 @@ const Home = () => {
                 <Alert type="error" message={errormsg} banner />
             ) : columns.length ? (
                 <Table dataSource={dataSource} columns={columns} />
-            ) : null} */}
+            ) : null}
 
             {/* <Table dataSource={dataSource} columns={columns} />; */}
         </div>
