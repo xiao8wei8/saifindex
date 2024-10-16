@@ -31,7 +31,7 @@ export const Box: FC<BoxProps> = ({ name }) => {
       end(item, monitor) {
         const dropResult = monitor.getDropResult() as DropResult
         if (item && dropResult) {
-          let alertMessage =`You ${item.name} into ${dropResult.name}!`
+          let alertMessage =`根据 ${item.name} 生成 ${dropResult.name}!`
           // const isDropAllowed =
           //   dropResult.allowedDropEffect === 'any' ||
           //   dropResult.allowedDropEffect === dropResult.dropEffect

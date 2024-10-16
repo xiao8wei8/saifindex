@@ -35,7 +35,7 @@ export const Dustbin: FC<DustbinProps> = ({ allowedDropEffect }) => {
     () => ({
       accept: ItemTypes.BOX,
       drop: () => ({
-        name: `${allowedDropEffect} Dustbin`,
+        name: `${allowedDropEffect}`,
         allowedDropEffect,
       }),
       collect: (monitor: any) => ({

@@ -21,7 +21,11 @@ export default ({
     const [pathname, setPathname] = useState(
         currentpathname || defaultpathname
     );
-    let curWeixin = localStorage.getItem("curWeixin")||"";
+    let curWeixin=""
+    if (typeof localStorage !== "undefined") {
+         curWeixin = localStorage.getItem("curWeixin")||"";
+    }
+   
     useEffect(() => {
         let curWeixin = localStorage.getItem("curWeixin")||"";
         if(!weixins.includes(curWeixin)) {
