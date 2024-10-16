@@ -19,6 +19,7 @@ import { Checkbox, Space, Tabs, message, theme } from 'antd';
 import type { CSSProperties } from 'react';
 import { useState } from 'react';
 import { useRouter } from "next/navigation";
+import weixins from "../components/weixins";
 type LoginType = 'phone' | 'account';
 
 export default () => {
@@ -32,7 +33,7 @@ export default () => {
     verticalAlign: 'middle',
     cursor: 'pointer',
   };
-
+  
   return (
     <div >
     <ProConfigProvider hashed={false} >
@@ -41,7 +42,21 @@ export default () => {
           logo="https://gw.alipayobjects.com/zos/antfincdn/upvrAjAPQX/Logo_Tech%252520UI.svg"
           title="SAIF CHAT"
           subTitle="高金人自己的金融数据智能查询平台"
-          onClick={() => router.push('/dashboard')}
+          onClick={(opt) => {
+            console.log('onClick');
+            console.log(opt)
+            // let curWeixin = localStorage.setItem("curWeixin")||"";
+            // router.push('/dashboard')
+          }}
+          onFinish={async (values) => {
+            console.log('Success:', values);
+            localStorage.setItem("curWeixin", values.username);
+            router.push('/dashboard');
+            // return true;
+          }}
+          onFinishFailed={async (errorInfo) => {
+            console.log('Failed:', errorInfo);
+          }}  
           actions={
             <Space>
               {/* 其他登录方式
@@ -68,13 +83,17 @@ export default () => {
                   size: 'large',
                   prefix: <UserOutlined className={'prefixIcon'} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />,
                 }}
-                disabled
+                // disabled
                 placeholder={'用户名: 微信号'}
                 rules={[
                   {
                     required: true,
                     message: '请输入绑定的微信号!',
                   },
+                  {
+                    pattern:new RegExp(weixins.join("|")),
+                    message: '微信号未绑定，请联系管理员绑定',
+                  }
                 ]}
               />
               <ProFormText.Password

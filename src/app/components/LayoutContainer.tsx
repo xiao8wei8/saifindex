@@ -4,10 +4,11 @@ import {
     QuestionCircleFilled,
 } from "@ant-design/icons";
 import { PageContainer, ProCard, ProLayout } from "@ant-design/pro-components";
-import { useState } from "react";
+import { use, useEffect, useState } from "react";
 import defaultProps from "./_defaultProps";
 const defaultpathname = "/admin/excle";
 import { useRouter } from "next/navigation";
+import weixins from "./weixins";
 import "./index.css";
 export default ({
     children,
@@ -20,8 +21,14 @@ export default ({
     const [pathname, setPathname] = useState(
         currentpathname || defaultpathname
     );
-
-    return (
+    let curWeixin = localStorage.getItem("curWeixin")||"";
+    useEffect(() => {
+        let curWeixin = localStorage.getItem("curWeixin")||"";
+        if(!weixins.includes(curWeixin)) {
+           router.push("/login");
+        }
+    },[])
+    return !curWeixin?null: (
         <div
             id="test-pro-layout"
             style={{
@@ -31,24 +38,24 @@ export default ({
             <ProLayout
                 siderWidth={216}
                 bgLayoutImgList={[
-                    {
-                        src: "https://img.alicdn.com/imgextra/i2/O1CN01O4etvp1DvpFLKfuWq_!!6000000000279-2-tps-609-606.png",
-                        left: 85,
-                        bottom: 100,
-                        height: "303px",
-                    },
-                    {
-                        src: "https://img.alicdn.com/imgextra/i2/O1CN01O4etvp1DvpFLKfuWq_!!6000000000279-2-tps-609-606.png",
-                        bottom: -68,
-                        right: -45,
-                        height: "303px",
-                    },
-                    {
-                        src: "https://img.alicdn.com/imgextra/i3/O1CN018NxReL1shX85Yz6Cx_!!6000000005798-2-tps-884-496.png",
-                        bottom: 0,
-                        left: 0,
-                        width: "331px",
-                    },
+                    // {
+                    //     src: "https://img.alicdn.com/imgextra/i2/O1CN01O4etvp1DvpFLKfuWq_!!6000000000279-2-tps-609-606.png",
+                    //     left: 85,
+                    //     bottom: 100,
+                    //     height: "303px",
+                    // },
+                    // {
+                    //     src: "https://img.alicdn.com/imgextra/i2/O1CN01O4etvp1DvpFLKfuWq_!!6000000000279-2-tps-609-606.png",
+                    //     bottom: -68,
+                    //     right: -45,
+                    //     height: "303px",
+                    // },
+                    // {
+                    //     src: "https://img.alicdn.com/imgextra/i3/O1CN018NxReL1shX85Yz6Cx_!!6000000005798-2-tps-884-496.png",
+                    //     bottom: 0,
+                    //     left: 0,
+                    //     width: "331px",
+                    // },
                 ]}
                 {...defaultProps}
                 title="SAIF Chat"
@@ -58,29 +65,29 @@ export default ({
                 }}
                 avatarProps={{
                     src: "https://gw.alipayobjects.com/zos/antfincdn/efFD%24IOql2/weixintupian_20170331104822.jpg",
-                    title: "SCer",
+                    title: localStorage.getItem("curWeixin")||"SCer",
                     size: "small",
                 }}
-                actionsRender={(props) => {
-                    if (props.isMobile) return [];
-                    return [
-                        <InfoCircleFilled
-                            key="InfoCircleFilled"
-                            onPointerEnterCapture={undefined}
-                            onPointerLeaveCapture={undefined}
-                        />,
-                        <QuestionCircleFilled
-                            key="QuestionCircleFilled"
-                            onPointerEnterCapture={undefined}
-                            onPointerLeaveCapture={undefined}
-                        />,
-                        <GithubFilled
-                            key="GithubFilled"
-                            onPointerEnterCapture={undefined}
-                            onPointerLeaveCapture={undefined}
-                        />,
-                    ];
-                }}
+                // actionsRender={(props) => {
+                //     if (props.isMobile) return [];
+                //     return [
+                //         <InfoCircleFilled
+                //             key="InfoCircleFilled"
+                //             onPointerEnterCapture={undefined}
+                //             onPointerLeaveCapture={undefined}
+                //         />,
+                //         <QuestionCircleFilled
+                //             key="QuestionCircleFilled"
+                //             onPointerEnterCapture={undefined}
+                //             onPointerLeaveCapture={undefined}
+                //         />,
+                //         <GithubFilled
+                //             key="GithubFilled"
+                //             onPointerEnterCapture={undefined}
+                //             onPointerLeaveCapture={undefined}
+                //         />,
+                //     ];
+                // }}
                 menuFooterRender={(props) => {
                     if (props?.collapsed) return undefined;
                     return (
