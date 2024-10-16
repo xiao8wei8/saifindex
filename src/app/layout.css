@@ -1,0 +1,16 @@
+body{
+    margin: 0;
+}
+.footer{
+
+
+    position: relative;
+    z-index: 999;
+    /* margin: 8px; */
+    /* bottom: 0px; */
+    text-align: center;
+    width: 100%;
+    margin-bottom: 8px;
+    margin-top: 8px;
+
+}

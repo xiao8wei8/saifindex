@@ -1,59 +1,10 @@
 {
-    "3a41366462c16b2475846fba12e01cca": {
+    "8c1b9c173d7b916ea2d01ae48e780918": {
         "tableResponse": {
             "success": true,
             "errorCode": null,
             "errorMessage": null,
-            "data": [
-                {
-                    "dataSourceId": 46845,
-                    "databaseName": "stockmarket",
-                    "schemaName": null,
-                    "tableName": "ts_income",
-                    "tableSchema": "CREATE TABLE `stockmarket`.`ts_income` (\n\t`stkseqno` INT   NOT NULL   AUTO_INCREMENT COMMENT '历史持股序列 自增字段无意义' ,\n\t`stockcode` CHAR(9) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT 'ts证券代码 [股票代码.市场]' ,\n\t`symbol` CHAR(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '股票代码' ,\n\t`stockname` CHAR(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL    COMMENT '股票名称' ,\n\t`stockmarketarea` CHAR(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '股票所属市场 例如:上证指数，深证指数，科创板，创业板' ,\n\t`stockmarketareacode` CHAR(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '股票所属编码 例如:sh_index,sz_index' ,\n\t`stockmarketareano` SMALLINT   NOT NULL    COMMENT '股票所属市场编号检索字段 例如:1上海，2深圳，3科创板，4创业板' ,\n\t`anndate` DATE   NULL    COMMENT '公告日期' ,\n\t`fanndate` DATE   NULL    COMMENT '实际公告日期' ,\n\t`enddate` DATE   NULL    COMMENT '报告期' ,\n\t`reporttypeno` TINYINT   NULL    COMMENT '报告类型编号 1合并报表 2单季合并 3调整单季合并表 4调整合并报表 5调整前合并报表 6母公司报表 7母公司单季表 8 母公司调整单季表 9母公司调整表 10母公司调整前报表 11调整前合并报表 12母公司调整前报表' ,\n\t`reporttype` CHAR(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL    COMMENT '报告类型' ,\n\t`comptypeno` TINYINT   NULL    COMMENT '公司类型(1一般工商业2银行3保险4证券)' ,\n\t`comptype` CHAR(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL    COMMENT '公司类型' ,\n\t`basiceps` DECIMAL(20,6)   NULL    COMMENT '基本每股收益' ,\n\t`dilutedeps` DECIMAL(20,6)   NULL    COMMENT '稀释每股收益' ,\n\t`totalrevenue` DECIMAL(20,6)   NULL    COMMENT '营业总收入' ,\n\t`revenue` DECIMAL(20,6)   NULL    COMMENT '营业收入' ,\n\t`intincome` DECIMAL(20,6)   NULL    COMMENT '利息收入' ,\n\t`premearned` DECIMAL(20,6)   NULL    COMMENT '已赚保费' ,\n\t`commincome` DECIMAL(20,6)   NULL    COMMENT '手续费及佣金收入' ,\n\t`ncommisincome` DECIMAL(20,6)   NULL    COMMENT '手续费及佣金净收入' ,\n\t`nothincome` DECIMAL(20,6)   NULL    COMMENT '其他经营净收益' ,\n\t`nothbincome` DECIMAL(20,6)   NULL    COMMENT '加:其他业务净收益' ,\n\t`premincome` DECIMAL(20,6)   NULL    COMMENT '保险业务收入' ,\n\t`outprem` DECIMAL(20,6)   NULL    COMMENT '减:分出保费' ,\n\t`unepremreser` DECIMAL(20,6)   NULL    COMMENT '提取未到期责任准备金' ,\n\t`reinsincome` DECIMAL(20,6)   NULL    COMMENT '其中:分保费收入' ,\n\t`nsectbincome` DECIMAL(20,6)   NULL    COMMENT '代理买卖证券业务净收入' ,\n\t`nsecuwincome` DECIMAL(20,6)   NULL    COMMENT '证券承销业务净收入' ,\n\t`nassetmgincome` DECIMAL(20,6)   NULL    COMMENT '受托客户资产管理业务净收入' ,\n\t`othbincome` DECIMAL(20,6)   NULL    COMMENT '其他业务收入' ,\n\t`fvvaluechggain` DECIMAL(20,6)   NULL    COMMENT '加:公允价值变动净收益' ,\n\t`investincome` DECIMAL(20,6)   NULL    COMMENT '加:投资净收益' ,\n\t`assinvestincome` DECIMAL(20,6)   NULL    COMMENT '其中:对联营企业和合营企业的投资收益' ,\n\t`forexgain` DECIMAL(20,6)   NULL    COMMENT '加:汇兑净收益' ,\n\t`totalcogs` DECIMAL(20,6)   NULL    COMMENT '营业总成本' ,\n\t`opercost` DECIMAL(20,6)   NULL    COMMENT '减:营业成本' ,\n\t`intexp` DECIMAL(20,6)   NULL    COMMENT '减:利息支出' ,\n\t`commexp` DECIMAL(20,6)   NULL    COMMENT '减:手续费及佣金支出' ,\n\t`biztaxsurchg` DECIMAL(20,6)   NULL    COMMENT '减:营业税金及附加' ,\n\t`sellexp` DECIMAL(20,6)   NULL    COMMENT '减:销售费用' ,\n\t`adminexp` DECIMAL(20,6)   NULL    COMMENT '减:管理费用' ,\n\t`finexp` DECIMAL(20,6)   NULL    COMMENT '减:财务费用' ,\n\t`assetsimpairloss` DECIMAL(20,6)   NULL    COMMENT '减:资产减值损失' ,\n\t`premrefund` DECIMAL(20,6)   NULL    COMMENT '退保金' ,\n\t`compenspayout` DECIMAL(20,6)   NULL    COMMENT '\t赔付总支出' ,\n\t`reserinsurliab` DECIMAL(20,6)   NULL    COMMENT '提取保险责任准备金' ,\n\t`divpayt` DECIMAL(20,6)   NULL    COMMENT '保户红利支出' ,\n\t`reinsexp` DECIMAL(20,6)   NULL    COMMENT '分保费用' ,\n\t`operexp` DECIMAL(20,6)   NULL    COMMENT '营业支出' ,\n\t`compenspayoutrefu` DECIMAL(20,6)   NULL    COMMENT '减:摊回赔付支出' ,\n\t`insurreserrefu` DECIMAL(20,6)   NULL    COMMENT '减:摊回保险责任准备金' ,\n\t`reinscostrefund` DECIMAL(20,6)   NULL    COMMENT '减:摊回分保费用' ,\n\t`otherbuscost` DECIMAL(20,6)   NULL    COMMENT '其他业务成本' ,\n\t`operateprofit` DECIMAL(20,6)   NULL    COMMENT '营业利润' ,\n\t`nonoperincome` DECIMAL(20,6)   NULL    COMMENT '加:营业外收入' ,\n\t`nonoperexp` DECIMAL(20,6)   NULL    COMMENT '减:营业外支出' ,\n\t`ncadisploss` DECIMAL(20,6)   NULL    COMMENT '其中:减:非流动资产处置净损失' ,\n\t`totalprofit` DECIMAL(20,6)   NULL    COMMENT '利润总额' ,\n\t`incometax` DECIMAL(20,6)   NULL    COMMENT '所得税费用' ,\n\t`nincome` DECIMAL(20,6)   NULL    COMMENT '\t净利润(含少数股东损益)' ,\n\t`nincomeattrp` DECIMAL(20,6)   NULL    COMMENT '\t净利润(不含少数股东损益)' ,\n\t`minoritygain` DECIMAL(20,6)   NULL    COMMENT '少数股东损益' ,\n\t`othcomprincome` DECIMAL(20,6)   NULL    COMMENT '\t其他综合收益' ,\n\t`tcomprincome` DECIMAL(20,6)   NULL    COMMENT '综合收益总额' ,\n\t`comprincattrp` DECIMAL(20,6)   NULL    COMMENT '归属于母公司(或股东)的综合收益总额' ,\n\t`comprincattrms` DECIMAL(20,6)   NULL    COMMENT '归属于少数股东的综合收益总额' ,\n\t`ebit` DECIMAL(20,6)   NULL    COMMENT '\t息税前利润' ,\n\t`ebitda` DECIMAL(20,6)   NULL    COMMENT '息税折旧摊销前利润' ,\n\t`insuranceexp` DECIMAL(20,6)   NULL    COMMENT '保险业务支出' ,\n\t`undistprofit` DECIMAL(20,6)   NULL    COMMENT '\t年初未分配利润' ,\n\t`distableprofit` DECIMAL(20,6)   NULL    COMMENT '可分配利润' ,\n\t`updateflag` CHAR(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL    COMMENT '更新标识，0未修改1更正过' ,\n\tPRIMARY KEY  (`stkseqno`)  \n) ENGINE=InnoDB COLLATE=utf8mb4_general_ci COMMENT='上市公司财务利润表数据';\n",
-                    "type": "TABLE"
-                },
-                {
-                    "dataSourceId": 46845,
-                    "databaseName": "stockmarket",
-                    "schemaName": null,
-                    "tableName": "df_central_gov_debt_total",
-                    "tableSchema": "CREATE TABLE `stockmarket`.`df_central_gov_debt_total` (\n\t`countrycode` CHAR(3) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '国家编码 格式 [国标]' ,\n\t`year` CHAR(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '年分 日期格式 [YYYY]' ,\n\t`countryname_cn` VARCHAR(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL    COMMENT '国家中文名称' ,\n\t`countryname_en` VARCHAR(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL    COMMENT '国家英文名称' ,\n\t`indicatorname_cn` VARCHAR(9) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL    COMMENT '指标名称' ,\n\t`indicatorname_en` VARCHAR(44) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL    COMMENT '指标名称' ,\n\t`indicatorcode` VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL    COMMENT '指标代码' ,\n\t`unit_en` VARCHAR(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL    COMMENT '计量单位英文' ,\n\t`unit_cn` VARCHAR(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL    COMMENT '计量单位中文' ,\n\t`total_gov_debt` DECIMAL(21,2)   NULL    COMMENT '政府总体债务' ,\n\t`total_gov_debt_ratio` DECIMAL(21,6)   NULL    COMMENT '政府总体债务率' ,\n\tPRIMARY KEY  (`countrycode`,`year`)  \n) ENGINE=InnoDB COLLATE=utf8mb4_general_ci COMMENT='中央政府债务(总额)';\n",
-                    "type": "TABLE"
-                },
-                {
-                    "dataSourceId": 46845,
-                    "databaseName": "stockmarket",
-                    "schemaName": null,
-                    "tableName": "ts_daily_befadjust",
-                    "tableSchema": "CREATE TABLE `stockmarket`.`ts_daily_befadjust` (\n\t`stockcode` CHAR(9) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT 'ts证券代码 [股票代码.市场]' ,\n\t`tradedate` DATE   NOT NULL    COMMENT '交易日期' ,\n\t`symbol` CHAR(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '股票代码' ,\n\t`stockname_cn` CHAR(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL    COMMENT '股票名称（中文）' ,\n\t`stockmarketarea` CHAR(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '股票所属市场 例如:上证指数，深证指数' ,\n\t`stockmarketareacode` CHAR(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '股票所属编码 例如:sh,sz' ,\n\t`stockmarketareano` SMALLINT   NOT NULL    COMMENT '股票所属市场板块编号检索字段 例如:1上海，2深圳，3科创板，4创业板' ,\n\t`stockmarket` CHAR(3) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL    COMMENT '股票所属市场板块名称 例如:1上海，2深圳，3科创板，4创业板' ,\n\t`open` DECIMAL(11,4)   NULL    COMMENT '当日开盘价' ,\n\t`high` DECIMAL(11,4)   NULL    COMMENT '当日最高价' ,\n\t`low` DECIMAL(11,4)   NULL    COMMENT '当日最低价' ,\n\t`close` DECIMAL(11,4)   NULL    COMMENT '当日收盘价' ,\n\t`pre_close` DECIMAL(11,4)   NULL    COMMENT '昨日收盘价' ,\n\t`change_price` DECIMAL(11,4)   NULL    COMMENT '当日涨跌额' ,\n\t`pct_chg` DECIMAL(11,4)   NULL    COMMENT '当日涨跌幅' ,\n\t`vol` DECIMAL(11,2)   NULL    COMMENT '当日成交量' ,\n\t`amount` DECIMAL(16,5)   NULL    COMMENT '当日成交额' ,\n\t`turnover_rate` DECIMAL(8,2)   NULL    COMMENT '当日换手率' ,\n\t`turnover_rate_f` DECIMAL(8,2)   NULL    COMMENT '当日自由流通股换手率' ,\n\t`volume_ratio` DECIMAL(8,2)   NULL    COMMENT '量比' ,\n\t`pe` DECIMAL(10,4)   NULL    COMMENT '市盈率（总市值/净利润， 亏损的PE为空）' ,\n\t`pe_ttm` DECIMAL(10,4)   NULL    COMMENT '滚动市盈率（TTM，亏损的PE为空）最近报告的12个月(四个季度)的净利润或者每股收益为基础来计算' ,\n\t`pb` DECIMAL(10,4)   NULL    COMMENT '市净率（总市值/净资产）' ,\n\t`ps` DECIMAL(12,4)   NULL    COMMENT '市销率' ,\n\t`ps_ttm` DECIMAL(12,4)   NULL    COMMENT '滚动市销率（TTM）最近报告的12个月(四个季度)基础来计算' ,\n\t`dv_ratio` DECIMAL(10,4)   NULL    COMMENT '股息率 （%）' ,\n\t`dv_ttm` DECIMAL(10,4)   NULL    COMMENT '滚动股息率（TTM）' ,\n\t`total_share` BIGINT   NULL    COMMENT '总股本 （股）' ,\n\t`float_share` BIGINT   NULL    COMMENT '流通股本 （股）' ,\n\t`free_share` BIGINT   NULL    COMMENT '自由流通股本 （元）' ,\n\t`total_mv` DECIMAL(21,2)   NULL    COMMENT '总市值 （元）' ,\n\t`circ_mv` DECIMAL(21,2)   NULL    COMMENT '流通市值（元）' ,\n\t`isstflag` TINYINT   NULL    COMMENT '历史当日是否ST股标记. 0是否;1是st;2是*st' ,\n\t`isst` CHAR(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL    COMMENT '历史当日是否ST股 'Y'是st, 'N'非st' ,\n\tPRIMARY KEY  (`stockcode`,`tradedate`)  \n) ENGINE=InnoDB COLLATE=utf8mb4_general_ci COMMENT='日线行情(前复权) 与每日基础指标合并';\n",
-                    "type": "TABLE"
-                },
-                {
-                    "dataSourceId": 46845,
-                    "databaseName": "stockmarket",
-                    "schemaName": null,
-                    "tableName": "ts_daily_noadjust",
-                    "tableSchema": "CREATE TABLE `stockmarket`.`ts_daily_noadjust` (\n\t`stockcode` CHAR(9) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT 'ts证券代码 [股票代码.市场]' ,\n\t`tradedate` DATE   NOT NULL    COMMENT '交易日期' ,\n\t`symbol` CHAR(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '股票代码' ,\n\t`stockname_cn` CHAR(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL    COMMENT '股票名称（中文）' ,\n\t`stockmarketarea` CHAR(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '股票所属市场 例如:上证指数，深证指数' ,\n\t`stockmarketareacode` CHAR(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '股票所属编码 例如:sh,sz' ,\n\t`stockmarketareano` SMALLINT   NOT NULL    COMMENT '股票所属市场板块编号检索字段 例如:1上海，2深圳，3科创板，4创业板' ,\n\t`stockmarket` CHAR(3) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL    COMMENT '股票所属市场板块名称 例如:1上海，2深圳，3科创板，4创业板' ,\n\t`open` DECIMAL(11,4)   NULL    COMMENT '当日开盘价' ,\n\t`high` DECIMAL(11,4)   NULL    COMMENT '当日最高价' ,\n\t`low` DECIMAL(11,4)   NULL    COMMENT '当日最低价' ,\n\t`close` DECIMAL(11,4)   NULL    COMMENT '当日收盘价' ,\n\t`pre_close` DECIMAL(11,4)   NULL    COMMENT '昨日收盘价' ,\n\t`change_price` DECIMAL(11,4)   NULL    COMMENT '当日涨跌额' ,\n\t`pct_chg` DECIMAL(11,4)   NULL    COMMENT '当日涨跌幅' ,\n\t`vol` DECIMAL(11,2)   NULL    COMMENT '当日成交量' ,\n\t`amount` DECIMAL(16,5)   NULL    COMMENT '当日成交额' ,\n\t`turnover_rate` DECIMAL(8,2)   NULL    COMMENT '当日换手率' ,\n\t`turnover_rate_f` DECIMAL(8,2)   NULL    COMMENT '当日自由流通股换手率' ,\n\t`volume_ratio` DECIMAL(8,2)   NULL    COMMENT '量比' ,\n\t`pe` DECIMAL(10,4)   NULL    COMMENT '市盈率（总市值/净利润， 亏损的PE为空）' ,\n\t`pe_ttm` DECIMAL(10,4)   NULL    COMMENT '滚动市盈率（TTM，亏损的PE为空）最近报告的12个月(四个季度)的净利润或者每股收益为基础来计算' ,\n\t`pb` DECIMAL(10,4)   NULL    COMMENT '市净率（总市值/净资产）' ,\n\t`ps` DECIMAL(12,4)   NULL    COMMENT '市销率' ,\n\t`ps_ttm` DECIMAL(12,4)   NULL    COMMENT '滚动市销率（TTM）最近报告的12个月(四个季度)基础来计算' ,\n\t`dv_ratio` DECIMAL(10,4)   NULL    COMMENT '股息率 （%）' ,\n\t`dv_ttm` DECIMAL(10,4)   NULL    COMMENT '滚动股息率（TTM）' ,\n\t`total_share` BIGINT   NULL    COMMENT '总股本 （股）' ,\n\t`float_share` BIGINT   NULL    COMMENT '流通股本 （股）' ,\n\t`free_share` BIGINT   NULL    COMMENT '自由流通股本 （元）' ,\n\t`total_mv` DECIMAL(21,2)   NULL    COMMENT '总市值 （元）' ,\n\t`circ_mv` DECIMAL(21,2)   NULL    COMMENT '流通市值（元）' ,\n\t`isstflag` TINYINT   NULL    COMMENT '历史当日是否ST股标记. 0是否;1是st;2是*st' ,\n\t`isst` CHAR(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL    COMMENT '历史当日是否ST股 'Y'是st, 'N'非st' ,\n\tPRIMARY KEY  (`stockcode`,`tradedate`)  \n) ENGINE=InnoDB COLLATE=utf8mb4_general_ci COMMENT='日线行情(不复权) 与每日基础指标合并';\n",
-                    "type": "TABLE"
-                },
-                {
-                    "dataSourceId": 46845,
-                    "databaseName": "stockmarket",
-                    "schemaName": null,
-                    "tableName": "ts_daily_aftadjust",
-                    "tableSchema": "CREATE TABLE `stockmarket`.`ts_daily_aftadjust` (\n\t`stockcode` CHAR(9) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT 'ts证券代码 [股票代码.市场]' ,\n\t`tradedate` DATE   NOT NULL    COMMENT '交易日期' ,\n\t`symbol` CHAR(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '股票代码' ,\n\t`stockname_cn` CHAR(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL    COMMENT '股票名称（中文）' ,\n\t`stockmarketarea` CHAR(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '股票所属市场 例如:上证指数，深证指数' ,\n\t`stockmarketareacode` CHAR(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '股票所属编码 例如:sh,sz' ,\n\t`stockmarketareano` SMALLINT   NOT NULL    COMMENT '股票所属市场板块编号检索字段 例如:1上海，2深圳，3科创板，4创业板' ,\n\t`stockmarket` CHAR(3) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL    COMMENT '股票所属市场板块名称 例如:1上海，2深圳，3科创板，4创业板' ,\n\t`open` DECIMAL(11,4)   NULL    COMMENT '当日开盘价' ,\n\t`high` DECIMAL(11,4)   NULL    COMMENT '当日最高价' ,\n\t`low` DECIMAL(11,4)   NULL    COMMENT '当日最低价' ,\n\t`close` DECIMAL(11,4)   NULL    COMMENT '当日收盘价' ,\n\t`pre_close` DECIMAL(11,4)   NULL    COMMENT '昨日收盘价' ,\n\t`change_price` DECIMAL(11,4)   NULL    COMMENT '当日涨跌额' ,\n\t`pct_chg` DECIMAL(11,4)   NULL    COMMENT '当日涨跌幅' ,\n\t`vol` DECIMAL(11,2)   NULL    COMMENT '当日成交量' ,\n\t`amount` DECIMAL(16,5)   NULL    COMMENT '当日成交额' ,\n\t`turnover_rate` DECIMAL(8,2)   NULL    COMMENT '当日换手率' ,\n\t`turnover_rate_f` DECIMAL(8,2)   NULL    COMMENT '当日自由流通股换手率' ,\n\t`volume_ratio` DECIMAL(8,2)   NULL    COMMENT '量比' ,\n\t`pe` DECIMAL(10,4)   NULL    COMMENT '市盈率（总市值/净利润， 亏损的PE为空）' ,\n\t`pe_ttm` DECIMAL(10,4)   NULL    COMMENT '滚动市盈率（TTM，亏损的PE为空）最近报告的12个月(四个季度)的净利润或者每股收益为基础来计算' ,\n\t`pb` DECIMAL(10,4)   NULL    COMMENT '市净率（总市值/净资产）' ,\n\t`ps` DECIMAL(12,4)   NULL    COMMENT '市销率' ,\n\t`ps_ttm` DECIMAL(12,4)   NULL    COMMENT '滚动市销率（TTM）最近报告的12个月(四个季度)基础来计算' ,\n\t`dv_ratio` DECIMAL(10,4)   NULL    COMMENT '股息率 （%）' ,\n\t`dv_ttm` DECIMAL(10,4)   NULL    COMMENT '滚动股息率（TTM）' ,\n\t`total_share` BIGINT   NULL    COMMENT '总股本 （股）' ,\n\t`float_share` BIGINT   NULL    COMMENT '流通股本 （股）' ,\n\t`free_share` BIGINT   NULL    COMMENT '自由流通股本 （元）' ,\n\t`total_mv` DECIMAL(21,2)   NULL    COMMENT '总市值 （元）' ,\n\t`circ_mv` DECIMAL(21,2)   NULL    COMMENT '流通市值（元）' ,\n\t`isstflag` TINYINT   NULL    COMMENT '历史当日是否ST股标记. 0是否;1是st;2是*st' ,\n\t`isst` CHAR(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL    COMMENT '历史当日是否ST股 'Y'是st, 'N'非st' ,\n\tPRIMARY KEY  (`stockcode`,`tradedate`)  \n) ENGINE=InnoDB COLLATE=utf8mb4_general_ci COMMENT='日线行情(后复权) 与每日基础指标合并';\n",
-                    "type": "TABLE"
-                },
-                {
-                    "dataSourceId": 46845,
-                    "databaseName": "stockmarket",
-                    "schemaName": null,
-                    "tableName": "stock_basic_ash",
-                    "tableSchema": "CREATE TABLE `stockmarket`.`stock_basic_ash` (\n\t`codeno` MEDIUMINT   NOT NULL    COMMENT '股票代码  股票代码 定义为整型用于数据库关联检索' ,\n\t`stockcode` CHAR(9) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '证券代码 [股票代码.市场]' ,\n\t`symbol` CHAR(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '股票代码' ,\n\t`stockmarketarea` CHAR(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '股票所属市场 例如:上证指数，深证指数，科创板，创业板' ,\n\t`stockmarketareacode` CHAR(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '股票所属编码 例如:sh_index,sz_index' ,\n\t`stockmarketareano` SMALLINT   NOT NULL    COMMENT '股票所属市场编号检索字段 例如:1上海，2深圳，3科创板，4创业板' ,\n\t`stockname` CHAR(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '股票名称' ,\n\t`area` CHAR(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '所在地域' ,\n\t`industry` VARCHAR(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '所属行业' ,\n\t`stockfullname` VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '股票全称' ,\n\t`stockenfullname` VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '英文全称' ,\n\t`stockmarkettype` CHAR(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '市场类型 （主板/中小板/创业板/科创板/CDR）' ,\n\t`exchange` CHAR(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '交易所代码' ,\n\t`curr_type` CHAR(3) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '交易货币' ,\n\t`list_status` CHAR(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '上市状态： L上市 D退市 P暂停上市' ,\n\t`list_date` DATE   NOT NULL    COMMENT '上市日期' ,\n\t`delist_date` DATE   NULL    COMMENT '退市日期' ,\n\t`is_hs` CHAR(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL    COMMENT '是否沪深港通标的，N否 H沪股通 S深股通' ,\n\tPRIMARY KEY  (`codeno`)  \n) ENGINE=InnoDB COLLATE=utf8mb4_general_ci COMMENT='股票基本信息';\n",
-                    "type": "TABLE"
-                }
-            ],
+            "data": [],
             "traceId": null,
             "errorDetail": null,
             "solutionLink": null
@@ -65,75 +16,18 @@
             "errorDetail": null,
             "solutionLink": null,
             "data": {
-                "token": "R6sENFJCGoBzlFmjwajD5Lz/1Ym/WmOlTV/hExlO6lw=",
+                "token": "w3PzmxXbO4adW6inDfkoIRPdZB6+Pb7+MH7jQDW8WFc=",
                 "chatId": 22428,
-                "questionId": 73142,
+                "questionId": 77217,
+                "answerId": null,
                 "dashboardSchema": null,
+                "excelSchemas": null,
                 "errorCode": null,
-                "errorMessage": null
+                "errorMessage": null,
+                "executeResults": null
             },
             "traceId": null
         },
-        "chatResponse": "id:20241007082614e99bdc25a9034395\ndata:{\"role\":\"assistant\",\"content\":\"SELECT\"}\nretry:3000\n\nid:20241007082614e99bdc25a9034395\ndata:{\"role\":\"assistant\",\"content\":\" DISTINCT\"}\nretry:3000\n\nid:20241007082614e99bdc25a9034395\ndata:{\"role\":\"assistant\",\"content\":\" `\"}\nretry:3000\n\nid:20241007082614e99bdc25a9034395\ndata:{\"role\":\"assistant\",\"content\":\"industry\"}\nretry:3000\n\nid:20241007082614e99bdc25a9034395\ndata:{\"role\":\"assistant\",\"content\":\"`\"}\nretry:3000\n\nid:20241007082614e99bdc25a9034395\ndata:{\"role\":\"assistant\",\"content\":\" \\nFROM\"}\nretry:3000\n\nid:20241007082614e99bdc25a9034395\ndata:{\"role\":\"assistant\",\"content\":\" `\"}\nretry:3000\n\nid:20241007082614e99bdc25a9034395\ndata:{\"role\":\"assistant\",\"content\":\"stock\"}\nretry:3000\n\nid:20241007082614e99bdc25a9034395\ndata:{\"role\":\"assistant\",\"content\":\"market\"}\nretry:3000\n\nid:20241007082614e99bdc25a9034395\ndata:{\"role\":\"assistant\",\"content\":\"`.`\"}\nretry:3000\n\nid:20241007082614e99bdc25a9034395\ndata:{\"role\":\"assistant\",\"content\":\"stock\"}\nretry:3000\n\nid:20241007082614e99bdc25a9034395\ndata:{\"role\":\"assistant\",\"content\":\"_basic\"}\nretry:3000\n\nid:20241007082614e99bdc25a9034395\ndata:{\"role\":\"assistant\",\"content\":\"_\"}\nretry:3000\n\nid:20241007082614e99bdc25a9034395\ndata:{\"role\":\"assistant\",\"content\":\"ash\"}\nretry:3000\n\nid:20241007082614e99bdc25a9034395\ndata:{\"role\":\"assistant\",\"content\":\"`\"}\nretry:3000\n\nid:20241007082614e99bdc25a9034395\ndata:{\"role\":\"assistant\",\"content\":\" \\nWHERE\"}\nretry:3000\n\nid:20241007082614e99bdc25a9034395\ndata:{\"role\":\"assistant\",\"content\":\" `\"}\nretry:3000\n\nid:20241007082614e99bdc25a9034395\ndata:{\"role\":\"assistant\",\"content\":\"stock\"}\nretry:3000\n\nid:20241007082614e99bdc25a9034395\ndata:{\"role\":\"assistant\",\"content\":\"name\"}\nretry:3000\n\nid:20241007082614e99bdc25a9034395\ndata:{\"role\":\"assistant\",\"content\":\"`\"}\nretry:3000\n\nid:20241007082614e99bdc25a9034395\ndata:{\"role\":\"assistant\",\"content\":\" =\"}\nretry:3000\n\nid:20241007082614e99bdc25a9034395\ndata:{\"role\":\"assistant\",\"content\":\" '\"}\nretry:3000\n\nid:20241007082614e99bdc25a9034395\ndata:{\"role\":\"assistant\",\"content\":\"雅\"}\nretry:3000\n\nid:20241007082614e99bdc25a9034395\ndata:{\"role\":\"assistant\",\"content\":\"戈\"}\nretry:3000\n\nid:20241007082614e99bdc25a9034395\ndata:{\"role\":\"assistant\",\"content\":\"尔\"}\nretry:3000\n\nid:20241007082614e99bdc25a9034395\ndata:{\"role\":\"assistant\",\"content\":\"';\"}\nretry:3000\n\nid:20241007082614e99bdc25a9034395\ndata:{\"role\":\"assistant\",\"content\":\"\"}\nretry:3000\n\nid:[DONE]\ndata:[DONE]\nretry:3000\n\n",
-        "executeResponse": {
-            "success": true,
-            "errorCode": null,
-            "errorMessage": null,
-            "data": [
-                {
-                    "sql": null,
-                    "originalSql": "SELECT DISTINCT `industry` \nFROM `stockmarket`.`stock_basic_ash` \nWHERE `stockname` = '雅戈尔'",
-                    "description": "Execution successful",
-                    "message": null,
-                    "success": true,
-                    "updateCount": null,
-                    "headerList": [
-                        {
-                            "dataType": "CHAT2DB_ROW_NUMBER",
-                            "name": "Row Number",
-                            "primaryKey": null,
-                            "comment": null,
-                            "defaultValue": null,
-                            "autoIncrement": null,
-                            "nullable": null,
-                            "columnSize": null,
-                            "decimalDigits": null
-                        },
-                        {
-                            "dataType": "STRING",
-                            "name": "industry",
-                            "primaryKey": null,
-                            "comment": null,
-                            "defaultValue": null,
-                            "autoIncrement": null,
-                            "nullable": null,
-                            "columnSize": null,
-                            "decimalDigits": null
-                        }
-                    ],
-                    "dataList": [
-                        [
-                            "1",
-                            "服饰"
-                        ]
-                    ],
-                    "sqlType": "SELECT",
-                    "hasNextPage": false,
-                    "pageNo": 1,
-                    "pageSize": 200,
-                    "fuzzyTotal": "1",
-                    "duration": 35,
-                    "canEdit": true,
-                    "tableName": "`stockmarket`.`stock_basic_ash`",
-                    "extra": null,
-                    "dataAccess": false,
-                    "scriptAccess": false,
-                    "noPermissionDetail": null
-                }
-            ],
-            "traceId": null,
-            "errorDetail": null,
-            "solutionLink": null
-        }
+        "chatResponse": "id:20241016070655ff33c00255e9426e\ndata:{\"role\":\"assistant\",\"content\":\"\"}\nretry:3000\n\nid:20241016070655ff33c00255e9426e\ndata:{\"role\":\"assistant\",\"content\":\"\"}\nretry:3000\n\nid:20241016070655ff33c00255e9426e\ndata:{\"role\":\"assistant\",\"content\":\"\\nSELECT\"}\nretry:3000\n\nid:20241016070655ff33c00255e9426e\ndata:{\"role\":\"assistant\",\"content\":\" DISTINCT\"}\nretry:3000\n\nid:20241016070655ff33c00255e9426e\ndata:{\"role\":\"assistant\",\"content\":\" `\"}\nretry:3000\n\nid:20241016070655ff33c00255e9426e\ndata:{\"role\":\"assistant\",\"content\":\"stock\"}\nretry:3000\n\nid:20241016070655ff33c00255e9426e\ndata:{\"role\":\"assistant\",\"content\":\"name\"}\nretry:3000\n\nid:20241016070655ff33c00255e9426e\ndata:{\"role\":\"assistant\",\"content\":\"`\"}\nretry:3000\n\nid:20241016070655ff33c00255e9426e\ndata:{\"role\":\"assistant\",\"content\":\" AS\"}\nretry:3000\n\nid:20241016070655ff33c00255e9426e\ndata:{\"role\":\"assistant\",\"content\":\" '\"}\nretry:3000\n\nid:20241016070655ff33c00255e9426e\ndata:{\"role\":\"assistant\",\"content\":\"股票\"}\nretry:3000\n\nid:20241016070655ff33c00255e9426e\ndata:{\"role\":\"assistant\",\"content\":\"名称\"}\nretry:3000\n\nid:20241016070655ff33c00255e9426e\ndata:{\"role\":\"assistant\",\"content\":\"'\\nFROM\"}\nretry:3000\n\nid:20241016070655ff33c00255e9426e\ndata:{\"role\":\"assistant\",\"content\":\" `\"}\nretry:3000\n\nid:20241016070655ff33c00255e9426e\ndata:{\"role\":\"assistant\",\"content\":\"stock\"}\nretry:3000\n\nid:20241016070655ff33c00255e9426e\ndata:{\"role\":\"assistant\",\"content\":\"market\"}\nretry:3000\n\nid:20241016070655ff33c00255e9426e\ndata:{\"role\":\"assistant\",\"content\":\"`.`\"}\nretry:3000\n\nid:20241016070655ff33c00255e9426e\ndata:{\"role\":\"assistant\",\"content\":\"stock\"}\nretry:3000\n\nid:20241016070655ff33c00255e9426e\ndata:{\"role\":\"assistant\",\"content\":\"_basic\"}\nretry:3000\n\nid:20241016070655ff33c00255e9426e\ndata:{\"role\":\"assistant\",\"content\":\"_\"}\nretry:3000\n\nid:20241016070655ff33c00255e9426e\ndata:{\"role\":\"assistant\",\"content\":\"ash\"}\nretry:3000\n\nid:20241016070655ff33c00255e9426e\ndata:{\"role\":\"assistant\",\"content\":\"`\\nWHERE\"}\nretry:3000\n\nid:20241016070655ff33c00255e9426e\ndata:{\"role\":\"assistant\",\"content\":\" `\"}\nretry:3000\n\nid:20241016070655ff33c00255e9426e\ndata:{\"role\":\"assistant\",\"content\":\"stock\"}\nretry:3000\n\nid:20241016070655ff33c00255e9426e\ndata:{\"role\":\"assistant\",\"content\":\"name\"}\nretry:3000\n\nid:20241016070655ff33c00255e9426e\ndata:{\"role\":\"assistant\",\"content\":\"`\"}\nretry:3000\n\nid:20241016070655ff33c00255e9426e\ndata:{\"role\":\"assistant\",\"content\":\" =\"}\nretry:3000\n\nid:20241016070655ff33c00255e9426e\ndata:{\"role\":\"assistant\",\"content\":\" '\"}\nretry:3000\n\nid:20241016070655ff33c00255e9426e\ndata:{\"role\":\"assistant\",\"content\":\"平安\"}\nretry:3000\n\nid:20241016070655ff33c00255e9426e\ndata:{\"role\":\"assistant\",\"content\":\"银行\"}\nretry:3000\n\nid:20241016070655ff33c00255e9426e\ndata:{\"role\":\"assistant\",\"content\":\"';\\n\"}\nretry:3000\n\nid:20241016070655ff33c00255e9426e\ndata:{\"role\":\"assistant\",\"content\":\"\"}\nretry:3000\n\nid:[DONE]\ndata:[DONE]\nretry:3000\n\n"
     }
 }

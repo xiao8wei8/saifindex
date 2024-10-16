@@ -1,4 +1,7 @@
 /** @type {import('next').NextConfig} */
+
+
+import withAntdLess from 'next-plugin-antd-less';
 const nextConfig = {
     env: {
         MYSQL_HOST: "你的地址",
@@ -24,4 +27,5 @@ const nextConfig = {
     },
 };
 
-export default nextConfig;
+
+export default withAntdLess(nextConfig);

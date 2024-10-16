@@ -124,6 +124,7 @@ const tableResponse = {
 const sql_generate =
     "https://app.chat2db-ai.com/api/ai/slash_magic/sql_generate";
 let sql_generate_paload = {
+    questionType: "NL_2_SQL",
     source: "DATASOURCE_CHAT",
     dataSourceId: environmentData.dataSourceId,
     message: "查询平安银行的股票代码",

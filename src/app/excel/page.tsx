@@ -7,6 +7,7 @@ import * as ExcelJs from 'exceljs';
 import {generateHeaders, saveWorkbook} from "../../libs/utils";
 import {StudentInfo} from "../../libs/types";
 import {downloadExcel, downloadFiles2Zip, downloadFiles2ZipWithFolder} from "../../libs/utils/excelUtils";
+import LayoutContainer from '../components/LayoutContainer';
 
 interface SimpleDemoProps {
 }
@@ -318,5 +319,11 @@ const SimpleDemo: React.FC<SimpleDemoProps> = () => {
     </Card>
   );
 }
-
-export default SimpleDemo
+const APP = () => {
+  return (
+    <LayoutContainer currentpathname='/excel'>
+      <SimpleDemo/>
+    </LayoutContainer>
+  )
+}
+export default APP

@@ -18,13 +18,13 @@ import {
 import { Checkbox, Space, Tabs, message, theme } from 'antd';
 import type { CSSProperties } from 'react';
 import { useState } from 'react';
-
+import { useRouter } from "next/navigation";
 type LoginType = 'phone' | 'account';
 
 export default () => {
   const { token } = theme.useToken();
   const [loginType, setLoginType] = useState<LoginType>('account');
-
+  const router = useRouter();
   const iconStyles: CSSProperties = {
     marginInlineStart: '16px',
     color: setAlpha(token.colorTextBase, 0.2),
@@ -34,12 +34,14 @@ export default () => {
   };
 
   return (
-    <ProConfigProvider hashed={false}>
+    <div >
+    <ProConfigProvider hashed={false} >
       <div style={{ backgroundColor: token.colorBgContainer }}>
         <LoginForm
           logo="https://gw.alipayobjects.com/zos/antfincdn/upvrAjAPQX/Logo_Tech%252520UI.svg"
           title="SAIF CHAT"
           subTitle="高金人自己的金融数据智能查询平台"
+          onClick={() => router.push('/dashboard')}
           actions={
             <Space>
               {/* 其他登录方式
@@ -55,7 +57,7 @@ export default () => {
             activeKey={loginType}
             onChange={(activeKey) => setLoginType(activeKey as LoginType)}
           >
-            <Tabs.TabPane key={'account'} tab={'账号密码登录'} />
+            <Tabs.TabPane key={'account'} tab={'账号密码登录'} disabled/>
             <Tabs.TabPane key={'phone'} tab={'手机号登录'}  disabled/>
           </Tabs>
           {loginType === 'account' && (
@@ -66,6 +68,7 @@ export default () => {
                   size: 'large',
                   prefix: <UserOutlined className={'prefixIcon'} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />,
                 }}
+                disabled
                 placeholder={'用户名: 微信号'}
                 rules={[
                   {
@@ -191,5 +194,6 @@ export default () => {
         </LoginForm>
       </div>
     </ProConfigProvider>
+    </div>
   );
 };

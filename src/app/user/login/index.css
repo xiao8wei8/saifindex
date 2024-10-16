@@ -1,0 +1,8 @@
+#footer{
+    text-align: center;
+    position: fixed !important;
+    z-index: 999;
+    margin: 8px;
+    bottom: 0px !important;
+    width: 100% !important;
+}
