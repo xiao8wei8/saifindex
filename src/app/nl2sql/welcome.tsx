@@ -1,10 +1,11 @@
 "use client";
 import React, { ReactNode, useCallback, useRef, useState } from "react";
 //@ts-ignore
-import { Input, Table, Alert, Steps, LoadingOutlined ,Spin, theme, Space, Button} from "antd";
+import { Input, Table, Alert, Steps, LoadingOutlined ,Spin, theme, Space, Button, Divider} from "antd";
 
 import axios from "axios";
 import { format } from 'sql-formatter'
+import Markdown from 'react-markdown'
 //@ts-ignore
 import Highlight from 'react-highlight'
 import 'highlight.js/styles/zenburn.css'
@@ -455,19 +456,21 @@ const Home = () => {
                             banner
                         />
                         {/* <div style={tipsStyle} >数据如下：</div> */}
-                        <Space style={{marginBottom: 10}}>
+                        <Space style={{margin: 10,float: 'right'}}>
                         <Button type={'primary'} onClick={onExportBasicExcel}>导出excel</Button>
                         </Space>
                         <Table dataSource={_dataSource} columns={_columns} scroll={(headerList.length>3?{ x: 1500, }:{ })}/>
-                        <div>以下ai内容来自通义千问 </div>
-                        <Highlight 
+                        {/* <div>以下ai内容来自通义千问 </div> */}
+                        {/* <Highlight 
                          language="Markdown"
                         style={{
                              display: "block",
                              borderRadius: "5px",
                              padding: '20px',
                              lineHeight: '18px'
-                        }}>{(qwenMessage)}</Highlight>
+                        }}>{(qwenMessage)}</Highlight> */}
+                        <Divider/>
+                        <Markdown>{qwenMessage}</Markdown>
 
 
                     </>

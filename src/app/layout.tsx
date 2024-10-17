@@ -38,7 +38,7 @@ const RootLayout = ({ children }: React.PropsWithChildren) => (
                 id="footer"
             >
                 <div>
-                    SAIF Chat ©{new Date().getFullYear()} Created by SAIF
+                    SAIF AI-BASE ©{new Date().getFullYear()} Created by SAIF
                     24Gr.技术小组
                 </div>
                 <div style={{ marginTop: "10px" }}>
@@ -54,7 +54,7 @@ const RootLayout = ({ children }: React.PropsWithChildren) => (
                 id="footer"
             >
                 <div>
-                    SAIF Chat ©{new Date().getFullYear()} Created by SAIF
+                    SAIF AI-BASE ©{new Date().getFullYear()} Created by SAIF
                     24Gr.技术小组
                 </div>
                 <div style={{ marginTop: "10px" }}>

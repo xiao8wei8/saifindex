@@ -13,10 +13,10 @@ const App =  () =>{
     <Container>
       <Hero />
       <SectionTitle
-        preTitle="saif chat Benefits"
-        title=" Why should you use this saif chat"
+        preTitle="SAIF AI-BASE Benefits"
+        title=" Why should you use this SAIF AI-BASE"
       >
-        saif chat is a xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.
+        SAIF AI-BASE is a xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.
       </SectionTitle>
 
       <Benefits data={benefitOne} />

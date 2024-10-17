@@ -62,7 +62,7 @@ export default ({
                     // },
                 ]}
                 {...defaultProps}
-                title="SAIF Chat"
+                title="SAIF AI-BASE"
                 logo="https://gw.alipayobjects.com/zos/antfincdn/upvrAjAPQX/Logo_Tech%252520UI.svg"
                 location={{
                     pathname,
@@ -102,7 +102,7 @@ export default ({
                             }}
                         >
                             {" "}
-                            <div> SAIF Chat ©{new Date().getFullYear()}</div>
+                            <div> SAIF AI-BASE ©{new Date().getFullYear()}</div>
                             <div> Created by SAIF 24Gr.技术小组</div>
                         </div>
                     );

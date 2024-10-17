@@ -40,7 +40,7 @@ export default () => {
       <div style={{ backgroundColor: token.colorBgContainer }}>
         <LoginForm
           logo="https://gw.alipayobjects.com/zos/antfincdn/upvrAjAPQX/Logo_Tech%252520UI.svg"
-          title="SAIF CHAT"
+          title="SAIF AI-BASE"
           subTitle="高金人自己的金融数据智能查询平台"
           onClick={(opt) => {
             console.log('onClick');

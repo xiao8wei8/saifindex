@@ -24,12 +24,12 @@ export function Footer() {
                   height="32"
                   className="w-8"
                 />
-                <span>SAIF CHAT</span>
+                <span>SAIF AI-BASE</span>
               </Link>
             </div>
 
             <div className="max-w-md mt-4 text-gray-500 dark:text-gray-400">
-             SAIF CHAT xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+             SAIF AI-BASE xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
              xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
             </div>
 
@@ -85,7 +85,7 @@ export function Footer() {
                 rel="noopener"
               >
                 <span className="sr-only">Twitter</span>
-                <Twitter />
+                <Twitter />fFrequently Asked Questions
               </a>
               <a
                 href="https://facebook.com/web3templates"

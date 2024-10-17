@@ -1,8 +1,10 @@
-import type { CSSProperties, FC } from 'react'
+"use client"
+import { useEffect, useState, type CSSProperties, type FC } from 'react'
 import type { DragSourceMonitor } from 'react-dnd'
 import { useDrag } from 'react-dnd'
 
 import ItemTypes from './ItemTypes'
+import "./index.css"
 
 const style: CSSProperties = {
   border: '1px dashed gray',
@@ -24,6 +26,22 @@ interface DropResult {
 }
 
 export const Box: FC<BoxProps> = ({ name }) => {
+  let styleClasses: Array<string> = [];
+  const [isSelected, setIsSelected] = useState(false);
+  // if (.isSelected) {
+  //   styleClasses.push("card-wrapper-selected");
+  // }
+  const onClick = (e: any) => {
+    console.log(e);
+    setIsSelected(!isSelected)
+  };
+  // useEffect(() => {
+  //   if (isSelected) {
+  //     styleClasses.push("card-wrapper-selected");
+  //   }else{
+  //     styleClasses=[];
+  //   }
+  // },[isSelected])
   const [{ opacity }, drag] = useDrag(
     () => ({
       type: ItemTypes.BOX,
@@ -46,16 +64,22 @@ export const Box: FC<BoxProps> = ({ name }) => {
           alert(alertMessage)
         }
       },
-      collect: (monitor: DragSourceMonitor) => ({
-        opacity: monitor.isDragging() ? 0.4 : 1,
-      }),
+      start() {
+        
+      },
+      collect: (monitor: DragSourceMonitor) => {
+        console.log("collect", monitor)
+        return ({
+          opacity: monitor.isDragging() ? 0.4 : 1,
+        })
+      },
     }),
     [name],
   )
 
   return (
     //@ts-ignore
-    <div ref={drag} style={{ ...style, opacity }}>
+    <div ref={drag} style={{ ...style, opacity }}  onMouseDown={onClick}  className={isSelected||opacity==0.4 ? "card-wrapper-selected" : ""}>
       {name}
     </div>
   )
