@@ -61,8 +61,15 @@ export const DragBox: any= (props: any) => {
       },
       end(item, monitor) {
     
-       const dropResult = monitor.getDropResult()
+       const dropResult:any = monitor.getDropResult()
        console.log("[dragBox]end",dropResult)
+       let ret = []
+       _selectedCards.forEach((item:any) => {
+        ret.push(item.name)
+       })
+       ret.push("in")
+       ret.push(dropResult.name)
+       alert(JSON.stringify(ret))
         props.clearItemSelection();
       },
       isDragging: (monitor:any) => {

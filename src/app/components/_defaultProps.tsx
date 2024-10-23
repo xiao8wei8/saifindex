@@ -90,6 +90,31 @@ export default {
                     },
                 ],
             },
+            {
+              path: "/dataquery",
+              name: "CEIC",
+              icon: (
+                  <StockOutlined
+                      onPointerEnterCapture={undefined}
+                      onPointerLeaveCapture={undefined}
+                  />
+              ),
+              access: "canAdmin",
+              component: "./Admin",
+              routes: [
+                  {
+                      path: "/gdp",
+                      name: "GDP",
+                      icon: (
+                          <CrownFilled
+                              onPointerEnterCapture={undefined}
+                              onPointerLeaveCapture={undefined}
+                          />
+                      ),
+                      component: "./Welcome",
+                  },
+              ],
+          },
         ],
     },
     location: {
