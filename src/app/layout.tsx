@@ -4,6 +4,7 @@ import { AntdRegistry } from "@ant-design/nextjs-registry";
 // import Icon from "@ant-design/icons";
 import Layout, { Content, Footer } from "antd/lib/layout/layout";
 import "./layout.css";
+import Textscroll from "@/components/textscroll/page";
 
 const RootLayout = ({ children }: React.PropsWithChildren) => (
     <html lang="en">
@@ -17,6 +18,7 @@ const RootLayout = ({ children }: React.PropsWithChildren) => (
                                 minHeight: 520,
                             }}
                         > */}
+                <Textscroll/>
                 {children}
                 {/* </div>
                     </Content> */}

@@ -14,3 +14,6 @@ body{
     margin-top: 8px;
 
 }
+.ant-pro-layout .ant-pro-sider.ant-pro-sider-fixed {
+    top: 40px !important;
+}

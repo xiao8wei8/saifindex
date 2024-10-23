@@ -43,6 +43,12 @@ export default {
             icon: <CrownFilled onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />,
             component: './Welcome',
           },
+          {
+            path: '/heatmaps',
+            name: '热力图',
+            icon: <CrownFilled onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />,
+            component: './Welcome',
+          },
         ],
       }
     ],

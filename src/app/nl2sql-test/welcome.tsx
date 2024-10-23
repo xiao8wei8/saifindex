@@ -11,7 +11,7 @@ import 'highlight.js/styles/zenburn.css'
 
 import { getDatabase, filterSql, getDatabaseList } from "@/libs/util";
 const { Search, TextArea } = Input;
-axios.defaults.withCredentials = true;
+// axios.defaults.withCredentials = true;
 axios.defaults.timeout = 50000;
 const Home = () => {
     const [dataSource, setDataSource] = useState(Array<any>());

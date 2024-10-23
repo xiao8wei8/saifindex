@@ -1,7 +1,7 @@
 import type { CSSProperties, FC } from 'react'
 import { useDrop } from 'react-dnd'
 
-import ItemTypes from './ItemTypes'
+
 
 const style: CSSProperties = {
   height: '12rem',
@@ -20,37 +20,40 @@ export interface DustbinProps {
   allowedDropEffect: string
 }
 
-function selectBackgroundColor(isActive: boolean, canDrop: boolean) {
+function selectBackgroundColor(isActive: boolean) {
   if (isActive) {
     return 'darkgreen'
-  } else if (canDrop) {
-    return 'darkkhaki'
   } else {
     return '#222'
   }
 }
 
-export const Dustbin: FC<DustbinProps> = ({ allowedDropEffect }) => {
-  const [{ canDrop, isOver }, drop] = useDrop(
-    () => ({
-      accept: ItemTypes.BOX,
-      drop: () => ({
-        name: `${allowedDropEffect}`,
-        allowedDropEffect,
-      }),
-      collect: (monitor: any) => ({
-        isOver: monitor.isOver(),
-        canDrop: monitor.canDrop(),
-      }),
+export const DropBox:any= ({ name,selectedCards }:any) => {
+  // const [{ isOver }, drop] = useDrop(
+  //   () => ({
+  //     accept: "DragBox",
+  //     drop: () => (() => {
+  //       console.log("[//drop]",selectedCards)
+  //     }),
+  //     collect: (monitor: any) => ({
+  //       isOver: monitor.isOver()
+  //     }),
+  //   })
+  // )
+  const [{ canDrop, isOver }, drop] = useDrop(() => ({
+    accept:  "DragBox",
+    drop: () => ({ name:name }),
+    collect: (monitor) => ({
+      isOver: monitor.isOver(),
+      canDrop: monitor.canDrop(),
     }),
-    [allowedDropEffect],
-  )
+  }))
 
-  const isActive = canDrop && isOver
-  const backgroundColor = selectBackgroundColor(isActive, canDrop)
+  const isActive = isOver
+  const backgroundColor = selectBackgroundColor(isActive)
   return (
     <div ref={drop as any} style={{ ...style, backgroundColor }}>
-      {allowedDropEffect} 
+      {name} 
       {/* {`Works with ${allowedDropEffect} drop effect`}
       <br />
       <br />

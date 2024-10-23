@@ -14,7 +14,7 @@ import { getDatabase, filterSql, getDatabaseList } from "@/libs/util";
 import { generateHeaders, saveWorkbook } from "@/libs/utils";
 const { Search, TextArea } = Input;
 
-axios.defaults.withCredentials = true;
+// axios.defaults.withCredentials = true;
 axios.defaults.timeout = 50000;
 const Home = () => {
     const searchRef = useRef<any>(null);

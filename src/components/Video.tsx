@@ -1,48 +1,39 @@
 "use client";
 import { useState } from "react";
 import { Container } from "@/components/Container";
-
+import "../../node_modules/video-react/dist/video-react.css";
+// @ts-ignore
+import { Player } from "video-react";
 interface VideoProps {
-  videoId: string;
+    videoId: string;
 }
 
 export function Video({ videoId }: Readonly<VideoProps>) {
-  const [playVideo, setPlayVideo] = useState(false);
+    const [playVideo, setPlayVideo] = useState(true);
 
-  if (!videoId) return null;
+    if (!videoId) return null;
 
-  return (
-    <Container>
-      <div className="relative w-full h-[500px] max-w-4xl mx-auto overflow-hidden lg:mb-20 rounded-2xl bg-indigo-300 cursor-pointer bg-gradient-to-tr from-purple-400 to-indigo-700">
-        {!playVideo && (
-          <button
-            onClick={() => setPlayVideo(!playVideo)}
-            className="absolute inset-auto w-16 h-16 text-white transform -translate-x-1/2 -translate-y-1/2 lg:w-28 lg:h-28 top-1/2 left-1/2"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="w-16 h-16  lg:w-28 lg:h-28"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                fillRule="evenodd"
-                d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
-                clipRule="evenodd"
-              />
-            </svg>
-            <span className="sr-only">Play Video</span>
-          </button>
-        )}
-        {playVideo && (
-          <iframe
-            src={`https://www.youtube-nocookie.com/embed/${videoId}?controls=0&autoplay=1`}
-            title="YouTube video player"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            className="w-full h-full aspect-video"
-          ></iframe>
-        )}
-      </div>
-    </Container>
-  );
+    return (
+        <Container>
+            <Player>
+                <source src="https://www.bbhub.io/marketing/sites/6/China_BPS_Website_Sizzle_438976.mp4" />
+            </Player>
+            {/* <video
+                        playsInline={false}
+                        autoPlay={true}
+                        muted={false}
+                        loop={false}
+                        preload="auto"
+                        poster="https://assets.bbhub.io/marketing/sites/6/2018/09/Core-Megasite-Frame-1-170327_1.jpg"
+                        className="video 
+                   hide-on-mobile"
+                    >
+                        <source
+                            data-src="https://www.bbhub.io/marketing/sites/6/China_BPS_Website_Sizzle_438976.mp4"
+                            src="https://www.bbhub.io/marketing/sites/6/China_BPS_Website_Sizzle_438976.mp4"
+                            type="video/mp4"
+                        />
+                    </video> */}
+        </Container>
+    );
 }

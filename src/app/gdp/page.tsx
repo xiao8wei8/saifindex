@@ -7,13 +7,18 @@ import { HTML5Backend } from 'react-dnd-html5-backend'
 import LayoutContainer from '../components/LayoutContainer'
 
 const SimpleDemo =  () =>{
-    return (
-        <div className="App">
-            <DndProvider backend={HTML5Backend}>
-                <Container />
-            </DndProvider>
-        </div>
-    )
+    if (typeof window == 'undefined') {
+       return null
+    }else{
+        return (
+            <div className="App">
+                <DndProvider backend={HTML5Backend}>
+                    <Container />
+                </DndProvider>
+            </div>
+        )
+    }
+  
 }
 
 
