@@ -11,6 +11,18 @@ export default {
     route: {
         path: "/",
         routes: [
+    
+          {
+            path: "/chat",
+            name: "SAIF Chat",
+            icon: (
+                <CrownFilled
+                    onPointerEnterCapture={undefined}
+                    onPointerLeaveCapture={undefined}
+                />
+            ),
+            component: "./Welcome",
+        },
             {
                 path: "/dashboard",
                 name: "数据大盘",
@@ -51,22 +63,12 @@ export default {
                         ),
                         component: "./Welcome",
                     },
-                    {
-                        path: "/gdp",
-                        name: "GDP对比",
-                        icon: (
-                            <CrownFilled
-                                onPointerEnterCapture={undefined}
-                                onPointerLeaveCapture={undefined}
-                            />
-                        ),
-                        component: "./Welcome",
-                    },
+                    
                    
                 ],
             },
             {
-                path: "/dataquery",
+                path: "/stockindex",
                 name: "指数",
                 icon: (
                     <StockOutlined
@@ -91,7 +93,7 @@ export default {
                 ],
             },
             {
-              path: "/dataquery",
+              path: "/queryCEIC",
               name: "CEIC",
               icon: (
                   <StockOutlined
@@ -114,7 +116,7 @@ export default {
                       component: "./Welcome",
                   },
               ],
-          },
+          }
         ],
     },
     location: {

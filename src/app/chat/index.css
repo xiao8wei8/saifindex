@@ -1,0 +1,7 @@
+.ant-pro-card-body{
+height: auto !important;
+}
+.ant-pro-card {
+    height: auto !important;
+    min-height: auto !important;
+}

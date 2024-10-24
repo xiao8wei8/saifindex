@@ -5,7 +5,7 @@ import { AntdRegistry } from "@ant-design/nextjs-registry";
 import Layout, { Content, Footer } from "antd/lib/layout/layout";
 import "./layout.css";
 import Textscroll from "@/components/textscroll/page";
-
+import 'tailwindcss/tailwind.css';
 const RootLayout = ({ children }: React.PropsWithChildren) => (
     <html lang="en">
         <body>
