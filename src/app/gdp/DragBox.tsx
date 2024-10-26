@@ -63,13 +63,15 @@ export const DragBox: any= (props: any) => {
     
        const dropResult:any = monitor.getDropResult()
        console.log("[dragBox]end",dropResult)
-       let ret = []
-       _selectedCards.forEach((item:any) => {
-        ret.push(item.name)
-       })
-       ret.push("in")
-       ret.push(dropResult.name)
-       alert(JSON.stringify(ret))
+      //  let ret = []
+      //  _selectedCards.forEach((item:any) => {
+      //   ret.push(item.name)
+      //  })
+      //  ret.push("in")
+      //  ret.push(dropResult.name)
+      //  alert(JSON.stringify(ret))
+        
+        props.end(_selectedCards,dropResult);
         props.clearItemSelection();
       },
       isDragging: (monitor:any) => {
@@ -139,7 +141,7 @@ export const DragBox: any= (props: any) => {
     // <div className={"card-wrapper " + styleClasses.join(" ")}>
 
  
-    <div ref={ref} style={{ ...style, opacity }}  onClick={onClick}  className={"card-wrapper " + styleClasses.join(" ")}>
+    <div ref={ref} style={{ ...style, opacity }}  onClick={onClick}  className={"card-wrapper " + styleClasses.join(" ")} draggable={props.isSelected?true:false} >
       {name}
     </div>
    

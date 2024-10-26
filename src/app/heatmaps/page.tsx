@@ -3,33 +3,35 @@ import React, { useRef } from "react";
 import Highcharts from "highcharts/highstock";
 import HighchartsReact from "highcharts-react-official";
 import HighchartsExporting from "highcharts/modules/exporting";
+import { DatePicker } from "antd";
+const { RangePicker } = DatePicker;
 
+import { Calendar, theme } from "antd";
+import type { CalendarProps } from "antd";
+import type { Dayjs } from "dayjs";
 
-import { Calendar, theme } from 'antd';
-import type { CalendarProps } from 'antd';
-import type { Dayjs } from 'dayjs';
-
-const onPanelChange = (value: Dayjs, mode: CalendarProps<Dayjs>['mode']) => {
-  console.log(value.format('YYYY-MM-DD'), mode);
+const onPanelChange = (
+    value: Dayjs,
+    mode: CalendarProps<Dayjs>["mode"]
+): any => {
+    console.log(value.format("YYYY-MM-DD"), mode);
 };
 
 const AppC: React.FC = () => {
-  const { token } = theme.useToken();
+    const { token } = theme.useToken();
 
-  const wrapperStyle: React.CSSProperties = {
-    width: 300,
-    border: `1px solid ${token.colorBorderSecondary}`,
-    borderRadius: token.borderRadiusLG,
-  };
+    const wrapperStyle: React.CSSProperties = {
+        width: 300,
+        border: `1px solid ${token.colorBorderSecondary}`,
+        borderRadius: token.borderRadiusLG,
+    };
 
-  return (
-    <div style={wrapperStyle}>
-      <Calendar fullscreen={false} onPanelChange={onPanelChange} />
-    </div>
-  );
+    return (
+        <div style={wrapperStyle}>
+            <RangePicker picker="month" onPanelChange={onPanelChange as any} />
+        </div>
+    );
 };
-
-
 
 if (typeof Highcharts === "object") {
     HighchartsExporting(Highcharts);
@@ -43,23 +45,20 @@ import mapData from "./components/mapData";
 import HeatMaps from "./components/HeatMaps";
 import LayoutContainer from "../components/LayoutContainer";
 if (typeof window == "undefined") {
-   
 } else {
- // Load Highcharts modules
-require("highcharts/indicators/indicators")(Highcharts);
-require("highcharts/indicators/pivot-points")(Highcharts);
-require("highcharts/indicators/macd")(Highcharts);
-require("highcharts/modules/exporting")(Highcharts);
-require("highcharts/modules/map")(Highcharts);
-require("highcharts/modules/treemap")(Highcharts);  
+    // Load Highcharts modules
+    require("highcharts/indicators/indicators")(Highcharts);
+    require("highcharts/indicators/pivot-points")(Highcharts);
+    require("highcharts/indicators/macd")(Highcharts);
+    require("highcharts/modules/exporting")(Highcharts);
+    require("highcharts/modules/map")(Highcharts);
+    require("highcharts/modules/treemap")(Highcharts);
 }
-
 
 // The wrapper exports only a default component that at the same time is a
 // namespace for the related Props interface (HighchartsReact.Props) and
 // RefObject interface (HighchartsReact.RefObject). All other interfaces
 // like Options come from the Highcharts module itself.
-
 
 const stockOptions = {
     yAxis: [
@@ -383,6 +382,12 @@ const HeatMapsOptions = {
             borderColor: "#fff",
             borderRadius: 6,
             borderWidth: 2,
+
+            events: {
+                click: function (event: any) {
+                    console.log(event);
+                },
+            },
             dataLabels: {
                 style: {
                     textOutline: "none",
@@ -504,7 +509,6 @@ const HeatMapsOptions = {
 };
 // Render app with demo chart
 class App extends React.Component {
-    
     constructor(props: any) {
         super(props);
         const chartOptions = {
@@ -513,7 +517,7 @@ class App extends React.Component {
             },
             series: [
                 {
-                    data: [1, 2, 3]
+                    data: [1, 2, 3],
                 },
             ],
         };
@@ -546,16 +550,17 @@ class App extends React.Component {
     render() {
         if (typeof window == "undefined") {
             return <div></div>;
-        } 
+        }
         return (
             <div>
                 <h1>Demos</h1>
-                <h2>Highstock</h2>
-                <StockChart options={stockOptions} highcharts={Highcharts} />
+            
                 <h2>TreeMaps</h2>
                 <HeatMaps options={HeatMapsOptions} highcharts={Highcharts} />
+                <h2>Highstock</h2>
+                <StockChart options={stockOptions} highcharts={Highcharts} />
 
-                <h2>Highcharts</h2>
+                {/* <h2>Highcharts</h2>
                 <Chart options={this.state.options} highcharts={Highcharts} />
                 <button onClick={this.onClick}>Update Series</button>
 
@@ -563,7 +568,7 @@ class App extends React.Component {
                 <MapChart options={mapOptions} highcharts={Highcharts} />
 
                 <h2>Live updating chart</h2>
-                <Container />
+                <Container /> */}
             </div>
         );
     }

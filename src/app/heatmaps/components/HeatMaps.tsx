@@ -8,6 +8,7 @@ const HeatMaps = ({ options, highcharts }:any) =>{
     // constructorType={'ganttChart'}
     
     options={options}
+   onClick={(e:any)=>{console.log(e)}}
   />
   )
 }

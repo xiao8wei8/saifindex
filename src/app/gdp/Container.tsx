@@ -1,10 +1,14 @@
 "use client";
 
-import { useReducer } from "react";
+import { use, useEffect, useReducer, useState } from "react";
 import { DragBox } from "./DragBox";
 import { DropBox } from "./DropBox";
 import Chart from "@/components/Chart";
-import styles from './index.module.less';
+import React from "react";
+import HighchartsReact from "highcharts-react-official";
+import Highcharts from "highcharts";
+// @ts-ignore
+import styles from "./index.module.less";
 let init_cards = [
     {
         id: 1,
@@ -98,58 +102,162 @@ const cardReducer = (state: any, action: any) => {
 };
 const Container = () => {
     const [state, dispatch] = useReducer(cardReducer, init_state);
+
+    const getSeries = (keys: any) => {
+        var ret = [];
+        for (let index = 0; index < lineSeries.length; index++) {
+            const element = lineSeries[index];
+            if (keys.includes(element.name)) {
+                ret.push(element);
+            }
+        }
+        return ret;
+    };
+
+    const lineSeries = [
+        {
+            name: "中国",
+            data: [
+                43934, 48656, 65165, 81827, 112143, 142383, 171533, 165174,
+                155157, 161454, 154610, 168960
+            ],
+        },
+        {
+            name: "美国",
+            data: [
+                24916, 37941, 29742, 29851, 32490, 30282, 38121, 36885, 33726,
+                34243, 31050, 33099, 33473,
+            ],
+        },
+        {
+            name: "日本",
+            data: [
+                11744, 30000, 16005, 19771, 20185, 24377, 32147, 30912, 29243,
+                29213, 25663, 28978, 30618,
+            ],
+        },
+        {
+            name: "德国",
+            data: [
+                11744, 30000, 16005, 19771, 20185, 24377, 32147, 30912, 11164,
+                11218, 10077, 12530, 16585,
+            ],
+        },
+        {
+            name: "英国",
+            data: [
+                21908, 5548, 8105, 11248, 8989, 11816, 18274, 17300, 13053,
+                11906, 10073, 11471, 11648,
+            ],
+        },
+    ];
+    const [currentLineSeries, setCurrentLineSeries] = useState([] as any);
+    useEffect(() => {
+        const _series: any[] = getSeries([lineSeries[0].name]);
+        console.log("[_series]", _series);
+        // return
+        handleItemSelection(0, false, false);
+        setCurrentLineSeries(_series);
+        console.log("[currentLineSeries]", currentLineSeries);
+    }, []);
+
     const clearItemSelection = () => {
         console.log("[clearItemSelection]");
         dispatch({ type: "CLEAR_SELECTION" });
     };
+    const end = (_selectedCards: any[], dropResult: { name: any }) => {
+        console.log("[end]");
 
+        console.log("[dragBox]end", dropResult);
+        let ret: any[] = [];
+        _selectedCards.forEach((item: any) => {
+            ret.push(item.name);
+        });
+        // ret.push("in");
+        // ret.push(dropResult.name);
+        // alert(JSON.stringify(ret));
+        // const _series:any[] = myRandom([...lineSeries],_selectedCards.length)'
+        const _series: any[] = getSeries(ret);
+        console.log("[_series]", _series);
+        // return
+        setCurrentLineSeries(_series);
+    };
     const handleItemSelection = (index: number, cmdKey: any, shiftKey: any) => {
         let newSelectedCards: any[];
 
         const cards = state.cards;
         const card = index < 0 ? "" : cards[index];
-        const newLastSelectedIndex = index;
-        // 没有多选
-        if (!cmdKey && !shiftKey) {
-            newSelectedCards = [card];
-        } else if (shiftKey) {
-            // 多选，[index, lastSelectedIndex]
-            if (state.lastSelectedIndex >= index) {
-                newSelectedCards = [].concat.apply(
-                    state.selectedCards,
-                    cards.slice(index, state.lastSelectedIndex)
-                );
-            } else {
-                // 多选，[lastSelectedIndex,index]
-                newSelectedCards = [].concat.apply(
-                    state.selectedCards,
-                    cards.slice(state.lastSelectedIndex + 1, index + 1)
-                );
-            }
-        } else if (cmdKey) {
-            const foundIndex = state.selectedCards.findIndex(
-                (f: any) => f === card
-            );
-            // If found remove it to unselect it.
-            if (foundIndex >= 0) {
-                newSelectedCards = [
-                    ...state.selectedCards.slice(0, foundIndex),
-                    ...state.selectedCards.slice(foundIndex + 1),
-                ];
-            } else {
-                newSelectedCards = [...state.selectedCards, card];
-            }
+        let newLastSelectedIndex = index;
+
+        //
+
+        const foundIndex = state.selectedCards.findIndex(
+            (f: any) => f === card
+        );
+        console.log("[foundIndex]", foundIndex, state.selectedCards);
+        if (foundIndex > -1) {
+            console.log("[foundIndex]foundIndex>-1");
+            state.selectedCards.splice(foundIndex, 1);
+            newSelectedCards = [...state.selectedCards];
+        } else {
+            console.log("[foundIndex]foundIndex<=-1");
+            newSelectedCards = [...state.selectedCards, card];
         }
         const finalList = cards
             ? cards.filter((f: any) => newSelectedCards.find((a) => a === f))
             : [];
-
+        if (finalList.length === 0) {
+            newLastSelectedIndex = -1;
+        }
         console.log("[dispatch]", finalList);
         dispatch({
             type: "UPDATE_SELECTION",
             newSelectedCards: finalList,
             newLastSelectedIndex: newLastSelectedIndex,
         });
+        //
+
+        // 没有多选
+        // if (!cmdKey && !shiftKey) {
+        //     newSelectedCards = [card];
+        // } else if (shiftKey) {
+        //     // 多选，[index, lastSelectedIndex]
+        //     if (state.lastSelectedIndex >= index) {
+        //         newSelectedCards = [].concat.apply(
+        //             state.selectedCards,
+        //             cards.slice(index, state.lastSelectedIndex)
+        //         );
+        //     } else {
+        //         // 多选，[lastSelectedIndex,index]
+        //         newSelectedCards = [].concat.apply(
+        //             state.selectedCards,
+        //             cards.slice(state.lastSelectedIndex + 1, index + 1)
+        //         );
+        //     }
+        // } else if (cmdKey) {
+        //     const foundIndex = state.selectedCards.findIndex(
+        //         (f: any) => f === card
+        //     );
+        //     // If found remove it to unselect it.
+        //     if (foundIndex >= 0) {
+        //         newSelectedCards = [
+        //             ...state.selectedCards.slice(0, foundIndex),
+        //             ...state.selectedCards.slice(foundIndex + 1),
+        //         ];
+        //     } else {
+        //         newSelectedCards = [...state.selectedCards, card];
+        //     }
+        // }
+        // const finalList = cards
+        //     ? cards.filter((f: any) => newSelectedCards.find((a) => a === f))
+        //     : [];
+
+        // console.log("[dispatch]", finalList);
+        // dispatch({
+        //     type: "UPDATE_SELECTION",
+        //     newSelectedCards: finalList,
+        //     newLastSelectedIndex: newLastSelectedIndex,
+        // });
     };
     const v = {
         id: "1",
@@ -188,14 +296,25 @@ const Container = () => {
                             onSelectionChange={handleItemSelection}
                             clearItemSelection={clearItemSelection}
                             isSelected={state.selectedCards.includes(card)}
+                            end={end}
                         />
                     );
                 })}
             </div>
-            <div key={1} style={{ width: v.w, height: v.h }}  className={styles.card}>
-                <Chart data={v.data} type={v.type} id={v.id} />
+
+            <div>
+                {currentLineSeries.length > 0 && (
+                    <HighchartsReact
+                        highcharts={Highcharts}
+                        options={{
+                            
+                            series: currentLineSeries,
+                            chart: { type: "bar", events: { load: () => {} } },
+                        }}
+                        // constructorType={"bar"}
+                    />
+                )}
             </div>
-            <div>hhh</div>
         </div>
     );
 };
