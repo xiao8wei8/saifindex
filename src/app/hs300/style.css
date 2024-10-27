@@ -1,2 +1,5 @@
 @import "https://code.highcharts.com/css/stocktools/gui.css";
 @import "https://code.highcharts.com/css/annotations/popup.css";
+.highcharts-menu-wrapper {
+    padding: 0 !important;
+}

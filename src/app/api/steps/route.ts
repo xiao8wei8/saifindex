@@ -366,7 +366,7 @@ export async function POST(request: NextRequest) {
     let message = "",
         isforce = false;
     let step = 0;
-    let trailMessage = ";请将查询内容去重，并且返回中文。";
+    let trailMessage = "";//请将查询内容去重，并且返回中文。";
     //step 0
     try {
         const queryData = await request.json();

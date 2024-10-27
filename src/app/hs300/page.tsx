@@ -582,13 +582,13 @@ const HeatMapsOptions = {
 const App = () => {
     const [flag, setFlag] = useState(false);
  
-    // useEffect(() => {
-    //     console.log("flagStr//",flagStr);
+    useEffect(() => {
+        console.log("flagStr//",flagStr);
         
-    //     callfn = ()=>{
-    //         setFlag(!flag);
-    //     }
-    // },[])
+        // return callfn = ()=>{
+        //     setFlag(!flag);
+        // }
+    },[])
 
     if (typeof window == "undefined") {
         return <div></div>;
