@@ -14,7 +14,7 @@ export default {
     
           {
             path: "/chat",
-            name: "SAIF Chat",
+            name: "SAIF Chat Bot",
             icon: (
                 <CrownFilled
                     onPointerEnterCapture={undefined}
@@ -80,8 +80,19 @@ export default {
                 component: "./Admin",
                 routes: [
                     {
-                        path: "/heatmaps",
+                        path: "/hs300",
                         name: "沪深300",
+                        icon: (
+                            <CrownFilled
+                                onPointerEnterCapture={undefined}
+                                onPointerLeaveCapture={undefined}
+                            />
+                        ),
+                        component: "./Welcome",
+                    },
+                    {
+                        path: "/a50",
+                        name: "中证A50",
                         icon: (
                             <CrownFilled
                                 onPointerEnterCapture={undefined}
@@ -94,7 +105,7 @@ export default {
             },
             {
               path: "/queryCEIC",
-              name: "CEIC",
+              name: "宏观经济数据",
               icon: (
                   <StockOutlined
                       onPointerEnterCapture={undefined}
@@ -115,6 +126,17 @@ export default {
                       ),
                       component: "./Welcome",
                   },
+                  {
+                    path: "/inflation",
+                    name: "Inflation",
+                    icon: (
+                        <CrownFilled
+                            onPointerEnterCapture={undefined}
+                            onPointerLeaveCapture={undefined}
+                        />
+                    ),
+                    component: "./Welcome",
+                },
               ],
           }
         ],

@@ -152,6 +152,9 @@ const Container = () => {
         },
     ];
     const [currentLineSeries, setCurrentLineSeries] = useState([] as any);
+    const [crurrentChatType, setCrurrentChatType] = useState(
+        "line"
+    )
     useEffect(() => {
         const _series: any[] = getSeries([lineSeries[0].name]);
         console.log("[_series]", _series);
@@ -165,7 +168,7 @@ const Container = () => {
         console.log("[clearItemSelection]");
         dispatch({ type: "CLEAR_SELECTION" });
     };
-    const end = (_selectedCards: any[], dropResult: { name: any }) => {
+    const end = (_selectedCards: any[], dropResult: { name: any,type:any }) => {
         console.log("[end]");
 
         console.log("[dragBox]end", dropResult);
@@ -178,8 +181,9 @@ const Container = () => {
         // alert(JSON.stringify(ret));
         // const _series:any[] = myRandom([...lineSeries],_selectedCards.length)'
         const _series: any[] = getSeries(ret);
-        console.log("[_series]", _series);
+        console.log("[_series]", _series,dropResult.type);
         // return
+        setCrurrentChatType(dropResult.type);
         setCurrentLineSeries(_series);
     };
     const handleItemSelection = (index: number, cmdKey: any, shiftKey: any) => {
@@ -273,9 +277,9 @@ const Container = () => {
     return (
         <div>
             <div style={{ overflow: "hidden", clear: "both" }}>
-                <DropBox name="折线图" selectedCards={state.selectedCards} />
-                <DropBox name="柱状图" selectedCards={state.selectedCards} />
-                <DropBox name="曲线图" selectedCards={state.selectedCards} />
+                <DropBox name="折线图" selectedCards={state.selectedCards} type="line" />
+                <DropBox name="柱状图" selectedCards={state.selectedCards}  type="bar" />
+                <DropBox name="面积图" selectedCards={state.selectedCards} type="area"/>
             </div>
             <div style={{ overflow: "hidden", clear: "both" }}>
                 {state.cards.map((card: any, i: any) => {
@@ -309,7 +313,7 @@ const Container = () => {
                         options={{
                             
                             series: currentLineSeries,
-                            chart: { type: "bar", events: { load: () => {} } },
+                            chart: { type:crurrentChatType, events: { load: () => {} } },
                         }}
                         // constructorType={"bar"}
                     />

@@ -1,5 +1,5 @@
 "use client"
-import {useEffect, useState}from "react";
+import {use, useEffect, useState}from "react";
 import "./styles.css";
 import "./TextScroll/index.css";
 import TextScroll from "./TextScroll";
@@ -14,6 +14,15 @@ export default function App() {
   if(typeof window == "undefined") {
     return null
   }
+  const [isShow, setIsShow] = useState(false);
+  const curWeixin = localStorage.getItem("curWeixin")||""
+  useEffect(() => {
+    if(!curWeixin) {
+      setIsShow(false)
+    }else{
+      setIsShow(true)
+    }
+  },[curWeixin])
     const [content, setContent] = useState([""]);
     const callData = ()=>{
         axios.get("https://vip.stock.finance.sina.com.cn/quotes_service/api/json_v2.php/Market_Center.getHQNodeDataSimple?page=1&num=40&sort=symbol&asc=1&node=hs_s&_s_r_a=init").then((res) => {
@@ -41,10 +50,11 @@ export default function App() {
         callData()
     },[])
   return (
+   
     <div className="header-index-container">
     <div className="header-index">
       <div className="header-index-items">
-        <TextScroll content= {content}/>
+      {isShow?<TextScroll content= {content}/>:null}  
       </div>
      
     </div>

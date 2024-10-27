@@ -7,9 +7,11 @@ import {
   SunIcon,
 } from "@heroicons/react/24/solid";
 
-import benefitOneImg from "../../public/img/benefit-one.png";
-import benefitTwoImg from "../../public/img/benefit-two.png";
+// import benefitOneImg from "../../public/img/benefit-one.png";
+// import benefitTwoImg from "../../public/img/benefit-two.png";
 
+import benefitOneImg from "../../public/images/howmuch/9.jpg";
+import benefitTwoImg from "../../public/images/howmuch/10.jpg";
 const benefitOne = {
   title: "特性",
   desc: "描述描述描述描述描述描述描述描述描述描述描述描述描述描述描述描述描述描述描述描述描述描述描述描述描述描述描述描述描述",

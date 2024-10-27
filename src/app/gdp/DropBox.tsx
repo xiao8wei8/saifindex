@@ -1,3 +1,4 @@
+import { AreaChartOutlined, BarChartOutlined, LineChartOutlined } from '@ant-design/icons'
 import type { CSSProperties, FC } from 'react'
 import { useDrop } from 'react-dnd'
 
@@ -28,36 +29,51 @@ function selectBackgroundColor(isActive: boolean) {
   }
 }
 
-export const DropBox:any= ({ name,selectedCards }:any) => {
-  // const [{ isOver }, drop] = useDrop(
-  //   () => ({
-  //     accept: "DragBox",
-  //     drop: () => (() => {
-  //       console.log("[//drop]",selectedCards)
-  //     }),
-  //     collect: (monitor: any) => ({
-  //       isOver: monitor.isOver()
-  //     }),
-  //   })
-  // )
-  const [{ canDrop, isOver }, drop] = useDrop(() => ({
-    accept:  "DragBox",
-    drop: () => ({ name:name }),
-    collect: (monitor) => ({
-      isOver: monitor.isOver(),
-      canDrop: monitor.canDrop(),
-    }),
-  }))
+export const DropBox: any = ({ name, selectedCards, type }: any) => {
+    // const [{ isOver }, drop] = useDrop(
+    //   () => ({
+    //     accept: "DragBox",
+    //     drop: () => (() => {
+    //       console.log("[//drop]",selectedCards)
+    //     }),
+    //     collect: (monitor: any) => ({
+    //       isOver: monitor.isOver()
+    //     }),
+    //   })
+    // )
+    const [{ canDrop, isOver }, drop] = useDrop(() => ({
+        accept: "DragBox",
+        drop: () => ({ name: name, type: type }),
+        collect: (monitor) => ({
+            isOver: monitor.isOver(),
+            canDrop: monitor.canDrop(),
+        }),
+    }));
 
-  const isActive = isOver
-  const backgroundColor = selectBackgroundColor(isActive)
-  return (
-    <div ref={drop as any} style={{ ...style, backgroundColor }}>
-      {name} 
-      {/* {`Works with ${allowedDropEffect} drop effect`}
+    const isActive = isOver;
+    const backgroundColor = selectBackgroundColor(isActive);
+    let IconType = null;
+    switch (type) {
+        case "bar":
+          IconType = <BarChartOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />;
+            break;
+        case "line":
+          IconType =  <LineChartOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />
+            break;
+        case "area":
+          IconType =  <AreaChartOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />
+            break;
+        default:
+            break;
+    }
+    return (
+        <div ref={drop as any} style={{ ...style, backgroundColor }}>
+           
+            {IconType} {name}
+            {/* {`Works with ${allowedDropEffect} drop effect`}
       <br />
       <br />
       {isActive ? 'Release to drop' : 'Drag a box here'} */}
-    </div>
-  )
-}
+        </div>
+    );
+};
