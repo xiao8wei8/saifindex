@@ -2,7 +2,6 @@
 @import "https://code.highcharts.com/css/annotations/popup.css";
 .highcharts-menu-wrapper {
     padding: 0 !important;
-    padding-top: 10 !important;
 }
 #chartContainer>div{
    
