@@ -6,7 +6,7 @@ import HighchartsExporting from "highcharts/modules/exporting";
 
 import "./style.css";
 
-import { DatePicker } from "antd";
+import { DatePicker, Space } from "antd";
 const { RangePicker } = DatePicker;
 
 import { Calendar, theme } from "antd";
@@ -136,10 +136,13 @@ let callfn :any= null
 const PickerContainer: React.FC = () => {
     const { token } = theme.useToken();
 
+   
     const wrapperStyle: React.CSSProperties = {
-        width: 300,
-        border: `1px solid ${token.colorBorderSecondary}`,
+        width: "100%",
+        // border: `1px solid ${token.colorBorderSecondary}`,
         borderRadius: token.borderRadiusLG,
+        paddingBottom: "20px",
+
     };
 
     return (
@@ -628,6 +631,7 @@ const APP2 = () => {
         return (
             <LayoutContainer currentpathname="/hs300">
                 <PickerContainer />
+              
                 <App />
             </LayoutContainer>
         );

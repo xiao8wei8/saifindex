@@ -6,14 +6,13 @@ import HighchartsExporting from "highcharts/modules/exporting";
 
 import "./style.css";
 
-import { DatePicker } from "antd";
+import { DatePicker, Space } from "antd";
 const { RangePicker } = DatePicker;
 
 import { Calendar, theme } from "antd";
 import type { CalendarProps } from "antd";
 import type { Dayjs } from "dayjs";
 import aaplOhlcvData from "./aapl-ohlcv";
-
 
 const onPanelChange = (
     value: Dayjs,
@@ -69,9 +68,9 @@ const getAaplOhlcv = () => {
             headerShape: "callout",
             borderWidth: 0,
             shadow: false,
-            positioner: function (width: number, height: number, point:any) {
+            positioner: function (width: number, height: number, point: any) {
                 // @ts-ignore
-                const chart:any = this.chart ;
+                const chart: any = this.chart;
                 let position;
 
                 if (point.isHeader) {
@@ -132,14 +131,16 @@ const getAaplOhlcv = () => {
 
 const aaplOhlcvOptions = getAaplOhlcv();
 
-let callfn :any= null
+let callfn: any = null;
 const PickerContainer: React.FC = () => {
     const { token } = theme.useToken();
 
     const wrapperStyle: React.CSSProperties = {
-        width: 300,
-        border: `1px solid ${token.colorBorderSecondary}`,
+        width: "100%",
+        // border: `1px solid ${token.colorBorderSecondary}`,
         borderRadius: token.borderRadiusLG,
+        paddingBottom: "20px",
+
     };
 
     return (
@@ -443,7 +444,7 @@ const stockOptions = {
         },
     ],
 };
-let flagStr = false
+let flagStr = false;
 const HeatMapsOptions = {
     series: [
         {
@@ -456,7 +457,7 @@ const HeatMapsOptions = {
 
             events: {
                 click: function (event: any) {
-                    console.log("flagStr",flagStr);
+                    console.log("flagStr", flagStr);
                     // setFlag(!flag);
                     // flagStr = !flagStr;
                     callfn();
@@ -583,14 +584,14 @@ const HeatMapsOptions = {
 };
 const App = () => {
     const [flag, setFlag] = useState(false);
- 
+
     useEffect(() => {
-        console.log("flagStr//",flagStr);
-        
+        console.log("flagStr//", flagStr);
+
         // return callfn = ()=>{
         //     setFlag(!flag);
         // }
-    },[])
+    }, []);
 
     if (typeof window == "undefined") {
         return <div></div>;
@@ -598,13 +599,16 @@ const App = () => {
 
     return (
         <div id="chartContainer">
-            <HeatMaps options={HeatMapsOptions} highcharts={Highcharts}  />
+            <HeatMaps options={HeatMapsOptions} highcharts={Highcharts} />
 
-            {flag?  <StockChart options={stockOptions} highcharts={Highcharts}  />:<StockChart options={aaplOhlcvOptions} highcharts={Highcharts} />}
-
-          
-
-            
+            {flag ? (
+                <StockChart options={stockOptions} highcharts={Highcharts} />
+            ) : (
+                <StockChart
+                    options={aaplOhlcvOptions}
+                    highcharts={Highcharts}
+                />
+            )}
 
             {/* <h2>Highcharts</h2>
                     <Chart options={this.state.options} highcharts={Highcharts} />
@@ -619,15 +623,17 @@ const App = () => {
     );
 };
 
-
-
 const APP2 = () => {
     if (typeof window == "undefined") {
         return <div></div>;
     } else {
         return (
             <LayoutContainer currentpathname="/a50">
-                <PickerContainer />
+            
+                 
+                    <PickerContainer />
+            
+
                 <App />
             </LayoutContainer>
         );
