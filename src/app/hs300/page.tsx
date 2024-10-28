@@ -14,6 +14,7 @@ import type { CalendarProps } from "antd";
 import type { Dayjs } from "dayjs";
 import aaplOhlcvData from "./aapl-ohlcv";
 
+
 const onPanelChange = (
     value: Dayjs,
     mode: CalendarProps<Dayjs>["mode"]
@@ -68,8 +69,9 @@ const getAaplOhlcv = () => {
             headerShape: "callout",
             borderWidth: 0,
             shadow: false,
-            positioner: function (width, height, point) {
-                const chart = this.chart;
+            positioner: function (width: number, height: number, point:any) {
+                // @ts-ignore
+                const chart:any = this.chart ;
                 let position;
 
                 if (point.isHeader) {
@@ -595,10 +597,10 @@ const App = () => {
     }
 
     return (
-        <div>
-            <HeatMaps options={HeatMapsOptions} highcharts={Highcharts} />
+        <div id="chartContainer">
+            <HeatMaps options={HeatMapsOptions} highcharts={Highcharts}  />
 
-            {flag?  <StockChart options={stockOptions} highcharts={Highcharts} />:<StockChart options={aaplOhlcvOptions} highcharts={Highcharts} />}
+            {flag?  <StockChart options={stockOptions} highcharts={Highcharts}  />:<StockChart options={aaplOhlcvOptions} highcharts={Highcharts} />}
 
           
 
@@ -617,209 +619,7 @@ const App = () => {
     );
 };
 
-// Render app with demo chart
-class App1 extends React.Component {
-    constructor(props: any) {
-        super(props);
-        const chartOptions = {
-            title: {
-                text: "",
-            },
-            series: [
-                {
-                    data: [1, 2, 3],
-                },
-            ],
-        };
-        this.state = {
-            options: {
-                series: chartOptions.series,
-            },
-        };
-        this.onClick = this.onClick.bind(this);
-    }
 
-    onClick() {
-        this.setState({
-            options: {
-                series: [
-                    {
-                        data: [1, 2, 3],
-                    },
-                    {
-                        data: [2, 3, 1],
-                    },
-                    {
-                        data: [3, 2, 1],
-                    },
-                ],
-            },
-        });
-    }
-
-    render() {
-        const HeatMapsOptions = {
-            series: [
-                {
-                    type: "treemap",
-                    layoutAlgorithm: "stripes",
-                    alternateStartingDirection: true,
-                    borderColor: "#fff",
-                    borderRadius: 6,
-                    borderWidth: 2,
-
-                    events: {
-                        click: function (event: any) {
-                            console.log(event);
-                        },
-                    },
-                    dataLabels: {
-                        style: {
-                            textOutline: "none",
-                        },
-                    },
-                    levels: [
-                        {
-                            level: 1,
-                            layoutAlgorithm: "sliceAndDice",
-                            dataLabels: {
-                                enabled: true,
-                                align: "left",
-                                verticalAlign: "top",
-                                style: {
-                                    fontSize: "15px",
-                                    fontWeight: "bold",
-                                },
-                            },
-                        },
-                    ],
-                    data: [
-                        {
-                            id: "A",
-                            name: "Nord-Norge",
-                            color: "#50FFB1",
-                        },
-                        {
-                            id: "B",
-                            name: "Trøndelag",
-                            color: "#F5FBEF",
-                        },
-                        {
-                            id: "C",
-                            name: "Vestlandet",
-                            color: "#A09FA8",
-                        },
-                        {
-                            id: "D",
-                            name: "Østlandet",
-                            color: "#E7ECEF",
-                        },
-                        {
-                            id: "E",
-                            name: "Sørlandet",
-                            color: "#A9B4C2",
-                        },
-                        {
-                            name: "Troms og Finnmark",
-                            parent: "A",
-                            value: 70923,
-                        },
-                        {
-                            name: "Nordland",
-                            parent: "A",
-                            value: 35759,
-                        },
-                        {
-                            name: "Trøndelag",
-                            parent: "B",
-                            value: 39494,
-                        },
-                        {
-                            name: "Møre og Romsdal",
-                            parent: "C",
-                            value: 13840,
-                        },
-                        {
-                            name: "Vestland",
-                            parent: "C",
-                            value: 31969,
-                        },
-                        {
-                            name: "Rogaland",
-                            parent: "C",
-                            value: 8576,
-                        },
-                        {
-                            name: "Viken",
-                            parent: "D",
-                            value: 22768,
-                        },
-                        {
-                            name: "Innlandet",
-                            parent: "D",
-                            value: 49391,
-                        },
-                        {
-                            name: "Oslo",
-                            parent: "D",
-                            value: 454,
-                        },
-                        {
-                            name: "Vestfold og Telemark",
-                            parent: "D",
-                            value: 15925,
-                        },
-                        {
-                            name: "Agder",
-                            parent: "E",
-                            value: 14981,
-                        },
-                    ],
-                },
-            ],
-            title: {
-                text: "Norwegian regions and counties by area",
-                align: "left",
-            },
-            subtitle: {
-                text: 'Source: <a href="https://snl.no/Norge" target="_blank">SNL</a>',
-                align: "left",
-            },
-            tooltip: {
-                useHTML: true,
-                pointFormat:
-                    "The area of <b>{point.name}</b> is <b>{point.value} km<sup>" +
-                    "2</sup></b>",
-            },
-        };
-
-        if (typeof window == "undefined") {
-            return <div></div>;
-        }
-        return (
-            <div>
-                <HeatMaps options={HeatMapsOptions} highcharts={Highcharts} />
-
-                <StockChart options={stockOptions} highcharts={Highcharts} />
-
-                <StockChart
-                    options={aaplOhlcvOptions}
-                    highcharts={Highcharts}
-                />
-
-                {/* <h2>Highcharts</h2>
-                <Chart options={this.state.options} highcharts={Highcharts} />
-                <button onClick={this.onClick}>Update Series</button>
-
-                <h2>Highmaps</h2>
-                <MapChart options={mapOptions} highcharts={Highcharts} />
-
-                <h2>Live updating chart</h2>
-                <Container /> */}
-            </div>
-        );
-    }
-}
 
 const APP2 = () => {
     if (typeof window == "undefined") {

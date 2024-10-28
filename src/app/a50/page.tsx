@@ -1,14 +1,19 @@
 "use client";
-import React, { useRef } from "react";
+import React, { use, useEffect, useRef, useState } from "react";
 import Highcharts from "highcharts/highstock";
 import HighchartsReact from "highcharts-react-official";
 import HighchartsExporting from "highcharts/modules/exporting";
+
+import "./style.css";
+
 import { DatePicker } from "antd";
 const { RangePicker } = DatePicker;
 
 import { Calendar, theme } from "antd";
 import type { CalendarProps } from "antd";
 import type { Dayjs } from "dayjs";
+import aaplOhlcvData from "./aapl-ohlcv";
+
 
 const onPanelChange = (
     value: Dayjs,
@@ -16,8 +21,119 @@ const onPanelChange = (
 ): any => {
     console.log(value.format("YYYY-MM-DD"), mode);
 };
+const getAaplOhlcv = () => {
+    const data = aaplOhlcvData;
 
-const AppC: React.FC = () => {
+    // split the data set into ohlc and volume
+    const ohlc = [],
+        volume = [],
+        dataLength = data.length;
+
+    for (let i = 0; i < dataLength; i += 1) {
+        ohlc.push([
+            data[i][0], // the date
+            data[i][1], // open
+            data[i][2], // high
+            data[i][3], // low
+            data[i][4], // close
+        ]);
+
+        volume.push([
+            data[i][0], // the date
+            data[i][5], // the volume
+        ]);
+    }
+
+    const ret = {
+        yAxis: [
+            {
+                labels: {
+                    align: "left",
+                },
+                height: "80%",
+                resize: {
+                    enabled: true,
+                },
+            },
+            {
+                labels: {
+                    align: "left",
+                },
+                top: "80%",
+                height: "20%",
+                offset: 0,
+            },
+        ],
+        tooltip: {
+            shape: "square",
+            headerShape: "callout",
+            borderWidth: 0,
+            shadow: false,
+            positioner: function (width: number, height: number, point:any) {
+                // @ts-ignore
+                const chart:any = this.chart ;
+                let position;
+
+                if (point.isHeader) {
+                    position = {
+                        x: Math.max(
+                            // Left side limit
+                            chart.plotLeft,
+                            Math.min(
+                                point.plotX + chart.plotLeft - width / 2,
+                                // Right side limit
+                                chart.chartWidth - width - chart.marginRight
+                            )
+                        ),
+                        y: point.plotY,
+                    };
+                } else {
+                    position = {
+                        x: point.series.chart.plotLeft,
+                        y: point.series.yAxis.top - chart.plotTop,
+                    };
+                }
+
+                return position;
+            },
+        },
+        series: [
+            {
+                type: "ohlc",
+                id: "aapl-ohlc",
+                name: "AAPL Stock Price",
+                data: ohlc,
+            },
+            {
+                type: "column",
+                id: "aapl-volume",
+                name: "AAPL Volume",
+                data: volume,
+                yAxis: 1,
+            },
+        ],
+        responsive: {
+            rules: [
+                {
+                    condition: {
+                        maxWidth: 800,
+                    },
+                    chartOptions: {
+                        rangeSelector: {
+                            inputEnabled: false,
+                        },
+                    },
+                },
+            ],
+        },
+    };
+    return ret;
+};
+
+const aaplOhlcvOptions = getAaplOhlcv();
+
+let callfn :any= null
+const PickerContainer: React.FC = () => {
     const { token } = theme.useToken();
 
     const wrapperStyle: React.CSSProperties = {
@@ -47,12 +163,17 @@ import LayoutContainer from "../components/LayoutContainer";
 if (typeof window == "undefined") {
 } else {
     // Load Highcharts modules
-    require("highcharts/indicators/indicators")(Highcharts);
+    require("highcharts/indicators/indicators-all")(Highcharts);
     require("highcharts/indicators/pivot-points")(Highcharts);
     require("highcharts/indicators/macd")(Highcharts);
     require("highcharts/modules/exporting")(Highcharts);
     require("highcharts/modules/map")(Highcharts);
     require("highcharts/modules/treemap")(Highcharts);
+    require("highcharts/modules/drag-panes")(Highcharts);
+    require("highcharts/modules/annotations-advanced")(Highcharts);
+    require("highcharts/modules/price-indicator")(Highcharts);
+    require("highcharts/modules/full-screen")(Highcharts);
+    require("highcharts/modules/stock-tools")(Highcharts);
 }
 
 // The wrapper exports only a default component that at the same time is a
@@ -322,57 +443,7 @@ const stockOptions = {
         },
     ],
 };
-
-const mapOptions = {
-    title: {
-        text: "",
-    },
-    colorAxis: {
-        min: 0,
-        stops: [
-            [0, "#EFEFFF"],
-            [0.67, "#4444FF"],
-            [1, "#000022"],
-        ],
-    },
-    tooltip: {
-        pointFormatter: function () {
-            return this.properties["woe-label"].split(",")[0];
-        },
-    },
-    series: [
-        {
-            mapData: mapData,
-            dataLabels: {
-                formatter: function () {
-                    return this.point.properties["woe-label"].split(",")[0];
-                },
-            },
-            name: "Norway",
-            data: [
-                ["no-mr", 0],
-                ["no-st", 1],
-                ["no-ho", 2],
-                ["no-sf", 42],
-                ["no-va", 4],
-                ["no-of", 5],
-                ["no-nt", 6],
-                ["no-ro", 7],
-                ["no-bu", 8],
-                ["no-vf", 9],
-                ["no-fi", 10],
-                ["no-no", 11],
-                ["no-tr", 12],
-                ["no-ak", 13],
-                ["no-op", 14],
-                ["no-he", 15],
-                ["no-os", 16],
-                ["no-te", 17],
-                ["no-aa", 18],
-            ],
-        },
-    ],
-};
+let flagStr = false
 const HeatMapsOptions = {
     series: [
         {
@@ -385,7 +456,10 @@ const HeatMapsOptions = {
 
             events: {
                 click: function (event: any) {
-                    console.log(event);
+                    console.log("flagStr",flagStr);
+                    // setFlag(!flag);
+                    // flagStr = !flagStr;
+                    callfn();
                 },
             },
             dataLabels: {
@@ -507,72 +581,45 @@ const HeatMapsOptions = {
             "2</sup></b>",
     },
 };
-// Render app with demo chart
-class App extends React.Component {
-    constructor(props: any) {
-        super(props);
-        const chartOptions = {
-            title: {
-                text: "",
-            },
-            series: [
-                {
-                    data: [1, 2, 3],
-                },
-            ],
-        };
-        this.state = {
-            options: {
-                series: chartOptions.series,
-            },
-        };
-        this.onClick = this.onClick.bind(this);
+const App = () => {
+    const [flag, setFlag] = useState(false);
+ 
+    useEffect(() => {
+        console.log("flagStr//",flagStr);
+        
+        // return callfn = ()=>{
+        //     setFlag(!flag);
+        // }
+    },[])
+
+    if (typeof window == "undefined") {
+        return <div></div>;
     }
 
-    onClick() {
-        this.setState({
-            options: {
-                series: [
-                    {
-                        data: [1, 2, 3],
-                    },
-                    {
-                        data: [2, 3, 1],
-                    },
-                    {
-                        data: [3, 2, 1],
-                    },
-                ],
-            },
-        });
-    }
+    return (
+        <div id="chartContainer">
+            <HeatMaps options={HeatMapsOptions} highcharts={Highcharts}  />
 
-    render() {
-        if (typeof window == "undefined") {
-            return <div></div>;
-        }
-        return (
-            <div>
-                <h1>Demos</h1>
+            {flag?  <StockChart options={stockOptions} highcharts={Highcharts}  />:<StockChart options={aaplOhlcvOptions} highcharts={Highcharts} />}
+
+          
+
             
-                <h2>TreeMaps</h2>
-                <HeatMaps options={HeatMapsOptions} highcharts={Highcharts} />
-                <h2>Highstock</h2>
-                <StockChart options={stockOptions} highcharts={Highcharts} />
 
-                {/* <h2>Highcharts</h2>
-                <Chart options={this.state.options} highcharts={Highcharts} />
-                <button onClick={this.onClick}>Update Series</button>
+            {/* <h2>Highcharts</h2>
+                    <Chart options={this.state.options} highcharts={Highcharts} />
+                    <button onClick={this.onClick}>Update Series</button>
+    
+                    <h2>Highmaps</h2>
+                    <MapChart options={mapOptions} highcharts={Highcharts} />
+    
+                    <h2>Live updating chart</h2>
+                    <Container /> */}
+        </div>
+    );
+};
 
-                <h2>Highmaps</h2>
-                <MapChart options={mapOptions} highcharts={Highcharts} />
 
-                <h2>Live updating chart</h2>
-                <Container /> */}
-            </div>
-        );
-    }
-}
 
 const APP2 = () => {
     if (typeof window == "undefined") {
@@ -580,7 +627,7 @@ const APP2 = () => {
     } else {
         return (
             <LayoutContainer currentpathname="/a50">
-                <AppC />
+                <PickerContainer />
                 <App />
             </LayoutContainer>
         );

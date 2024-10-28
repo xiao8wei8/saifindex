@@ -9,6 +9,7 @@ const HeatMaps = ({ options, highcharts }:any) =>{
     
     options={options}
    onClick={(e:any)=>{console.log(e)}}
+   style={{ minHeight: "600px" }}
   />
   )
 }
