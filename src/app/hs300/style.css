@@ -3,10 +3,14 @@
 .highcharts-menu-wrapper {
     padding: 0 !important;
 }
-#chartContainer>div{
+#chartContainer [data-highcharts-chart]{
    
-    height: 800px !important;
+    height: 760px !important;
 }
 .ant-pro-card{
     height: auto !important;
+}
+.right{
+    display: flex;
+    flex-direction: row-reverse;
 }

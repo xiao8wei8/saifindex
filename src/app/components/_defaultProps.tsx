@@ -52,18 +52,7 @@ export default {
                         icon: "https://gw.alipayobjects.com/zos/antfincdn/upvrAjAPQX/Logo_Tech%252520UI.svg",
                         component: "./Welcome",
                     },
-                    {
-                        path: "/nl2sql-test",
-                        name: "自然语言转SQL-Test ",
-                        icon: (
-                            <CrownFilled
-                                onPointerEnterCapture={undefined}
-                                onPointerLeaveCapture={undefined}
-                            />
-                        ),
-                        component: "./Welcome",
-                    },
-                    
+                 
                    
                 ],
             },
