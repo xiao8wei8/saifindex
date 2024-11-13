@@ -551,7 +551,7 @@ const App = () => {
             tooltip: {
                 useHTML: true,
                 pointFormat:
-                    "股票名称： <b>{point.name}</b> </br><b>股票权重:{point.value}</b>",
+                    "股票名称:<b>{point.name}</b> </br>股票代码:<b>{point.id}</b> </br>股票权重:<b>{point.value}</b>",
             },
         };
         var colorAxis = {
