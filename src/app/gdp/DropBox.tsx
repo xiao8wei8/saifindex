@@ -5,16 +5,19 @@ import { useDrop } from 'react-dnd'
 
 
 const style: CSSProperties = {
-  height: '12rem',
-  width: '12rem',
-  marginRight: '1.5rem',
-  marginBottom: '1.5rem',
+  // height: '12rem',
+  // width: '12rem',
+  // marginRight: '1.5rem',
+  // marginBottom: '1.5rem',
   color: 'white',
-  padding: '1rem',
-  textAlign: 'center',
+  // padding: '1rem',
+  // textAlign: 'center',
   fontSize: '1rem',
-  lineHeight: 'normal',
-  float: 'left',
+  // lineHeight: 'normal',
+  // float: 'left',
+  width: '100%',
+  height: '100%',
+  paddingTop: '45%',
 }
 
 export interface DustbinProps {
@@ -54,7 +57,7 @@ export const DropBox: any = ({ name, selectedCards, type }: any) => {
     const backgroundColor = selectBackgroundColor(isActive);
     let IconType = null;
     switch (type) {
-        case "bar":
+        case "column":
           IconType = <BarChartOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />;
             break;
         case "line":

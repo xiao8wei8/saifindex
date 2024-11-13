@@ -5,12 +5,15 @@ import { useDrag } from 'react-dnd'
 import "./index.css"
 
 const style: CSSProperties = {
-  border: '1px solid black',
-  backgroundColor: 'white',
-  padding: '0.5rem 1rem',
-  marginRight: '1.5rem',
-  marginBottom: '1.5rem',
-  float: 'left',
+  // border: '1px solid black',
+  // backgroundColor: 'white',
+  // padding: '0.5rem 1rem',
+  // marginRight: '1.5rem',
+  // marginBottom: '1.5rem',
+  // float: 'left',
+  width: '100%',
+  minWidth: 200,
+  textAlign: 'center',
 }
 
 // export interface BoxProps {

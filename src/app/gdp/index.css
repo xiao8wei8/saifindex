@@ -1,4 +1,5 @@
 .card-wrapper-selected {
-    border: 1px solid orange !important;
+    /* border: 1px solid orange !important; */
+    color: orange !important;
 }
   

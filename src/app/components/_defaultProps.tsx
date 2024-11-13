@@ -93,41 +93,51 @@ export default {
                 ],
             },
             {
-              path: "/queryCEIC",
-              name: "宏观经济数据",
-              icon: (
-                  <StockOutlined
-                      onPointerEnterCapture={undefined}
-                      onPointerLeaveCapture={undefined}
-                  />
-              ),
-              access: "canAdmin",
-              component: "./Admin",
-              routes: [
-                  {
-                      path: "/gdp",
-                      name: "GDP",
-                      icon: (
-                          <CrownFilled
-                              onPointerEnterCapture={undefined}
-                              onPointerLeaveCapture={undefined}
-                          />
-                      ),
-                      component: "./Welcome",
-                  },
-                  {
-                    path: "/inflation",
-                    name: "Inflation",
-                    icon: (
-                        <CrownFilled
-                            onPointerEnterCapture={undefined}
-                            onPointerLeaveCapture={undefined}
-                        />
-                    ),
-                    component: "./Welcome",
-                },
-              ],
-          }
+                path: "/gdp",
+                name: "宏观经济数据",
+                icon: (
+                    <StockOutlined
+                        onPointerEnterCapture={undefined}
+                        onPointerLeaveCapture={undefined}
+                    />
+                ),
+            },
+        //     {
+        //       path: "/queryCEIC",
+        //       name: "宏观经济数据",
+        //       icon: (
+        //           <StockOutlined
+        //               onPointerEnterCapture={undefined}
+        //               onPointerLeaveCapture={undefined}
+        //           />
+        //       ),
+        //       access: "canAdmin",
+        //       component: "./Admin",
+        //       routes: [
+        //           {
+        //               path: "/gdp",
+        //               name: "GDP",
+        //               icon: (
+        //                   <CrownFilled
+        //                       onPointerEnterCapture={undefined}
+        //                       onPointerLeaveCapture={undefined}
+        //                   />
+        //               ),
+        //               component: "./Welcome",
+        //           },
+        //           {
+        //             path: "/inflation",
+        //             name: "Inflation",
+        //             icon: (
+        //                 <CrownFilled
+        //                     onPointerEnterCapture={undefined}
+        //                     onPointerLeaveCapture={undefined}
+        //                 />
+        //             ),
+        //             component: "./Welcome",
+        //         },
+        //       ],
+        //   }
         ],
     },
     location: {
