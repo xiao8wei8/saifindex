@@ -5,6 +5,8 @@ import Highcharts from "highcharts/highstock";
 import Highcharts2 from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import HighchartsExporting from "highcharts/modules/exporting";
+import axios from "axios";
+axios.defaults.timeout = 50000;
 
 import "./style.css";
 
@@ -192,6 +194,21 @@ if (typeof window == "undefined") {
 // like Options come from the Highcharts module itself.
 
 const App = () => {
+    useEffect( () => {
+
+        const main = async () => {
+            const response = await axios.get(
+                "/api/sql",
+                {} // Include the config object as the third argument
+            );
+            const items = response.data;
+            console.log("[items]", items);
+        }
+        main()
+        // if (items.success == false) {
+
+        // }
+    },[])
     const [isShowStock, setIsShowStock] = useState(false);
     const defaultStockOptions = {
      

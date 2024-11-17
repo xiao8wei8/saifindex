@@ -2,13 +2,18 @@
 
 
 import withAntdLess from 'next-plugin-antd-less';
+/**
+ * stockmarket
+ * stockmarketstatistics
+ * information_schema
+ */
 const nextConfig = {
     env: {
-        MYSQL_HOST: "你的地址",
+        MYSQL_HOST: "101.34.245.222",
         MYSQL_PORT: "3306",
-        MYSQL_DATABASE: "lg",
-        MYSQL_USER: "root",
-        MYSQL_PASSWORD: "root",
+        MYSQL_DATABASE: "stockmarket",
+        MYSQL_USER: "si_readonly",
+        MYSQL_PASSWORD: "]FYzgq#S3i[lksFF",
     },
     transpilePackages: [
         "shiki",

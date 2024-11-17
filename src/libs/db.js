@@ -12,6 +12,7 @@ export async function query({ query, values = [] }) {
 
   try {
     const [results] = await dbconnection.execute(query, values);
+    console.log("[DB]",results);
     dbconnection.end();
     return results;
   } catch (error) {
