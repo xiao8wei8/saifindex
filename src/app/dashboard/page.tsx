@@ -737,7 +737,7 @@ const ECommerce: React.FC = () => {
             />
                 </div>
             </Carousel>
-            <Table dataSource={dataSource} columns={columns} />;
+            {/* <Table dataSource={dataSource} columns={columns} />; */}
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
                 <CardDataStats
                     title="Total views"

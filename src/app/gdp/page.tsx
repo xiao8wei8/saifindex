@@ -10,6 +10,9 @@ import {
     DatePicker,
     Select,
     Card,
+    Slider,
+    AutoComplete,
+    AutoCompleteProps,
 } from "antd";
 import { useEffect, useReducer, useRef, useState } from "react";
 import { DndProvider } from "react-dnd";
@@ -25,6 +28,11 @@ import Highcharts from "highcharts";
 // @ts-ignore
 import styles from "./index.module.less";
 import LayoutContainer from "../components/LayoutContainer";
+import { SearchOutlined } from "@ant-design/icons";
+const mockVal = (str: string, repeat = 1) => ({
+    value: str.repeat(repeat),
+  });
+
 let init_cards = [
     {
         id: 1,
@@ -321,6 +329,18 @@ const App = () => {
                         selectedCards={state.selectedCards}
                         type="column"
                     /> </Card.Grid>
+                     <Card.Grid style={gridStyle}>
+                    <DropBox
+                        name="线图"
+                        selectedCards={state.selectedCards}
+                        type="bar"
+                    /> </Card.Grid>
+                     <Card.Grid style={gridStyle}>
+                    <DropBox
+                        name="表格"
+                        selectedCards={state.selectedCards}
+                        type="table"
+                    /> </Card.Grid>
                     <Card.Grid style={gridStyle}>
                     <DropBox
                         name="面积图"
@@ -356,7 +376,8 @@ const App = () => {
             children: (
                 <div>
                 {currentLineSeries.length > 0 && (
-                    <HighchartsReact
+                    <div>
+                        <HighchartsReact
                         highcharts={Highcharts}
                         options={{
                             
@@ -365,6 +386,8 @@ const App = () => {
                         }}
                         // constructorType={"bar"}
                     />
+                    <Slider range defaultValue={[20, 50]}/>
+                    </div>
                 )}
             </div>
             ) as any,
@@ -418,11 +441,24 @@ const App = () => {
     const handleChange = (value: string) => {
         console.log(`selected ${value}`);
     };
-
+    const [value, setValue] = useState('');
+    const [options, setOptions] = useState<AutoCompleteProps['options']>([]);
+    const [anotherOptions, setAnotherOptions] = useState<AutoCompleteProps['options']>([]);
+  
+    const getPanelValue = (searchText: string) =>
+      !searchText ? [] : [mockVal(searchText), mockVal(searchText, 2), mockVal(searchText, 3)];
+  
+    const onSelect = (data: string) => {
+      console.log('onSelect', data);
+    };
+  
+    // const onChange = (data: string) => {
+    //   setValue(data);
+    // };
     return (
         <Row>
             <Col span={18} push={6}>
-                <Space direction={"vertical"} align={"center"}>
+                {/* <Space direction={"vertical"} align={"center"} style={{ width: "100%" }}> */}
                     <RangePicker picker="year" />
                     <Tabs
                         type="editable-card"
@@ -430,14 +466,15 @@ const App = () => {
                         activeKey={activeKey}
                         onEdit={onEdit}
                         items={items}
+                        style={{ width: "100%" }}
                     />
-                </Space>
+                {/* </Space> */}
             </Col>
             <Col span={6} pull={18}>
-                <Space direction={"vertical"} align={"center"}>
-                    <Space>
-                        类型选择{" "}
-                        <Select
+                {/* <Space direction={"vertical"} align={"center"}> */}
+                    {/* <Space> */}
+                        {/* 类型选择{" "} */}
+                        {/* <Select
                             defaultValue="GDP"
                             style={{ width: 200 }}
                             onChange={handleChange}
@@ -457,8 +494,16 @@ const App = () => {
                                     ],
                                 },
                             ]}
-                        />{" "}
-                    </Space>
+                        />{" "} */}
+                          <AutoComplete
+                            options={options}
+                            style={{ width: '100%' }}
+                            onSelect={onSelect}
+                            onSearch={(text) => setOptions(getPanelValue(text))}
+                            placeholder="input here"
+                        />
+                        {/* <Input placeholder="查询GDP或者Inflation"   prefix={<SearchOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />}/> */}
+                    {/* </Space> */}
 
                     <List
                         bordered
@@ -497,7 +542,7 @@ const App = () => {
                             // </List.Item>
                         }}
                     />
-                </Space>
+                {/* </Space> */}
             </Col>
         </Row>
     );
