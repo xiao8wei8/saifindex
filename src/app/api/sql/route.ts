@@ -1,39 +1,74 @@
-
-
- import { NextResponse } from 'next/server'
-import jsonwebtoken from 'jsonwebtoken'
-import { encrypt } from '@/utils/auth'
-import { cookies } from 'next/headers'
-
-const sql = `
- select tiw.tradedate,tiw.indexprefix,tiw.symbol,tiw.stockmarketareacode,tiw.weight
-  from ts_index_weight tiw 
+import { NextResponse } from "next/server";
+import jsonwebtoken from "jsonwebtoken";
+import { encrypt } from "@/utils/auth";
+import { cookies } from "next/headers";
+// 获取股票基本信息
+const get_stock_basic_ash = () => {
+  const sql = `
+  select * from stockmarket.stock_basic_ash
+  `;
+  return sql;
+}
+// 获取指数基本信息
+const get_indexshortname = () => {
+  const sql = `
+  select indexcode,indexshortname t from stockmarket.ts_index_basic
+  `;
+  return sql;
+}
+//上证300指数
+const get_hs300 = () => {
+    const hs300 = `
+  select tiw.tradedate,tiw.indexprefix,tiw.symbol,sba.stockname,tiw.stockmarketareacode,tiw.weight
+  from stockmarket.ts_index_weight tiw ,stockmarket.stock_basic_ash sba
  where tiw.indexcode = '930693.CSI' 
    and tradedate >= '20230301' and tradedate <= '20230331'
+   and sba.symbol = tiw.symbol
  order by tiw.weight desc
 
-`
-import {query} from '@/libs/db'
+`;
+    return hs300;
+};
+const get_hs300_stock = () => {
+    const hs300_stock = `
+ select * from stockmarket.ts_daily_befadjust where tradedate >= '20240101' and tradedate <= '20240131' and symbol = "601636"
+`;
+    return hs300_stock;
+};
+
+import { query } from "@/libs/db";
 
 export async function GET(
     request: Request,
-    // { params: { auth } }: { params: { auth: string } }
-    // {sql}: {sql: string}
-  ) {
-    query({query: sql})
+    {
+        params,
+    }: { params: { id: string; start: string; end: string; type: string } }
+) {
+    const { id, start, end, type } = params;
+    let sql = "";
+    switch (type) {
+        case "hs300":
+          sql = get_hs300();
+            break;
+        case "hs300_stock":
+          sql = get_hs300_stock();
+            break;
+        default:
+            break;
+    }
 
     try {
         const results: any = await query({
-          query: sql
-        } );
-      
+            query: sql,
+        });
+
         console.log(results); // results contains rows returned by server
         // console.log(fields); // fields contains extra meta data about results, if available
-        return NextResponse.json({data: { results }, msg: '成功'})
-      } catch (err) {
+        return NextResponse.json({ data: { results }, msg: "成功" });
+    } catch (err) {
         console.log(err);
-        return NextResponse.json({data: { results: [] }, msg: '失败'+err})
-      }
+        return NextResponse.json({ data: { results: [] }, msg: "失败" + err });
+    }
 
     // const { email, pwd } = await request.json();
 
@@ -52,7 +87,7 @@ export async function GET(
     //     process.env.JWT_SECRET || '',
     //     { expiresIn: '3d' }
     // );
-    
+
     // // 设置token过期时间
     // const oneDay = 3 * 24 * 60 * 60 * 1000;
     // // 将token设置到session中，请求中就不需要手动设置token参数
@@ -65,5 +100,4 @@ export async function GET(
     // if(auth === 'register') {
     //   return NextResponse.json({data: { email, pwd: en_pwd }, msg: '注册成功'})
     // }
-    
 }
