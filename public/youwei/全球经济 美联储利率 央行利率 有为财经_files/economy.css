@@ -1,0 +1,204 @@
+.main{
+    margin: 0 auto 20px;
+    padding-top: 20px;
+    padding-left: 20px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+}
+
+.cate-box{
+    min-height:calc(100vh - 100px);
+    margin-right: 20px;
+    width: 200px;
+    flex-shrink: 0;
+    background: #fff;
+    overflow:hidden;
+    -webkit-box-shadow: 0 3px 6px 0 #efefef;
+    box-shadow: 0 3px 6px 0 #efefef;
+}
+.content-box{
+    width: calc(100% - 220px);
+    background: #fff;
+    overflow: hidden;
+    -webkit-box-shadow: 0 3px 6px 0 #efefef;
+    box-shadow: 0 3px 6px 0 #efefef;
+}
+
+.c-box{
+    padding: 20px;
+}
+.c-box-head{
+    padding-bottom: 5px;
+    border-bottom: 1px solid #ddd;
+    font-size: 15px;
+    color: #888;
+}
+
+.c-box-body{
+    padding: 5px 0;
+}
+
+
+.menu-box{
+    text-align: left;
+    font-size: 16px;
+    margin-top: 20px;
+}
+
+.menu-box .menu-item {
+    color: black;
+    display: inline-block;
+    padding: 0 5px 3px 5px;
+    border-bottom: 1px solid #ddd;
+}
+
+.menu-box .active {
+    font-weight: bold;
+    border-bottom: 3px solid #f79817ff!important;
+}
+
+.card-box{
+    margin-bottom: 20px;
+}
+
+.tit{
+    border: 1px solid #f3f1ee;
+    border-bottom: 2px solid #ddd;
+    padding: 10px 0;
+    background-color: #fcfbfa;
+}
+.tit span {
+    color: #888;
+    font-size: 1rem;
+    margin-left: 15px;
+}
+
+.rate-content{
+    background-color: #fcfbfa;
+    padding-bottom: 20px;
+}
+
+.rate-content p{
+    margin-bottom: 0;
+}
+
+.rate-content > table{
+    width: 100%;
+    border-left: 1px solid #f3f1ee;
+    border-top: 1px solid #f3f1ee;
+    background-color: #fcfbfa;
+    font-size: 14px;
+}
+
+.rate-content>table th {
+    border-bottom: 1px solid #f3f1ee;
+    border-right: 1px solid #f3f1ee;
+    height: 50px;
+    color: #31708f;
+    text-align: center;
+}
+
+.rate-content>table td {
+    border-bottom: 1px solid #f3f1ee;
+    border-right: 1px solid #f3f1ee;
+    height: 50px;
+    color: #333;
+    text-align: center;
+}
+
+.rate-content>table span {
+    color: #888;
+    font-size: 12px;
+}
+
+.rate-content td.red {
+    color: #ed6464 !important;
+}
+
+.flex-box{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-left: 10px;
+}
+
+.flex-box img{
+    width: 100%;
+    padding: 5px;
+}
+
+.flex-box > div:last-child{
+    text-align: left;
+}
+
+
+#tbl-gdp>tbody>tr>td{
+    height: 35px;
+}
+
+
+table.sortable thead {
+    background-color:#f0f0f0;
+    color:#666666;
+    font-weight: bold;
+    cursor: default;
+}
+
+table.sortable>tbody>tr:nth-child(even){
+    background: #f9f9f9;
+}
+table.sortable>tbody>tr:hover{
+    background: #f1f1f1;
+}
+
+#tbl-box>table.sortable tbody {
+    counter-reset: sortabletablescope;
+}
+#tbl-box>table.sortable thead tr::before {
+    content: "";
+    display: table-cell;
+}
+#tbl-box>table.sortable tbody tr::before {
+    color: gray;
+    vertical-align: middle!important;
+    text-align: center;
+    content: counter(sortabletablescope);
+    counter-increment: sortabletablescope;
+    display: table-cell;
+}
+
+.charts-box{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+.charts-content{
+    width: 100%;
+
+}
+.charts-opt{
+    font-size: 14px;
+    width: 200px;
+}
+.charts-opt-card{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    color: #333;
+    padding: 5px 10px;
+}
+
+.charts-opt-card:hover{
+    background: #e1e1e1;
+    cursor: pointer;
+}
+.charts-box .active{
+    background: #ddd;
+}
+.charts-opt-card img{
+    width: 100%;
+    padding: 5px;
+}

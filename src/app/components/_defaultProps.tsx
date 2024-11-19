@@ -25,7 +25,7 @@ export default {
         },
             {
                 path: "/dashboard",
-                name: "数据大盘",
+                name: "综合看板",
                 icon: (
                     <DashboardOutlined
                         onPointerEnterCapture={undefined}

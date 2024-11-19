@@ -1,0 +1,64 @@
+.main{
+    margin: 0 auto;
+    padding-top: 20px;
+    padding-left: 20px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+}
+
+.price-box{
+    margin-left: 20px;
+    width:300px;
+    flex-shrink: 0;
+}
+.card-box{
+    width: calc(100% - 320px);
+    margin-bottom: 20px;
+}
+
+.cate-box, .tools-box{
+    background: #fff;
+    padding-bottom: 20px;
+}
+
+.cate-title{
+    border-bottom: 1px solid #ddd;
+    padding: 20px 20px 5px 20px;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.cate-body, .tools-body{
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: flex-start;
+}
+.cate-item{
+    padding: 20px 0 10px 20px;
+    width: 160px;
+}
+.cate-item img{
+    width: 16px;
+    height: 16px;
+}
+
+.tools-title{
+    border-bottom: 1px solid #ddd;
+    padding: 20px 20px 5px 20px;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.tools-item{
+    text-align: left;
+    width: 50%;
+    padding: 10px 0 0 20px;
+    font-size:14px;
+}
+
+.tools-item a, .tools-item a:visited, .cate-item a, .cate-item a:visited{
+    color: #1256a0;
+}

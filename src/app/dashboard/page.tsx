@@ -861,7 +861,9 @@ const ECommerce: React.FC = () => {
 const APP = () => {
     return (
         <LayoutContainer currentpathname="/dashborad">
-            <ECommerce />
+            {/* <ECommerce /> */}
+           
+            <iframe src="./youwei/index.html" style={{ width: "100%", height: "100%" }}></iframe>
         </LayoutContainer>
     );
 };
