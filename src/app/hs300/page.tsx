@@ -196,15 +196,15 @@ if (typeof window == "undefined") {
 const App = () => {
     useEffect( () => {
 
-        const main = async () => {
-            const response = await axios.get(
-                "/api/sql",
-                {} // Include the config object as the third argument
-            );
-            const items = response.data;
-            console.log("[items]", items);
-        }
-        main()
+        // const main = async () => {
+        //     const response = await axios.get(
+        //         "/api/sql",
+        //         {} // Include the config object as the third argument
+        //     );
+        //     const items = response.data;
+        //     console.log("[items]", items);
+        // }
+        // main()
         // if (items.success == false) {
 
         // }
