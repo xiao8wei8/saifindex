@@ -63,7 +63,7 @@ export default ({
                 ]}
                 {...defaultProps}
                 title="SAIF AI-BASE"
-                logo="https://gw.alipayobjects.com/zos/antfincdn/upvrAjAPQX/Logo_Tech%252520UI.svg"
+                logo="/images/logo-font/logo_star.png"
                 location={{
                     pathname,
                 }}

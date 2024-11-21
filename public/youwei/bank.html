@@ -13,6 +13,36 @@
     <link href="./bank/base.css" rel="stylesheet">
     <link href="./bank/main.css" rel="stylesheet">
     <link href="./bank/economy.css" rel="stylesheet">
+    <style>
+        #layout-aside {
+            display: none;
+        }
+        #layout-footer {
+            display: none;
+        }
+        #layout_content {
+            margin-top: 0;
+            padding-left: 0px;
+        }
+        .logo {
+            display: none;
+        }
+        #add_wechat {
+            display: none;
+        }
+        #layout-menu {
+            display: none;
+        }
+        #layout-news-nav {
+            display: none;
+        }
+        #layout-header {
+            display: none;
+        }
+        #layout-cate-box {
+            display: none;
+        }
+    </style>
 </head>
 
 <body>
@@ -91,12 +121,12 @@
             <div class="c-box-body">
                                 <div class="menu-box">
                     <span class="active">
-                        <a class="menu-item" href="https://upsort.com/e/bank">央行利率</a>
+                        <a class="menu-item" href="/bank" target="_blank">央行利率</a>
                     </span>
                 </div>
                                 <div class="menu-box">
                     <span>
-                        <a class="menu-item" href="https://upsort.com/e/global">全球经济指标</a>
+                        <a class="menu-item" href="/global" target="_blank">全球经济指标</a>
                     </span>
                 </div>
                             </div>
@@ -514,13 +544,10 @@
 <script>
     function rateTendChart(bank) {
         var opt = bank || 'FED';
-        $.ajax({
-            type: "GET",
-            url: "/e/ajax/bank",
-            dataType: "JSON",
-            data: {bank:opt},
-            success: function (res) {
-                var title = res.data.name + "利率历史趋势";
+
+        $.get("/api/youwei?type=e/ajax/bank&params="+JSON.stringify({bank:opt}), function(res){
+            console.log(res.data);
+                var title = res.data.data.name + "利率历史趋势";
                 Highcharts.chart('charts-container', {
                     credits: {enabled: false},
                     chart: {
@@ -530,7 +557,7 @@
                     },
                     xAxis: {
                         lineColor: '#1f2e5b',
-                        categories: res.data.cate,
+                        categories: res.data.data.cate,
                         tickmarkPlacement: 'on'
                     },
                     yAxis: {
@@ -590,19 +617,28 @@
                     series: [{
                         name: '公布值',
                         color: ' rgb(255, 119, 0)',
-                        data: res.data.rate,
+                        data: res.data.data.rate,
                         lineWidth: 1.5,
                     }, {
                         name: '预测值',
                         color: 'rgb(124, 181, 236)',
                         id: 'prediction',
-                        data: res.data.predict_rate,
+                        data: res.data.data.predict_rate,
                         lineWidth: 1.5,
                         dashStyle: "Dash"
                     }]
                 });
-            }
-        });
+        })
+
+        // $.ajax({
+        //     type: "GET",
+        //     url: "/api/youwei?type=/e/ajax/bank",
+        //     dataType: "JSON",
+        //     data: {params:{bank:opt}},
+        //     success: function (res) {
+               
+        //     }
+        // });
     }
     $(document).ready(function() {
         rateTendChart();

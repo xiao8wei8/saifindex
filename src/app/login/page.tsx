@@ -39,7 +39,7 @@ export default () => {
     <ProConfigProvider hashed={false} >
       <div style={{ backgroundColor: token.colorBgContainer }}>
         <LoginForm
-          logo="https://gw.alipayobjects.com/zos/antfincdn/upvrAjAPQX/Logo_Tech%252520UI.svg"
+          logo="/images/logo-font/logo_star.png"
           title="SAIF AI-BASE"
           subTitle="高金人自己的金融数据智能查询平台"
           onClick={(opt) => {
@@ -51,7 +51,7 @@ export default () => {
           onFinish={async (values) => {
             console.log('Success:', values);
             localStorage.setItem("curWeixin", values.username);
-            router.push('/dashboard');
+            router.push('/shishi');
             // return true;
           }}
           onFinishFailed={async (errorInfo) => {

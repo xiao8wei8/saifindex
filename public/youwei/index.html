@@ -34,7 +34,7 @@
             rel="stylesheet"
         />
         <link
-            href="https://upsort.com/style/index.css?20230311"
+            href="/youwei/static/index.css?20230311"
             rel="stylesheet"
         />
         <style>
@@ -498,7 +498,7 @@
                         <div class="index-wrap">
                             <div class="index-title">
                                 <div>7X24快讯</div>
-                                <!-- <div class="index-title-source">星期二</div> --> 
+                                <div class="index-title-source">星期</div> 
                             </div>
                             <div class="index-tips"></div>
                             <div class="index-body">
@@ -681,6 +681,27 @@
         <script src="./static/index.js?20230323"></script>
         <script>
             $(function () {
+
+            
+                var date = new Date();
+
+                // 获取年份
+                var year = date.getFullYear();
+
+                // 获取月份（注意：月份从0开始，需要加1）
+                var month = date.getMonth() + 1;
+
+                // 获取日期
+                var day = date.getDate();
+
+                // 获取星期几（注意：星期日是0，需要进行转换）
+                var weekDay = date.getDay();
+                var weekDayStr = ["日", "一", "二", "三", "四", "五", "六"][weekDay];
+
+
+                    // 将获取到的日期信息显示在页面上
+                    $(".index-title-source").html(year + "年" + month + "月" + day + "日" + " 星期" + weekDayStr)
+
                 if ($(window).width() > 600) {
                     $(".tab-idx").niceScroll({ autohidemode: "leave" });
                 }

@@ -37,27 +37,21 @@ export default {
                     {
                         path: "/shishi",
                         name: "实时详情",
-                        icon: "https://gw.alipayobjects.com/zos/antfincdn/upvrAjAPQX/Logo_Tech%252520UI.svg",
+                        icon: "/images/logo-font/logo_star.png",
                         component: "./Welcome",
                     },
                     {
-                        path: "/hot",
-                        name: "热点综合",
-                        icon: "https://gw.alipayobjects.com/zos/antfincdn/upvrAjAPQX/Logo_Tech%252520UI.svg",
+                        path: "/bank",
+                        name: "央视利率",
+                        icon: "/images/logo-font/logo_star.png",
                         component: "./Welcome",
                     },
                     {
-                        path: "/finance",
-                        name: "热点财经",
-                        icon: "https://gw.alipayobjects.com/zos/antfincdn/upvrAjAPQX/Logo_Tech%252520UI.svg",
+                        path: "/global",
+                        name: "全球经济指标",
+                        icon: "/images/logo-font/logo_star.png",
                         component: "./Welcome",
-                    },
-                    {
-                        path: "/politic",
-                        name: "热点时政",
-                        icon: "https://gw.alipayobjects.com/zos/antfincdn/upvrAjAPQX/Logo_Tech%252520UI.svg",
-                        component: "./Welcome",
-                    },
+                    }
                  
                    
                 ],
@@ -77,7 +71,7 @@ export default {
                     {
                         path: "/nl2sql",
                         name: "自然语言转SQL",
-                        icon: "https://gw.alipayobjects.com/zos/antfincdn/upvrAjAPQX/Logo_Tech%252520UI.svg",
+                        icon: "/images/logo-font/logo_star.png",
                         component: "./Welcome",
                     },
                  
@@ -169,7 +163,7 @@ export default {
         ],
     },
     location: {
-        pathname: "/dashboard",
+        pathname: "/shishi",
     },
     appList: [
         // {

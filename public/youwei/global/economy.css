@@ -20,7 +20,7 @@
     box-shadow: 0 3px 6px 0 #efefef;
 }
 .content-box{
-    width: calc(100% - 220px);
+    width: calc(100%);
     background: #fff;
     overflow: hidden;
     -webkit-box-shadow: 0 3px 6px 0 #efefef;

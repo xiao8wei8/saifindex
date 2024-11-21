@@ -21,7 +21,8 @@ export async function GET(request: NextRequest) {
     for(var key in params){
         paramsStr+=key+"="+params[key]+"&"
     }
-    const response = await fetch("https://upsort.com/"+type+"?"+paramsStr, {
+    let url = "https://upsort.com/"+type+"?"+paramsStr
+    const response = await fetch(url, {
         // body: params,
         method: "GET",
         headers: {
@@ -29,11 +30,11 @@ export async function GET(request: NextRequest) {
             //   Authorization: `Bearer ${request.cookies.get('token')?.value}`,
         },
     });
-   
+    console.log("[][type]",type,url);
     // 除了 200-299 之间的状态码都会视为失败
     if (response.ok) {
         const data = await response.json();
-        console.log("[][response]",response.ok,data);
+        
         return NextResponse.json({ data, success: true}, { status: 200 });
     }
     return NextResponse.json({  success: false}, { status: 200 });
