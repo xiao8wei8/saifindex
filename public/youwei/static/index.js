@@ -91,8 +91,12 @@ var Message = {
 
     getDataFromServer:function(page){
         var that = this;
-        $.get("/msg",{'page':page}, function(resp){
-            that.makeHtml(resp.data, page);
+        // $.get("/msg",{'page':page}, function(resp){
+        //     that.makeHtml(resp.data, page);
+        // })
+        $.get("/api/youwei?type=msg&params="+JSON.stringify({page:page}), function(resp){
+            console.log("[getDataFromServer]", resp.data.data);
+            that.makeHtml(resp.data.data, page);
         })
     },
 
@@ -181,8 +185,13 @@ var DaPan = {
         // $.get("https://upsort.com/pan", function(resp){
         //     that.makeHtml(resp.data);
         // })
-      
+        $.get("/api/youwei?type=pan", function(resp){
+            console.log("[api/youwei?type=pan]", resp.data);
+            var pan = resp.data;    
             that.makeHtml(pan.data);
+        })
+      
+            
        
     },
 

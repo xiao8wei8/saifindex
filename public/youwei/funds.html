@@ -10,10 +10,10 @@
     <link rel="apple-touch-icon" href="https://upsort.com/image/logo1.png">
     <title>行业资金流向 有为财经</title>
 
-    <link href="./行业资金流向 有为财经_files/base.css" rel="stylesheet">
-    <link href="./行业资金流向 有为财经_files/main.css" rel="stylesheet">
-    <link href="./行业资金流向 有为财经_files/data.css" rel="stylesheet">
-<link href="./行业资金流向 有为财经_files/jquery.dataTables.min.css" rel="stylesheet">
+    <link href="./funds/base.css" rel="stylesheet">
+    <link href="./funds/main.css" rel="stylesheet">
+    <link href="./funds/data.css" rel="stylesheet">
+<link href="./funds/jquery.dataTables.min.css" rel="stylesheet">
 </head>
 
 <body>
@@ -35,44 +35,44 @@
     <div id="layout-aside" class="aside">
         <div class="logo">
             <a href="https://upsort.com/">
-                <img alt="有为财经" src="./行业资金流向 有为财经_files/logo.png">
+                <img alt="有为财经" src="./funds/logo.png">
             </a>
         </div>
         <div class="nav">
             <div class="nav-box">
                 <div class="nav-item">
-                   <img alt="实时行情" src="./行业资金流向 有为财经_files/stock-off.png">
+                   <img alt="实时行情" src="./funds/stock-off.png">
                    <a href="https://upsort.com/">实时行情</a>
                 </div>
             </div>
             <div class="nav-box">
                 <div class="nav-item">
-                    <img alt="热点资讯" src="./行业资金流向 有为财经_files/hot-off.png">
+                    <img alt="热点资讯" src="./funds/hot-off.png">
                     <a href="https://upsort.com/news">热点资讯</a>
                 </div>
             </div>
             <div class="nav-box">
                 <div class="nav-item current">
-                    <img alt="A股数据" src="./行业资金流向 有为财经_files/data-off.png">
+                    <img alt="A股数据" src="./funds/data-off.png">
                     <a href="https://upsort.com/s/pan">A股数据</a>
                 </div>
             </div>
             <div class="nav-box">
                 <div class="nav-item">
-                    <img alt="大V观点" src="./行业资金流向 有为财经_files/value-off.png">
+                    <img alt="大V观点" src="./funds/value-off.png">
                     <a href="https://upsort.com/v/weibo">大V观点</a>
                 </div>
             </div>
 
             <div class="nav-box">
                 <div class="nav-item">
-                    <img alt="宏观经济" src="./行业资金流向 有为财经_files/economy-off.png">
+                    <img alt="宏观经济" src="./funds/economy-off.png">
                     <a href="https://upsort.com/e/bank">宏观经济</a>
                 </div>
             </div>
             <div class="nav-box">
                 <div class="nav-item">
-                    <img alt="财经导航" src="./行业资金流向 有为财经_files/nav-off.png">
+                    <img alt="财经导航" src="./funds/nav-off.png">
                     <a href="https://upsort.com/dh">财经导航</a>
                 </div>
             </div>
@@ -80,7 +80,7 @@
 
         <div id="add_wechat">
             <a href="https://upsort.com/">
-                <img alt="扫描加群畅聊" src="./行业资金流向 有为财经_files/wechat_qun.png">
+                <img alt="扫描加群畅聊" src="./funds/wechat_qun.png">
             </a>
         </div>
     </div>
@@ -121,10 +121,10 @@
     </div>
 </div>
 
-<script src="./行业资金流向 有为财经_files/jquery.min.js.下载"></script>
-<script src="./行业资金流向 有为财经_files/jquery.nicescroll.min.js.下载"></script>
-<script src="./行业资金流向 有为财经_files/jquery-scrolltofixed-min.js.下载"></script>
-<script src="./行业资金流向 有为财经_files/jquery.dataTables.min.js.下载"></script>
+<script src="./funds/jquery.min.js"></script>
+<script src="./funds/jquery.nicescroll.min.js"></script>
+<script src="./funds/jquery-scrolltofixed-min.js"></script>
+<script src="./funds/jquery.dataTables.min.js"></script>
 <script>
 $(function() {
     $.fn.dataTable.ext.type.order['code-order-pre'] = function (d) {
@@ -138,7 +138,7 @@ $(function() {
     };
 
     var tab = $('#myTable').DataTable({
-        "ajax": "/s/ajax/funds",
+        "ajax": "https://upsort.com/s/ajax/funds",
         "order": [[ 7, "asc" ]],
         "lengthMenu": [[50, 100, 200, 300],[50, 100, 200, 300]],
         scrollY: "58vh",

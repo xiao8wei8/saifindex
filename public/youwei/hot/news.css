@@ -1,0 +1,151 @@
+.news-main{
+    margin: 60px auto 0;
+    padding-top: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+}
+
+.news-main a {
+    color: #333;
+}
+
+.news-main a:hover{
+    color: #07d;
+}
+
+.news-main a:visited{
+    color: #888;
+}
+.news-box-wrap{
+    border-radius: 5px;
+    padding: 0 10px 0 10px;
+    box-sizing: border-box;
+    -webkit-box-shadow: 0 3px 6px 0 #efefef;
+    box-shadow: 0 3px 6px 0 #efefef;
+    background: #fff;
+    margin-left: 20px;
+    margin-bottom:20px;
+}
+
+.news-box-head{
+    padding:10px 0;
+    margin-bottom: 5px;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.news-box-head-title{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.news-box-head-title img{
+    height: 25px;
+    width: 25px;
+    margin-right:3px;
+    border-radius: 50%;
+}
+
+.news-box-head-title a{
+    font-size: 18px;
+    font-weight: 700;
+    margin-top: -2px;
+}
+
+.news-box-head-tag{
+    font-weight:700;
+    font-size: 16px;
+    color: #666;
+}
+
+.news-box-foot{
+    margin-top: 5px;
+    padding:10px 0;
+    border-top: 1px solid #ddd;
+    color: gray;
+    font-size: 12px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.news-box-foot a, .news-box-foot a:hover{
+    color: gray;
+}
+
+.news-box-body{
+    height: 320px;
+    overflow: hidden;
+    overflow-y: auto;
+}
+
+.news-box-body-row{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+    color: #999;
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+.news-box-body-row:nth-child(-n+3){
+    color: red;
+}
+
+.news-box-body-row-flag{
+    display: inline-block;
+    width: 15px;
+    text-align: right;
+    margin-right: 10px;
+    flex-shrink: 0;
+}
+
+.red{
+    color: red;
+}
+
+.rank-tr:hover{
+    background: #f8f8f8;
+}
+
+.news-nav{
+    margin: 0 auto;
+    width: 100%;
+    position: fixed;
+    top:0;
+    left:0;
+    background: #f7f8fa;
+
+}
+.news-nav-wrap{
+    text-align: center;
+    background: #F3F3F3;
+    z-index: 100;
+    box-shadow: 0 2px 4px 0 rgba(85,85,85,.25);
+}
+
+.nav-a{
+    display: inline-block;
+    font-size: 16px;
+    padding: 20px 10px 10px 10px;
+    text-align: center;
+    margin:0 10px;
+    color: black;
+
+}
+
+.nav-a:hover{
+    color: black;
+}
+
+.nav-active{
+    font-weight:700;
+    border-bottom: 2px solid #f79817ff;
+}
+

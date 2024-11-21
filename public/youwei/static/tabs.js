@@ -753,9 +753,14 @@ var Tool = {
         //     that.makeHtml(resp.data);
         //     that.heartBeat();
         // })
-
-                    that.makeHtml(all.data);
+        $.get("/api/youwei?type=all", function(resp){
+          console.log("[api/youwei?type=all]", resp.data);
+            that.makeHtml(resp.data.data);
             that.heartBeat();
+        })
+
+            //         that.makeHtml(all.data);
+            // that.heartBeat();
     },
 
     heartBeat:function(){

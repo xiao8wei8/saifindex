@@ -33,6 +33,34 @@ export default {
                     />
                 ),
                 component: "./Welcome",
+                routes: [
+                    {
+                        path: "/shishi",
+                        name: "实时详情",
+                        icon: "https://gw.alipayobjects.com/zos/antfincdn/upvrAjAPQX/Logo_Tech%252520UI.svg",
+                        component: "./Welcome",
+                    },
+                    {
+                        path: "/hot",
+                        name: "热点综合",
+                        icon: "https://gw.alipayobjects.com/zos/antfincdn/upvrAjAPQX/Logo_Tech%252520UI.svg",
+                        component: "./Welcome",
+                    },
+                    {
+                        path: "/finance",
+                        name: "热点财经",
+                        icon: "https://gw.alipayobjects.com/zos/antfincdn/upvrAjAPQX/Logo_Tech%252520UI.svg",
+                        component: "./Welcome",
+                    },
+                    {
+                        path: "/politic",
+                        name: "热点时政",
+                        icon: "https://gw.alipayobjects.com/zos/antfincdn/upvrAjAPQX/Logo_Tech%252520UI.svg",
+                        component: "./Welcome",
+                    },
+                 
+                   
+                ],
             },
             {
                 path: "/dataquery",
