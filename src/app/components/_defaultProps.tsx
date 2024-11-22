@@ -1,3 +1,4 @@
+'use client';
 import {
     ChromeFilled,
     CrownFilled,
@@ -11,18 +12,17 @@ export default {
     route: {
         path: "/",
         routes: [
-    
-          {
-            path: "/chat",
-            name: "SAIF Chat Bot",
-            icon: (
-                <CrownFilled
-                    onPointerEnterCapture={undefined}
-                    onPointerLeaveCapture={undefined}
-                />
-            ),
-            component: "./Welcome",
-        },
+            {
+                path: "/chat",
+                name: "SAIF Chat Bot",
+                icon: (
+                    <CrownFilled
+                        onPointerEnterCapture={undefined}
+                        onPointerLeaveCapture={undefined}
+                    />
+                ),
+                component: "./Welcome",
+            },
             {
                 path: "/dashboard",
                 name: "综合看板",
@@ -42,7 +42,7 @@ export default {
                     },
                     {
                         path: "/bank",
-                        name: "央视利率",
+                        name: "央行利率",
                         icon: "/images/logo-font/logo_star.png",
                         component: "./Welcome",
                     },
@@ -51,9 +51,19 @@ export default {
                         name: "全球经济指标",
                         icon: "/images/logo-font/logo_star.png",
                         component: "./Welcome",
-                    }
-                 
-                   
+                    },
+                    {
+                        path: "/indexs/1",
+                        name: "111",
+                        icon: "/images/logo-font/logo_star.png",
+                        component: "./Welcome",
+                    },
+                    {
+                        path: "/indexs/12",
+                        name: "222",
+                        icon: "/images/logo-font/logo_star.png",
+                        component: "./Welcome",
+                    },
                 ],
             },
             {
@@ -74,8 +84,6 @@ export default {
                         icon: "/images/logo-font/logo_star.png",
                         component: "./Welcome",
                     },
-                 
-                   
                 ],
             },
             {
@@ -124,42 +132,42 @@ export default {
                     />
                 ),
             },
-        //     {
-        //       path: "/queryCEIC",
-        //       name: "宏观经济数据",
-        //       icon: (
-        //           <StockOutlined
-        //               onPointerEnterCapture={undefined}
-        //               onPointerLeaveCapture={undefined}
-        //           />
-        //       ),
-        //       access: "canAdmin",
-        //       component: "./Admin",
-        //       routes: [
-        //           {
-        //               path: "/gdp",
-        //               name: "GDP",
-        //               icon: (
-        //                   <CrownFilled
-        //                       onPointerEnterCapture={undefined}
-        //                       onPointerLeaveCapture={undefined}
-        //                   />
-        //               ),
-        //               component: "./Welcome",
-        //           },
-        //           {
-        //             path: "/inflation",
-        //             name: "Inflation",
-        //             icon: (
-        //                 <CrownFilled
-        //                     onPointerEnterCapture={undefined}
-        //                     onPointerLeaveCapture={undefined}
-        //                 />
-        //             ),
-        //             component: "./Welcome",
-        //         },
-        //       ],
-        //   }
+            //     {
+            //       path: "/queryCEIC",
+            //       name: "宏观经济数据",
+            //       icon: (
+            //           <StockOutlined
+            //               onPointerEnterCapture={undefined}
+            //               onPointerLeaveCapture={undefined}
+            //           />
+            //       ),
+            //       access: "canAdmin",
+            //       component: "./Admin",
+            //       routes: [
+            //           {
+            //               path: "/gdp",
+            //               name: "GDP",
+            //               icon: (
+            //                   <CrownFilled
+            //                       onPointerEnterCapture={undefined}
+            //                       onPointerLeaveCapture={undefined}
+            //                   />
+            //               ),
+            //               component: "./Welcome",
+            //           },
+            //           {
+            //             path: "/inflation",
+            //             name: "Inflation",
+            //             icon: (
+            //                 <CrownFilled
+            //                     onPointerEnterCapture={undefined}
+            //                     onPointerLeaveCapture={undefined}
+            //                 />
+            //             ),
+            //             component: "./Welcome",
+            //         },
+            //       ],
+            //   }
         ],
     },
     location: {

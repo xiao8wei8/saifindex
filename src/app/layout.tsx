@@ -1,3 +1,5 @@
+
+
 import React from "react";
 //@ts-ignore
 import { AntdRegistry } from "@ant-design/nextjs-registry";
@@ -6,68 +8,89 @@ import Layout, { Content, Footer } from "antd/lib/layout/layout";
 import "./layout.css";
 import Textscroll from "@/components/textscroll/page";
 import 'tailwindcss/tailwind.css';
-const RootLayout = ({ children }: React.PropsWithChildren) => (
-    <html lang="en">
-        <body>
-            <AntdRegistry>
-                {/* <Layout style={{minHeight: "100vh"}}> */}
-                {/* <Content style={{ margin: "24px 16px 0" }}>
-                        <div
-                            style={{
-                                padding: 24,
-                                minHeight: 520,
-                            }}
-                        > */}
-                <Textscroll/>
-                {children}
-                {/* </div>
-                    </Content> */}
+// import {createContext} from "react";
+import { DataProvider } from "./components/DataProvider";
+const getInitialProps = async () => {
+    // const res = await fetch('https://api.github.com/repos/vercel/next.js')
+    // const json = await res.json()
+    return { stars: 1 }
+  }
 
-                {/* </Layout> */}
-            </AntdRegistry>
-            {/* <Footer
-                style={{
-                    textAlign: "center",
-                    // position: "fixed",
-                    // bottom: "0",
-                    // width: "100%",
-                    // minWidth: "430px",
-                    // height: "66px",
-                    zIndex: 999,
-                    margin: "8px",
-                }}
-                className="footer"
-                id="footer"
-            >
-                <div>
-                    SAIF AI-BASE ©{new Date().getFullYear()} Created by SAIF
-                    24Gr.技术小组
+const RootLayout = async ({ children }: React.PropsWithChildren) => {
+    const initialItems = await getInitialProps();
+    // console.log("[initialItems]",initialItems)
+    return (
+        <html lang="en">
+            <body>
+                <AntdRegistry>
+                    {/* <Layout style={{minHeight: "100vh"}}> */}
+                    {/* <Content style={{ margin: "24px 16px 0" }}>
+                            <div
+                                style={{
+                                    padding: 24,
+                                    minHeight: 520,
+                                }}
+                            > */}
+                    <Textscroll/>
+                    {/* <TDataContext.Provider value={initialItems}> */}
+                    <DataProvider  value={initialItems}>{children}</DataProvider>
+                    {/* {children} */}
+                    {/* </TDataContext.Provider> */}
+                 
+                    {/* </div>
+                        </Content> */}
+    
+                    {/* </Layout> */}
+                </AntdRegistry>
+                {/* <Footer
+                    style={{
+                        textAlign: "center",
+                        // position: "fixed",
+                        // bottom: "0",
+                        // width: "100%",
+                        // minWidth: "430px",
+                        // height: "66px",
+                        zIndex: 999,
+                        margin: "8px",
+                    }}
+                    className="footer"
+                    id="footer"
+                >
+                    <div>
+                        SAIF AI-BASE ©{new Date().getFullYear()} Created by SAIF
+                        24Gr.技术小组
+                    </div>
+                    <div style={{ marginTop: "10px" }}>
+                        © 备案号：
+                        <a href="https://beian.miit.gov.cn/" target="_blank">
+                            沪ICP备2024095623号-1
+                        </a>
+                    </div>
+                </Footer> */}
+                <div
+                  
+                    className="footer"
+                    id="footer"
+                >
+                    <div>
+                        SAIF AI-BASE ©{new Date().getFullYear()} Created by SAIF
+                        24Gr.技术小组
+                    </div>
+                    <div style={{ marginTop: "10px" }}>
+                        © 备案号：
+                        <a href="https://beian.miit.gov.cn/" target="_blank">
+                            沪ICP备2024095623号-1
+                        </a>
+                    </div>
                 </div>
-                <div style={{ marginTop: "10px" }}>
-                    © 备案号：
-                    <a href="https://beian.miit.gov.cn/" target="_blank">
-                        沪ICP备2024095623号-1
-                    </a>
-                </div>
-            </Footer> */}
-            <div
-              
-                className="footer"
-                id="footer"
-            >
-                <div>
-                    SAIF AI-BASE ©{new Date().getFullYear()} Created by SAIF
-                    24Gr.技术小组
-                </div>
-                <div style={{ marginTop: "10px" }}>
-                    © 备案号：
-                    <a href="https://beian.miit.gov.cn/" target="_blank">
-                        沪ICP备2024095623号-1
-                    </a>
-                </div>
-            </div>
-        </body>
-    </html>
-);
-
+            </body>
+        </html>
+    )
+};
+RootLayout.getInitialProps = async () => {
+   
+    return { stars: {
+        test:1
+    }};
+};
 export default RootLayout;
