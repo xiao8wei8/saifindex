@@ -10,15 +10,40 @@ import Textscroll from "@/components/textscroll/page";
 import 'tailwindcss/tailwind.css';
 // import {createContext} from "react";
 import { DataProvider } from "./components/DataProvider";
+import axios from "axios";
+import { useRouter } from "next/router";
 const getInitialProps = async () => {
     // const res = await fetch('https://api.github.com/repos/vercel/next.js')
     // const json = await res.json()
-    return { stars: 1 }
+
+     // const main = async () => {
+        //     const response = await axios.get(
+        //         "/api/sql",
+        //         {} // Include the config object as the third argument
+        //     );
+        //     const items = response.data;
+        //     console.log("[items]", items);
+        // }
+        // main()
+        // if (items.success == false) {
+
+        // }
+
+    // const response = await axios.get(
+    //     "/api/sql?type=hs300",
+    //     {} // Include the config object as the third argument
+    // );
+    // const items = response.data;
+    // console.log("[items]", items);
+   
+    const res = await fetch('http://localhost:3000/api/sql?type=indexshortname')
+    const json = await res.json()
+    return { data: json }
   }
 
 const RootLayout = async ({ children }: React.PropsWithChildren) => {
     const initialItems = await getInitialProps();
-    // console.log("[initialItems]",initialItems)
+    console.log("[initialItems]",initialItems)
     return (
         <html lang="en">
             <body>
@@ -33,7 +58,7 @@ const RootLayout = async ({ children }: React.PropsWithChildren) => {
                             > */}
                     <Textscroll/>
                     {/* <TDataContext.Provider value={initialItems}> */}
-                    <DataProvider  value={initialItems}>{children}</DataProvider>
+                    <DataProvider value={initialItems}>{children}</DataProvider>
                     {/* {children} */}
                     {/* </TDataContext.Provider> */}
                  

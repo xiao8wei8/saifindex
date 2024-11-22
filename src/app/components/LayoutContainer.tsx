@@ -1,5 +1,6 @@
 'use client';
 import {
+    CrownFilled,
     GithubFilled,
     InfoCircleFilled,
     QuestionCircleFilled,
@@ -12,7 +13,7 @@ import { useRouter } from "next/navigation";
 import weixins from "./weixins";
 import "./index.css";
 import { NextPageContext } from "next";
-// import TDataContext from "./DataProvider";
+import {TDataContext} from "./DataProvider";
 
 const Page =   ({
     children,
@@ -23,9 +24,42 @@ const Page =   ({
     currentpathname?: string;
     stars: number 
 }) => {
-    // const initData = useContext(TDataContext);
+    const initData:any = useContext(TDataContext);
+    const results = initData.data.data.results
     // const revenue = await fetchRevenue();
-    console.log("[initData]");
+    console.log("[initData]",results);
+    let routes:any = [
+        
+    ]
+    results.forEach((item:any) => {
+        routes.push({
+            path: "/indexs/"+item.indexcode,
+            name: item.indexshortname,
+            icon: (
+                <CrownFilled
+                    onPointerEnterCapture={undefined}
+                    onPointerLeaveCapture={undefined}
+                />
+            ),
+            component: "./Welcome",
+        });
+    });
+    console.log("[routes]",routes);
+    let newPros:any = defaultProps
+    newPros.route.routes[3]['routes'] = routes;
+
+    // {
+    //     path: "/hs300",
+    //     name: "沪深300",
+    //     icon: (
+    //         <CrownFilled
+    //             onPointerEnterCapture={undefined}
+    //             onPointerLeaveCapture={undefined}
+    //         />
+    //     ),
+    //     component: "./Welcome",
+    // },
+    // defaultProps
     const router = useRouter();
     const [pathname, setPathname] = useState(
         currentpathname || defaultpathname
@@ -72,7 +106,7 @@ const Page =   ({
                         // },
                     ]
                 }
-                {...defaultProps}
+                {...newPros}
                 title="SAIF AI-BASE"
                 logo="/images/logo-font/logo_star.png"
                 location={{
