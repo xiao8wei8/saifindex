@@ -12,17 +12,17 @@ axios.defaults.timeout = 50000;
 
 import "./style.css";
 
-import { Button, DatePicker, Pagination, Space } from "antd";
+import { Button, DatePicker, Pagination, Space, Spin } from "antd";
 const { RangePicker } = DatePicker;
 
 import { Calendar, theme } from "antd";
 import type { CalendarProps } from "antd";
 import type { Dayjs } from "dayjs";
 import aaplOhlcvData from "./aapl-ohlcv";
-import hs300 from "../../data/hs300";
+// import hs300 from "../../data/hs300";
 
-const hs300Data = hs300.slice(0, 20);
-
+// const hs300Data = hs300.slice(0, 20);
+let hs300:any = []
 const onPanelChange = (
     value: Dayjs,
     mode: CalendarProps<Dayjs>["mode"]
@@ -196,22 +196,29 @@ if (typeof window == "undefined") {
 // like Options come from the Highcharts module itself.
 
 const App = ({ weighValue }: { weighValue: any }) => {
-  const [heatMapsOptions, setHeatMapsOptions] = useState({});//getHeatMapsData(1)
+    if (typeof window == "undefined") {
+        return <div></div>;
+    }
+    if(weighValue.length == 0){
+        return <div> <Spin /></div>
+    }
+    hs300 = weighValue;
+
     console.log("[weighValue]", weighValue);
-    useEffect(() => {
-        // const main = async () => {
-        //     const response = await axios.get(
-        //         "/api/sql",
-        //         {} // Include the config object as the third argument
-        //     );
-        //     const items = response.data;
-        //     console.log("[items]", items);
-        // }
-        // main()
-        // if (items.success == false) {
-        // }
-        setHeatMapsOptions(weighValue);
-    }, [weighValue]);
+    // useEffect(() => {
+    //     // const main = async () => {
+    //     //     const response = await axios.get(
+    //     //         "/api/sql",
+    //     //         {} // Include the config object as the third argument
+    //     //     );
+    //     //     const items = response.data;
+    //     //     console.log("[items]", items);
+    //     // }
+    //     // main()
+    //     // if (items.success == false) {
+    //     // }
+    //     setHeatMapsOptions(weighValue);
+    // }, [weighValue]);
     const [isShowStock, setIsShowStock] = useState(false);
     const defaultStockOptions = {
         yAxis: [
@@ -585,7 +592,7 @@ const App = ({ weighValue }: { weighValue: any }) => {
         HeatMapsOptionsDefault.colorAxis = colorAxis;
         return HeatMapsOptionsDefault;
     };
-
+    const [heatMapsOptions, setHeatMapsOptions] = useState(getHeatMapsData(1));//
     const setHeatMapsData = (number: number) => {
         const data = getHeatMapsData(number);
         setHeatMapsOptions(data);
@@ -593,9 +600,7 @@ const App = ({ weighValue }: { weighValue: any }) => {
 
     useEffect(() => {}, []);
 
-    if (typeof window == "undefined") {
-        return <div></div>;
-    }
+    
     const onClose = () => {
         setIsShowStock(!isShowStock);
     };
@@ -674,21 +679,55 @@ export default function Page({
 }: {
     params: Promise<{ slug: string }>;
 }) {
-    const [weighValue, setWeighValue] = useState({});
+    // {id:"688981",name:"中芯国际",value:4.807,colorValue:300},
+    // {id:"688599",name:"天合光能",value:3.252,colorValue:299},
+    const dd = [
+        {
+            "name": "旗滨集团",
+            "id": "601636.SH",
+            "value": 29.9670,
+            "colorValue": 300
+        },
+        {
+            "name": "华新水泥",
+            "id": "600801.SH",
+            "value": 18.8950,
+            "colorValue": 300
+        },
+        {
+            "name": "金隅集团",
+            "id": "601992.SH",
+            "value": 18.2290,
+            "colorValue": 300
+        },
+        {
+            "name": "冀东水泥",
+            "id": "000401.SZ",
+            "value": 16.4690,
+            "colorValue": 300
+        },
+        {
+            "name": "南玻A",
+            "id": "000012.SZ",
+            "value": 16.4390,
+            "colorValue": 300
+        }
+    ]
+    const [weighValue, setWeighValue] = useState([]||dd);
 
-    useEffect(() => {
-        console.log("[params]", geturl);
-        const fn = async () => {
-            console.log("[fn]");
-            const slug = (await params).slug;
-            const data = await getInitialProps("weigh", {
-                slug: slug,
-            });
-            console.log("[data]", data);
-            setWeighValue(data.data.data.results);
-        };
-        fn();
-    }, []);
+    // useEffect(() => {
+    //     console.log("[params]", geturl);
+    //     const fn = async () => {
+    //         console.log("[fn]");
+    //         const slug = (await params).slug;
+    //         const data = await getInitialProps("weigh", {
+    //             slug: slug,
+    //         });
+    //         console.log("[data]", data);
+    //         setWeighValue(data.data.data.results);
+    //     };
+    //     fn();
+    // }, []);
 
     if (typeof window == "undefined") {
         return <div></div>;

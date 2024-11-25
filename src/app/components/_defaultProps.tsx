@@ -51,19 +51,7 @@ export default {
                         name: "全球经济指标",
                         icon: "/images/logo-font/logo_star.png",
                         component: "./Welcome",
-                    },
-                    {
-                        path: "/indexs/1",
-                        name: "111",
-                        icon: "/images/logo-font/logo_star.png",
-                        component: "./Welcome",
-                    },
-                    {
-                        path: "/indexs/12",
-                        name: "222",
-                        icon: "/images/logo-font/logo_star.png",
-                        component: "./Welcome",
-                    },
+                    }
                 ],
             },
             {

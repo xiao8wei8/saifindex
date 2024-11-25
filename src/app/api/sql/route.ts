@@ -9,19 +9,37 @@ const get_stock_basic_ash = () => {
   `;
     return sql;
 };
+
+const basics = [
+"'399013.SZ'",
+"'000967.SH'",
+"'000967.CSI'",
+"'000905.SH'",
+"'399316.SZ'",
+"'399400.SZ'",
+"'921266.CSI'",
+"'000982.SH'",
+"'399001.SZ'",
+]
+// select indexcode,indexshortname t from stockmarket.ts_index_basic where indexcode in (${basics.join(",")})
+
 // 获取指数基本信息
 const get_indexshortname = () => {
     const sql = `
-  select indexcode,indexshortname t from stockmarket.ts_index_basic where indexcode like "%.sz"
+
+ select indexcode,indexshortname t from stockmarket.ts_index_basic where indexcode in ('399013.SZ','000967.SH','000967.CSI','000905.SH','399316.SZ','399400.SZ','921266.CSI','000982.SH','399001.SZ')
+
 
   `;
+  
     return sql;
 };
 //上证300指数  {id:"688981",name:"中芯国际",value:4.807,colorValue:300},
 const get_weight = (indexcode?: any) => {
     let code = indexcode || "930693.CSI";
     const hs300 = `
-  select sba.stockname as name,tiw.stockmarketareacode as id,tiw.weight as weight,300 as colorValue
+
+select sba.stockname as name,tiw.stockcode as id,tiw.weight as value, 300 AS colorValue
   from stockmarket.ts_index_weight tiw ,stockmarket.stock_basic_ash sba
  where tiw.indexcode = '${code}' 
    and tradedate >= '20230301' and tradedate <= '20230331'
@@ -73,6 +91,7 @@ export async function GET(request: NextRequest) {
     }
 
     try {
+        console.log("[SQL]:",sql)
         const results: any = await query({
             query: sql,
         });
