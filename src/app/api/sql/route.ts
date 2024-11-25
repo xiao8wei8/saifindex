@@ -4,23 +4,24 @@ import { encrypt } from "@/utils/auth";
 import { cookies } from "next/headers";
 // 获取股票基本信息
 const get_stock_basic_ash = () => {
-  const sql = `
+    const sql = `
   select * from stockmarket.stock_basic_ash
   `;
-  return sql;
-}
+    return sql;
+};
 // 获取指数基本信息
 const get_indexshortname = () => {
-  const sql = `
-  select indexcode,indexshortname t from stockmarket.ts_index_basic
+    const sql = `
+  select indexcode,indexshortname t from stockmarket.ts_index_basic where indexcode like "%.sz"
+
   `;
-  return sql;
-}
-//上证300指数
-const get_hs300 = (indexcode?:any) => {
-    let code = indexcode||'930693.CSI'
+    return sql;
+};
+//上证300指数  {id:"688981",name:"中芯国际",value:4.807,colorValue:300},
+const get_weight = (indexcode?: any) => {
+    let code = indexcode || "930693.CSI";
     const hs300 = `
-  select tiw.tradedate,tiw.indexprefix,tiw.symbol,sba.stockname,tiw.stockmarketareacode,tiw.weight
+  select sba.stockname as name,tiw.stockmarketareacode as id,tiw.weight as weight,300 as colorValue
   from stockmarket.ts_index_weight tiw ,stockmarket.stock_basic_ash sba
  where tiw.indexcode = '${code}' 
    and tradedate >= '20230301' and tradedate <= '20230331'
@@ -30,8 +31,8 @@ const get_hs300 = (indexcode?:any) => {
 `;
     return hs300;
 };
-const get_hs300_stock = (symbol?:any) => {
-    let code = symbol||'601636'
+const get_stock = (symbol?: any) => {
+    let code = symbol || "601636";
     const hs300_stock = `
  select * from stockmarket.ts_daily_befadjust where tradedate >= '20240101' and tradedate <= '20240131' and symbol = "${code}"
 `;
@@ -46,25 +47,27 @@ import { query } from "@/libs/db";
 //         params,
 //     }: { params: { id: string; start: string; end: string; type: string } }
 // ) {
-    // const { id, start, end, type } = params;
+// const { id, start, end, type } = params;
 
 export async function GET(request: NextRequest) {
-        const searchParams = request.nextUrl.searchParams;
-        const type: any = searchParams.get("type"); // 'xxx'
-        const params: any =JSON.parse(searchParams.get("params")||'{}')
+    const searchParams = request.nextUrl.searchParams;
+    const type: any = searchParams.get("type"); // 'xxx'
+    const params: any = JSON.parse(searchParams.get("params") || "{}");
 
     let sql = "";
     switch (type) {
-        case "hs300":
-          sql = get_hs300();
+        case "weigh": //获取权重
+            const indexcode = params.indexcode;
+            sql = get_weight(indexcode);
             break;
-        case "hs300_stock":
-          sql = get_hs300_stock();
+        case "stock": //获取股票
+        const symbol = params.indexcode;
+            sql = get_stock(symbol);
             break;
-        case "indexshortname":
+        case "indexshortname": //获取指数
             sql = get_indexshortname();
-                break;
-            
+            break;
+
         default:
             break;
     }

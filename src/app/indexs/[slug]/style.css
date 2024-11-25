@@ -1,0 +1,16 @@
+@import "https://code.highcharts.com/css/stocktools/gui.css";
+@import "https://code.highcharts.com/css/annotations/popup.css";
+.highcharts-menu-wrapper {
+    padding: 0 !important;
+}
+#chartContainer [data-highcharts-chart]{
+   
+    height: 760px !important;
+}
+.ant-pro-card{
+    height: auto !important;
+}
+.right{
+    display: flex;
+    flex-direction: row-reverse;
+}

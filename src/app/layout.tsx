@@ -12,6 +12,9 @@ import 'tailwindcss/tailwind.css';
 import { DataProvider } from "./components/DataProvider";
 import axios from "axios";
 import { useRouter } from "next/router";
+import config from "@/libs/config";
+// import { use, useEffect, useState } from "react";
+const geturl = config.url;
 const getInitialProps = async () => {
     // const res = await fetch('https://api.github.com/repos/vercel/next.js')
     // const json = await res.json()
@@ -36,7 +39,7 @@ const getInitialProps = async () => {
     // const items = response.data;
     // console.log("[items]", items);
    
-    const res = await fetch('http://localhost:3000/api/sql?type=indexshortname')
+    const res = await fetch(geturl+'?type=indexshortname')
     const json = await res.json()
     return { data: json }
   }

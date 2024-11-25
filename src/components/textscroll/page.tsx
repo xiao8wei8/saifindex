@@ -4,6 +4,7 @@ import "./styles.css";
 import "./TextScroll/index.css";
 import TextScroll from "./TextScroll";
 import axios from "axios";
+import Image from 'next/image'
 
 /**
  * 升级版：
@@ -58,6 +59,32 @@ export default function App() {
       </div>
      
     </div>
-    </div>
+    <div className="header-ad">
+    <Image
+      src="/images/ad-5.gif"
+      width={600}
+      height={58}
+      alt="Picture of the author"
+    />
+     <Image
+         src="/images/ad-4.gif"
+      width={600}
+      height={58}
+      alt="Picture of the author"
+    />
+    <Image
+      src="/images/ad-3.jpg"
+      width={600}
+      height={58}
+      alt="Picture of the author"
+    />
+     <Image
+         src="/images/ad-2.png"
+      width={600}
+      height={58}
+      alt="Picture of the author"
+    />
+    </div></div>
+    
   );
 }

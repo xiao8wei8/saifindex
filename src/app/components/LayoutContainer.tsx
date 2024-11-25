@@ -17,12 +17,11 @@ import {TDataContext} from "./DataProvider";
 
 const Page =   ({
     children,
-    currentpathname,
-    stars 
+    currentpathname
 }: {
     children: React.ReactNode;
     currentpathname?: string;
-    stars: number 
+
 }) => {
     const initData:any = useContext(TDataContext);
     const results = initData.data.data.results
@@ -34,7 +33,7 @@ const Page =   ({
     results.forEach((item:any) => {
         routes.push({
             path: "/indexs/"+item.indexcode,
-            name: item.indexshortname,
+            name: item.t,
             icon: (
                 <CrownFilled
                     onPointerEnterCapture={undefined}
