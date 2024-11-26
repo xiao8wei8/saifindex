@@ -38,10 +38,14 @@ const getInitialProps = async () => {
     // );
     // const items = response.data;
     // console.log("[items]", items);
-   
-    const res = await fetch(geturl+'?type=indexshortname')
-    const json = await res.json()
-    return { data: json }
+   try {
+       const res = await fetch(geturl + "?type=indexshortname");
+       const json = await res.json();
+       return { data: json };
+   } catch (error) {
+       return { data: {}, state: "error" };
+   }
+    
   }
 
 const RootLayout = async ({ children }: React.PropsWithChildren) => {

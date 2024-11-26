@@ -7,7 +7,7 @@
         "build": "next build && PORT=3000 npm start",
         "start": "next start",
         "lint": "next lint",
-        "rebuild":"pm2 delete nextjs && pm2 start npm --name 'nextjs' -- run build && pm2 save"
+        "rebuild":"NODE_ENV = 'production'   pm2 delete nextjs && pm2 start npm --name 'nextjs' -- run build && pm2 save"
     },
     "dependencies": {
         "@ant-design/icons": "5.0.1",

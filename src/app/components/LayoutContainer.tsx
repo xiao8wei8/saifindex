@@ -24,7 +24,7 @@ const Page =   ({
 
 }) => {
     const initData:any = useContext(TDataContext);
-    const results = initData.data.data.results
+    const results = initData?.data?.data?.results||[]
     // const revenue = await fetchRevenue();
     console.log("[initData]",results);
     let routes:any = [

@@ -33,7 +33,10 @@ export default () => {
     verticalAlign: 'middle',
     cursor: 'pointer',
   };
-  const curWeixin = localStorage.getItem("curWeixin")||"";
+  let curWeixin = ""
+  if(typeof window != "undefined") {
+    curWeixin = localStorage.getItem("curWeixin")||"";
+  }
   
   return (
     <div >
