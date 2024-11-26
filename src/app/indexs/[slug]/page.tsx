@@ -12,7 +12,7 @@ axios.defaults.timeout = 50000;
 
 import "./style.css";
 
-import { Button, DatePicker, Pagination, Space, Spin } from "antd";
+import { Button, DatePicker, message, Pagination, Space, Spin } from "antd";
 const { RangePicker } = DatePicker;
 
 import { Calendar, theme } from "antd";
@@ -22,7 +22,7 @@ import aaplOhlcvData from "./aapl-ohlcv";
 // import hs300 from "../../data/hs300";
 
 // const hs300Data = hs300.slice(0, 20);
-let hs300:any = []
+let hs300: any = [];
 const onPanelChange = (
     value: Dayjs,
     mode: CalendarProps<Dayjs>["mode"]
@@ -195,13 +195,19 @@ if (typeof window == "undefined") {
 // RefObject interface (HighchartsReact.RefObject). All other interfaces
 // like Options come from the Highcharts module itself.
 
-const App = ({ weighValue }: { weighValue: any }) => {
+const App = ({ weighValue }: { weighValue: any}) => {
     if (typeof window == "undefined") {
         return <div></div>;
     }
-    if(weighValue.length == 0){
-        return <div> <Spin /></div>
+    if (weighValue.length == 0) {
+        return (
+            <div>
+                {" "}
+                <Spin />
+            </div>
+        );
     }
+    const [messageApi, contextHolder] = message.useMessage();
     hs300 = weighValue;
 
     console.log("[weighValue]", weighValue);
@@ -485,11 +491,20 @@ const App = ({ weighValue }: { weighValue: any }) => {
     const [name, setName] = useState("");
     const [value, setValue] = useState("");
     const [stockOptions, setStockOptions] = useState(defaultStockOptions);
-    const getStockData = (point: any) => {
+
+    useEffect(() => {
+        messageApi.info('Hello, Ant Design!');
+    }, [name]);
+    
+    const getStockData = async(point: any) => {
         const { value, name } = point;
         console.log(value, name);
-        setName(name);
-        setValue(value);
+        setName(name.split("</br>").join("-") );
+        const options = await getStockDataByCode("stock", { indexcode: name.split("</br>")[1] });
+     
+
+
+        console.log("[options]",options);
         // @ts-ignore
         setStockOptions(aaplOhlcvOptions);
         setIsShowStock(!isShowStock);
@@ -557,7 +572,7 @@ const App = ({ weighValue }: { weighValue: any }) => {
                         },
                     ],
                     events: {
-                        click: function (event: any) {
+                        click:  function (event: any) {
                             console.log("flagStr", event.point);
                             // setFlag(!flag);
                             // flagStr = !flagStr;
@@ -570,7 +585,7 @@ const App = ({ weighValue }: { weighValue: any }) => {
                 },
             ],
             title: {
-                text: "沪深300及其权重",
+                text: slug + "股票权重分配",
                 align: "left",
             },
             // subtitle: {
@@ -592,7 +607,7 @@ const App = ({ weighValue }: { weighValue: any }) => {
         HeatMapsOptionsDefault.colorAxis = colorAxis;
         return HeatMapsOptionsDefault;
     };
-    const [heatMapsOptions, setHeatMapsOptions] = useState(getHeatMapsData(1));//
+    const [heatMapsOptions, setHeatMapsOptions] = useState(getHeatMapsData(1)); //
     const setHeatMapsData = (number: number) => {
         const data = getHeatMapsData(number);
         setHeatMapsOptions(data);
@@ -600,7 +615,6 @@ const App = ({ weighValue }: { weighValue: any }) => {
 
     useEffect(() => {}, []);
 
-    
     const onClose = () => {
         setIsShowStock(!isShowStock);
     };
@@ -674,6 +688,7 @@ const App = ({ weighValue }: { weighValue: any }) => {
 import config from "@/libs/config";
 // import { use, useEffect, useState } from "react";
 const geturl = config.url;
+let slug = "";
 export default function Page({
     params,
 }: {
@@ -681,53 +696,37 @@ export default function Page({
 }) {
     // {id:"688981",name:"中芯国际",value:4.807,colorValue:300},
     // {id:"688599",name:"天合光能",value:3.252,colorValue:299},
-    const dd = [
-        {
-            "name": "旗滨集团",
-            "id": "601636.SH",
-            "value": 29.9670,
-            "colorValue": 300
-        },
-        {
-            "name": "华新水泥",
-            "id": "600801.SH",
-            "value": 18.8950,
-            "colorValue": 300
-        },
-        {
-            "name": "金隅集团",
-            "id": "601992.SH",
-            "value": 18.2290,
-            "colorValue": 300
-        },
-        {
-            "name": "冀东水泥",
-            "id": "000401.SZ",
-            "value": 16.4690,
-            "colorValue": 300
-        },
-        {
-            "name": "南玻A",
-            "id": "000012.SZ",
-            "value": 16.4390,
-            "colorValue": 300
-        }
-    ]
-    const [weighValue, setWeighValue] = useState([]||dd);
+    // const dd = [
+    //     {
+    //         name: "旗滨集团",
+    //         id: "601636.SH",
+    //         value: 29.967,
+    //         colorValue: 300,
+    //     },
+   
+    // ];
+    const [weighValue, setWeighValue] = useState([]);
 
-    // useEffect(() => {
-    //     console.log("[params]", geturl);
-    //     const fn = async () => {
-    //         console.log("[fn]");
-    //         const slug = (await params).slug;
-    //         const data = await getInitialProps("weigh", {
-    //             slug: slug,
-    //         });
-    //         console.log("[data]", data);
-    //         setWeighValue(data.data.data.results);
-    //     };
-    //     fn();
-    // }, []);
+    useEffect(() => {
+        console.log("[params]", geturl);
+        const fn = async () => {
+            console.log("[fn]");
+            slug = (await params).slug;
+            const data = await getInitialProps("weight", {
+                indexcode: slug,
+            });
+            console.log("[data]", data);
+            let results = data.data.data.results;
+            results.map((item: any, index: number) => {
+                item.colorValue = 300 + index;
+                item.value = parseFloat(item.value);
+                item.name = item.name+"</br>"+item.id+"</br>"+item.value;
+            });
+            console.log("[results]", results);
+            setWeighValue(results);
+        };
+        fn();
+    }, []);
 
     if (typeof window == "undefined") {
         return <div></div>;
@@ -756,3 +755,19 @@ const getInitialProps = async (type: string, params: Object) => {
     const json = await res.json();
     return { data: json };
 };
+
+const getStockDataByCode = async (type: string, params: Object) => {
+
+    // case "stock": //获取股票
+    // const symbol = params.indexcode;
+    //     sql = get_stock(symbol);
+
+
+    const urlStr =
+        geturl + "?type=" + type + "&params=" + JSON.stringify(params);
+    console.log("[urlStr]", urlStr);
+    const res = await fetch(urlStr);
+    const json = await res.json();
+    return { data: json };
+};
+

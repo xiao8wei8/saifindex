@@ -1,3 +1,6 @@
 #footer{
     display: none !important;
 }
+.header-index-container {
+    display: block !important;
+}

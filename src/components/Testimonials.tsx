@@ -13,8 +13,9 @@ export const Testimonials = () => {
         <div className="lg:col-span-2 xl:col-auto">
           <div className="flex flex-col justify-between w-full h-full bg-gray-100 px-14 rounded-2xl py-14 dark:bg-trueGray-800">
             <p className="text-2xl leading-normal ">
-              Share a real <Mark>testimonial</Mark>
-              that hits some of your benefits from one of your popular customer.
+            
+           
+              分享一个真实的<Mark>证明</Mark>，从你的一个受欢迎的客户那里得到一些好处。
             </p>
 
             <Avatar
@@ -27,8 +28,9 @@ export const Testimonials = () => {
         <div className="">
           <div className="flex flex-col justify-between w-full h-full bg-gray-100 px-14 rounded-2xl py-14 dark:bg-trueGray-800">
             <p className="text-2xl leading-normal ">
-              Make sure you only pick the <Mark>right sentence</Mark>
-              to keep it short and simple.
+          
+              确保你只选择<Mark>正确的</Mark>
+工具。
             </p>
 
             <Avatar
@@ -41,8 +43,10 @@ export const Testimonials = () => {
         <div className="">
           <div className="flex flex-col justify-between w-full h-full bg-gray-100 px-14 rounded-2xl py-14 dark:bg-trueGray-800">
             <p className="text-2xl leading-normal ">
-              This is an <Mark>awesome</Mark> landing page template I&apos;ve
-              seen. I would use this for anything.
+           
+观察。我可以用它来做任何事情。
+这是我见过的一个<Mark>很棒的</Mark>网站。
+
             </p>
 
             <Avatar

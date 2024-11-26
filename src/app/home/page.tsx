@@ -14,9 +14,9 @@ const App =  () =>{
       <Hero />
       <SectionTitle
         preTitle="SAIF AI-BASE Benefits"
-        title=" Why should you use this SAIF AI-BASE"
+        title=" 你为什么要使用这个SAIF AI-BASE"
       >
-        SAIF AI-BASE is a xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.
+        SAIF AI-BASE 全球各个金融市场的实时数据、新闻和研究报告、强大的分析工具、即时通讯工具和世界级的交易执行系统均无缝整合于一个一体化平台。
       </SectionTitle>
 
       <Benefits data={benefitOne} />
@@ -24,21 +24,18 @@ const App =  () =>{
 
       <SectionTitle
         preTitle="Watch a video"
-        title="Learn how to fullfil your needs"
+        title="学会如何满足自己的需求"
       >
-        This section is to highlight a promo or demo video of your product.
-        Analysts says a landing page with video has 3% more conversion rate. So,
-        don&apos;t forget to add one. Just like this.
+       跨资产类别的订单和执行管理解决方案及满足买方和卖方机构全部投资流程的分析工具，使他们与全球资本市场对接、提升企业合规并降低所有者成本。
       </SectionTitle>
 
       <Video videoId="fZ0D0cnR88E" />
 
       <SectionTitle
         preTitle="Testimonials"
-        title="Here's what our customers said"
+        title="这是我们的顾客说的"
       >
-        Testimonials is a great way to increase the brand trust and awareness.
-        Use this section to highlight your popular customers.
+      由市场、场内工具和机构变化而不断筛选、认证和持续更新的最优质的数据。
       </SectionTitle>
 
       <Testimonials />

@@ -33,6 +33,7 @@ export default () => {
     verticalAlign: 'middle',
     cursor: 'pointer',
   };
+  const curWeixin = localStorage.getItem("curWeixin")||"";
   
   return (
     <div >
@@ -51,7 +52,7 @@ export default () => {
           onFinish={async (values) => {
             console.log('Success:', values);
             localStorage.setItem("curWeixin", values.username);
-            router.push('/shishi');
+            router.push('/dingpan');
             // return true;
           }}
           onFinishFailed={async (errorInfo) => {
@@ -83,6 +84,7 @@ export default () => {
                   size: 'large',
                   prefix: <UserOutlined className={'prefixIcon'} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />,
                 }}
+                initialValue={curWeixin}
                 // disabled
                 placeholder={'用户名: 微信号'}
                 rules={[

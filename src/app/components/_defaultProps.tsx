@@ -34,6 +34,14 @@ export default {
                 ),
                 component: "./Welcome",
                 routes: [
+                    
+                    
+                    {
+                        path: "/dingpan",
+                        name: "盯盘",
+                        icon: "/images/logo-font/logo_star.png",
+                        component: "./Welcome",
+                    },
                     {
                         path: "/shishi",
                         name: "实时详情",
@@ -159,7 +167,7 @@ export default {
         ],
     },
     location: {
-        pathname: "/shishi",
+        pathname: "/dingpan",
     },
     appList: [
         // {

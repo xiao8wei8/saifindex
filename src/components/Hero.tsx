@@ -12,12 +12,12 @@ export const Hero = () => {
             SAIF AI-BASE 的优点
             </h1>
             <p className="py-5 text-xl leading-normal text-gray-500 lg:text-xl xl:text-2xl dark:text-gray-300">
-              SAIF AI-BASE  is xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.
+              SAIF AI-BASE 是专业服务将决策者与信息、专业人士和策略所汇集的强大网络紧密相连。这个网络的核心是我们通过创新技术为金融专业人士和机构快速、精准地传递数据、资讯和分析。
             </p>
 
             <div className="flex flex-col items-start space-y-3 sm:space-x-4 sm:space-y-0 sm:items-center sm:flex-row">
               <a
-                href="/shishi"
+                href="/dingpan"
                 target="_blank"
                 rel="noopener"
                 className="px-8 py-4 text-lg font-medium text-center text-white bg-indigo-600 rounded-md ">
@@ -44,8 +44,8 @@ export const Hero = () => {
       <Container>
         <div className="flex flex-col justify-center">
           <div className="text-xl text-center text-gray-700 dark:text-white">
-            Trusted by <span className="text-indigo-600">2000+</span>{" "}
-            customers worldwide
+          受到全球 <span className="text-indigo-600">2000+</span>{" "}
+          多家客户的信赖
           </div>
 
           <div className="flex flex-wrap justify-center gap-5 mt-10 md:justify-around">

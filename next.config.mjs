@@ -8,6 +8,16 @@ import withAntdLess from 'next-plugin-antd-less';
  * information_schema
  */
 const nextConfig = {
+    async redirects() {
+        return [
+          // Basic redirect
+          {
+            source: '/',
+            destination: '/home',
+            permanent: true,
+          }
+        ]
+      },
     env: {
         MYSQL_HOST: "101.34.245.222",
         MYSQL_PORT: "3306",

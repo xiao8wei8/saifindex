@@ -52,7 +52,7 @@ export function PopupWidget() {
         console.log(error);
       });
   };
-
+  return null
   return (
     <div>
       <Disclosure>

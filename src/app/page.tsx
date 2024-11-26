@@ -1,13 +1,21 @@
 "use client";
-import React from "react";
+import { Spin } from "antd";
+import { redirect } from "next/navigation";
+import React, { useEffect } from "react";
 
 
 const Home = ({stars}:any) => {
     console.log("[stars]",stars);
+    useEffect(() => {
+        redirect(`/home`); 
+    },[])
     
     return (
         <div className="App">
-         hello
+         <Spin size="large" />
+
+       
+
         </div>
     );
 };

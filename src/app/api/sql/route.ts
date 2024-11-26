@@ -22,14 +22,14 @@ const basics = [
 "'399001.SZ'",
 ]
 // select indexcode,indexshortname t from stockmarket.ts_index_basic where indexcode in (${basics.join(",")})
+//  select indexcode,indexshortname t from stockmarket.ts_index_basic where indexcode in ('399013.SZ','000967.SH','000967.CSI','000905.SH','399316.SZ','399400.SZ','921266.CSI','000982.SH','399001.SZ')
 
 // 获取指数基本信息
 const get_indexshortname = () => {
     const sql = `
 
- select indexcode,indexshortname t from stockmarket.ts_index_basic where indexcode in ('399013.SZ','000967.SH','000967.CSI','000905.SH','399316.SZ','399400.SZ','921266.CSI','000982.SH','399001.SZ')
-
-
+   select indexcode,indexshortname t from stockmarket.ts_index_basic where indexcode in (
+'399001.SZ','399006.SZ','399300.SZ','399330.SZ')
   `;
   
     return sql;
@@ -74,7 +74,7 @@ export async function GET(request: NextRequest) {
 
     let sql = "";
     switch (type) {
-        case "weigh": //获取权重
+        case "weight": //获取权重
             const indexcode = params.indexcode;
             sql = get_weight(indexcode);
             break;

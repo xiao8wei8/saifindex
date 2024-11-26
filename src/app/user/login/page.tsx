@@ -27,7 +27,7 @@ export default function Home() {
       const { email, pwd } = values;
       loginApi(email, pwd).then((res:any) => {
         // login logic
-        router.push('/shishi');
+        router.push('/dingpan');
       })
       return
     }
@@ -36,7 +36,7 @@ export default function Home() {
       const { email, pwd } = values;
       registerApi(email, pwd).then((res:any) => {
         // register logic
-        router.push('/shishi');
+        router.push('/dingpan');
       })
     }
     
