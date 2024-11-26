@@ -4,6 +4,8 @@
 import React, { use, useEffect, useRef, useState } from "react";
 import Highcharts from "highcharts/highstock";
 
+
+
 import Highcharts2 from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import HighchartsExporting from "highcharts/modules/exporting";
@@ -23,13 +25,47 @@ import aaplOhlcvData from "./aapl-ohlcv";
 
 // const hs300Data = hs300.slice(0, 20);
 let hs300: any = [];
-const onPanelChange = (
-    value: Dayjs,
-    mode: CalendarProps<Dayjs>["mode"]
-): any => {
-    console.log(value.format("YYYY-MM-DD"), mode);
-};
-const getAaplOhlcv = () => {
+const onPanelChange =(date: any, dateString: any) => {
+    console.log(date, dateString);
+  };
+const getAaplOhlcv = (aaplOhlcvData: any) => {
+    // [1666791000000,150.96,151.99,148.04,149.35,88194300],
+    // {
+    //     "stockcode": "300750.SZ",
+    //     "tradedate": "2024-01-01T16:00:00.000Z",
+    //     "symbol": "300750",
+    //     "stockname_cn": "宁德时代",
+    //     "stockmarketarea": "深交所",
+    //     "stockmarketareacode": "sz",
+    //     "stockmarketareano": 4,
+    //     "stockmarket": "创业板",
+    //     "open": "162.2200",
+    //     "high": "162.5300",
+    //     "low": "156.6200",
+    //     "close": "156.8300",
+    //     "pre_close": "163.2600",
+    //     "change_price": "-6.4300",
+    //     "pct_chg": "-3.9385",
+    //     "vol": "214032.68",
+    //     "amount": "3390080.35000",
+    //     "turnover_rate": "0.55",
+    //     "turnover_rate_f": "0.88",
+    //     "volume_ratio": "1.03",
+    //     "pe": "22.4510",
+    //     "pe_ttm": "15.5794",
+    //     "pb": "3.8248",
+    //     "ps": "2.0996",
+    //     "ps_ttm": "1.6707",
+    //     "dv_ratio": "0.8921",
+    //     "dv_ttm": "0.8921",
+    //     "total_share": 439904,
+    //     "float_share": 389485,
+    //     "free_share": 2418684247,
+    //     "total_mv": "689901637042.00",
+    //     "circ_mv": "610829749255.00",
+    //     "isstflag": 0,
+    //     "isst": "N"
+    // }
     const data = aaplOhlcvData;
 
     // split the data set into ohlc and volume
@@ -38,17 +74,31 @@ const getAaplOhlcv = () => {
         dataLength = data.length;
 
     for (let i = 0; i < dataLength; i += 1) {
+        const item = data[i];
+        // ohlc.push([
+        //     data[i][0], // the date
+        //     data[i][1], // open
+        //     data[i][2], // high
+        //     data[i][3], // low
+        //     data[i][4], // close
+        // ]);
+
+        // volume.push([
+        //     data[i][0], // the date
+        //     data[i][5], // the volume
+        // ]);
+
         ohlc.push([
-            data[i][0], // the date
-            data[i][1], // open
-            data[i][2], // high
-            data[i][3], // low
-            data[i][4], // close
+            new Date(item.tradedate).getTime(), // the date
+            parseFloat(item.open), // open
+            parseFloat(item.high), // high
+            parseFloat(item.low), // low
+            parseFloat(item.close), // close
         ]);
 
         volume.push([
-            data[i][0], // the date
-            data[i][5], // the volume
+            new Date(item.tradedate).getTime(), // the date
+            parseFloat(item.vol), // the volume
         ]);
     }
 
@@ -108,14 +158,14 @@ const getAaplOhlcv = () => {
         series: [
             {
                 type: "ohlc",
-                id: "aapl-ohlc",
-                name: "AAPL Stock Price",
+                id: "ohlc",
+                name: "Stock Price",
                 data: ohlc,
             },
             {
                 type: "column",
-                id: "aapl-volume",
-                name: "AAPL Volume",
+                id: "volume",
+                name: "Volume",
                 data: volume,
                 yAxis: 1,
             },
@@ -135,10 +185,11 @@ const getAaplOhlcv = () => {
             ],
         },
     };
+    console.log("[getAaplOhlcv]", ret);
     return ret;
 };
 
-const aaplOhlcvOptions = getAaplOhlcv();
+// const aaplOhlcvOptions = getAaplOhlcv();
 
 let callfn: any = null;
 const PickerContainer: React.FC = () => {
@@ -153,7 +204,8 @@ const PickerContainer: React.FC = () => {
 
     return (
         <div style={wrapperStyle}>
-            <RangePicker picker="month" onPanelChange={onPanelChange as any} />
+            {/* <RangePicker picker="month" onPanelChange={onPanelChange as any} /> */}
+            <DatePicker onChange={onPanelChange} picker="month" />
         </div>
     );
 };
@@ -188,14 +240,26 @@ if (typeof window == "undefined") {
     require("highcharts/modules/price-indicator")(Highcharts);
     require("highcharts/modules/full-screen")(Highcharts);
     require("highcharts/modules/stock-tools")(Highcharts);
+    require("highcharts/highcharts-more")(Highcharts);
+    console
 }
 
 // The wrapper exports only a default component that at the same time is a
 // namespace for the related Props interface (HighchartsReact.Props) and
 // RefObject interface (HighchartsReact.RefObject). All other interfaces
 // like Options come from the Highcharts module itself.
+const success = (name?: string) => {
+    message.open({
+        type: "warning",
+        content: name + "数据为空！",
+        style: {
+            marginTop: "100px",
+        },
+        duration: 2,
+    });
+};
 
-const App = ({ weighValue }: { weighValue: any}) => {
+const App = ({ weighValue }: { weighValue: any }) => {
     if (typeof window == "undefined") {
         return <div></div>;
     }
@@ -207,7 +271,7 @@ const App = ({ weighValue }: { weighValue: any}) => {
             </div>
         );
     }
-    const [messageApi, contextHolder] = message.useMessage();
+    // const [messageApi, contextHolder] = message.useMessage();
     hs300 = weighValue;
 
     console.log("[weighValue]", weighValue);
@@ -492,22 +556,28 @@ const App = ({ weighValue }: { weighValue: any}) => {
     const [value, setValue] = useState("");
     const [stockOptions, setStockOptions] = useState(defaultStockOptions);
 
-    useEffect(() => {
-        messageApi.info('Hello, Ant Design!');
-    }, [name]);
-    
-    const getStockData = async(point: any) => {
+    // useEffect(() => {
+    //     messageApi.info('Hello, Ant Design!');
+    // }, [name]);
+
+    const getStockData = async (point: any) => {
         const { value, name } = point;
         console.log(value, name);
-        setName(name.split("</br>").join("-") );
-        const options = await getStockDataByCode("stock", { indexcode: name.split("</br>")[1] });
-     
 
+        const options = await getStockDataByCode("stock", {
+            stockcode: name.split("</br>")[1],
+        });
 
-        console.log("[options]",options);
-        // @ts-ignore
-        setStockOptions(aaplOhlcvOptions);
-        setIsShowStock(!isShowStock);
+        if (options.data.data.results.length === 0) {
+            success(name.split("</br>").join("-"));
+            return;
+        } else {
+            setName(name.split("</br>").join("-"));
+            console.log("[options]", options);
+            // @ts-ignore
+            setStockOptions(getAaplOhlcv(options.data.data.results));
+            setIsShowStock(!isShowStock);
+        }
     };
     const pageNum = 20;
     const pageLen = hs300.length;
@@ -572,7 +642,7 @@ const App = ({ weighValue }: { weighValue: any}) => {
                         },
                     ],
                     events: {
-                        click:  function (event: any) {
+                        click: function (event: any) {
                             console.log("flagStr", event.point);
                             // setFlag(!flag);
                             // flagStr = !flagStr;
@@ -703,7 +773,7 @@ export default function Page({
     //         value: 29.967,
     //         colorValue: 300,
     //     },
-   
+
     // ];
     const [weighValue, setWeighValue] = useState([]);
 
@@ -720,7 +790,8 @@ export default function Page({
             results.map((item: any, index: number) => {
                 item.colorValue = 300 + index;
                 item.value = parseFloat(item.value);
-                item.name = item.name+"</br>"+item.id+"</br>"+item.value;
+                item.name =
+                    item.name + "</br>" + item.id + "</br>" + item.value;
             });
             console.log("[results]", results);
             setWeighValue(results);
@@ -757,11 +828,9 @@ const getInitialProps = async (type: string, params: Object) => {
 };
 
 const getStockDataByCode = async (type: string, params: Object) => {
-
     // case "stock": //获取股票
     // const symbol = params.indexcode;
     //     sql = get_stock(symbol);
-
 
     const urlStr =
         geturl + "?type=" + type + "&params=" + JSON.stringify(params);
@@ -770,4 +839,3 @@ const getStockDataByCode = async (type: string, params: Object) => {
     const json = await res.json();
     return { data: json };
 };
-

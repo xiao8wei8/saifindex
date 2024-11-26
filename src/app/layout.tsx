@@ -42,8 +42,8 @@ const getInitialProps = async () => {
        const res = await fetch(geturl + "?type=indexshortname");
        const json = await res.json();
        return { data: json };
-   } catch (error) {
-       return { data: {}, state: "error" };
+   } catch (error:any) {
+       return { data: {}, state: error?.message };
    }
     
   }

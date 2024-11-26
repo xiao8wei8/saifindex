@@ -1,16 +1,14 @@
-import React from 'react'
-import HighchartsReact from 'highcharts-react-official';
+import React from "react";
+import HighchartsReact from "highcharts-react-official";
 
 const StockChart = ({ options, highcharts }) => {
-
     return (
         <HighchartsReact
-  highcharts={highcharts}
-  constructorType={'stockChart'}
-  options={options}
-/>
+            highcharts={highcharts}
+            constructorType={"stockChart"}
+            options={options}
+        />
+    );
+};
 
-    )
-}
-
-export default StockChart
+export default StockChart;

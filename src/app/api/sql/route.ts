@@ -49,10 +49,10 @@ select sba.stockname as name,tiw.stockcode as id,tiw.weight as value, 300 AS col
 `;
     return hs300;
 };
-const get_stock = (symbol?: any) => {
-    let code = symbol || "601636";
+const get_stock = (stockcode?: any) => {
+    let code = stockcode || "601636";
     const hs300_stock = `
- select * from stockmarket.ts_daily_befadjust where tradedate >= '20240101' and tradedate <= '20240131' and symbol = "${code}"
+ select * from stockmarket.ts_daily_befadjust where tradedate >= '20240101' and tradedate <= '20240131' and stockcode = "${code}"
 `;
     return hs300_stock;
 };
@@ -79,8 +79,8 @@ export async function GET(request: NextRequest) {
             sql = get_weight(indexcode);
             break;
         case "stock": //获取股票
-        const symbol = params.indexcode;
-            sql = get_stock(symbol);
+        const stockcode = params.stockcode;
+            sql = get_stock(stockcode);
             break;
         case "indexshortname": //获取指数
             sql = get_indexshortname();

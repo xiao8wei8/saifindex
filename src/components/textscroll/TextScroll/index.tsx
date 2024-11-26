@@ -96,9 +96,9 @@ function TextScroll(props: TextScrollProps) {
         </div>
     );
 }
-TextScroll.defaultProps = {
-    content: "",
-    duration: 3,
-};
+// TextScroll.defaultProps = {
+//     content: "",
+//     duration: 3,
+// };
 
 export default React.memo(TextScroll);
