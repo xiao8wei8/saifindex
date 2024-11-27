@@ -11,16 +11,16 @@ const get_stock_basic_ash = () => {
 };
 
 const basics = [
-"'399013.SZ'",
-"'000967.SH'",
-"'000967.CSI'",
-"'000905.SH'",
-"'399316.SZ'",
-"'399400.SZ'",
-"'921266.CSI'",
-"'000982.SH'",
-"'399001.SZ'",
-]
+    "'399013.SZ'",
+    "'000967.SH'",
+    "'000967.CSI'",
+    "'000905.SH'",
+    "'399316.SZ'",
+    "'399400.SZ'",
+    "'921266.CSI'",
+    "'000982.SH'",
+    "'399001.SZ'",
+];
 // select indexcode,indexshortname t from stockmarket.ts_index_basic where indexcode in (${basics.join(",")})
 //  select indexcode,indexshortname t from stockmarket.ts_index_basic where indexcode in ('399013.SZ','000967.SH','000967.CSI','000905.SH','399316.SZ','399400.SZ','921266.CSI','000982.SH','399001.SZ')
 
@@ -31,7 +31,7 @@ const get_indexshortname = () => {
    select indexcode,indexshortname t from stockmarket.ts_index_basic where indexcode in (
 '399001.SZ','399006.SZ','399300.SZ','399330.SZ')
   `;
-  
+
     return sql;
 };
 //上证300指数  {id:"688981",name:"中芯国际",value:4.807,colorValue:300},
@@ -56,6 +56,35 @@ const get_stock = (stockcode?: any) => {
 `;
     return hs300_stock;
 };
+// 获取宏观数据目录
+const get_catalogue = () => {
+    const sql = `
+ select cal.object_name,cal.db_name,cal.object_name,cal.object_name_cn  
+  from macroeconomic.catalogue cal
+ where cal.parent_id = 10
+   and cal.enabled_status = 1
+  `;
+    return sql;
+};
+// 获取所有国家
+const get_countryname_cn = () => {
+    const sql = `
+     select count( distinct countryname_cn) as a from stockmarket.df_central_gov_debt_total
+  `;
+    return sql;
+};
+const get_catalogue_list = (table: any, countryname_cn?: any, year?: any) => {
+    table = table || "stockmarket.df_central_gov_debt_total";
+    countryname_cn = countryname_cn || "('中国','美国')";
+    year =
+        year ||
+        "2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023";
+
+    const sql = `
+  select * from stockmarket.df_central_gov_debt_total where countryname_cn in ('中国','美国') and year>=2000 and year<=2023 
+  `;
+    return sql;
+};
 
 import { query } from "@/libs/db";
 
@@ -79,7 +108,7 @@ export async function GET(request: NextRequest) {
             sql = get_weight(indexcode);
             break;
         case "stock": //获取股票
-        const stockcode = params.stockcode;
+            const stockcode = params.stockcode;
             sql = get_stock(stockcode);
             break;
         case "indexshortname": //获取指数
@@ -91,7 +120,7 @@ export async function GET(request: NextRequest) {
     }
 
     try {
-        console.log("[SQL]:",sql)
+        console.log("[SQL]:", sql);
         const results: any = await query({
             query: sql,
         });
