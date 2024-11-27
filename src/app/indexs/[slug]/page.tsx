@@ -7,7 +7,7 @@ import Highcharts from "highcharts/highstock";
 
 
 import Highcharts2 from "highcharts";
-import HighchartsReact from "highcharts-react-official";
+// import HighchartsReact from "highcharts-react-official";
 import HighchartsExporting from "highcharts/modules/exporting";
 import axios from "axios";
 axios.defaults.timeout = 50000;
@@ -18,9 +18,9 @@ import { Button, DatePicker, message, Pagination, Space, Spin } from "antd";
 const { RangePicker } = DatePicker;
 
 import { Calendar, theme } from "antd";
-import type { CalendarProps } from "antd";
-import type { Dayjs } from "dayjs";
-import aaplOhlcvData from "./aapl-ohlcv";
+// import type { CalendarProps } from "antd";
+// import type { Dayjs } from "dayjs";
+// import aaplOhlcvData from "./aapl-ohlcv";
 // import hs300 from "../../data/hs300";
 
 // const hs300Data = hs300.slice(0, 20);
@@ -157,7 +157,7 @@ const getAaplOhlcv = (aaplOhlcvData: any) => {
         },
         series: [
             {
-                type: "ohlc",
+                pe: 'candlestick',
                 id: "ohlc",
                 name: "Stock Price",
                 data: ohlc,
@@ -214,17 +214,17 @@ if (typeof Highcharts === "object") {
     HighchartsExporting(Highcharts);
 }
 // Import our demo components
-import Chart from "./components/Chart";
+// import Chart from "./components/Chart";
 import StockChart from "./components/Stock";
-import MapChart from "./components/Map";
-import Container from "./components/Container";
-import mapData from "./components/mapData";
+// import MapChart from "./components/Map";
+// import Container from "./components/Container";
+// import mapData from "./components/mapData";
 import HeatMaps from "./components/HeatMaps";
 import LayoutContainer from "../../components/LayoutContainer";
-import Icon from "@ant-design/icons/lib/components/Icon";
+// import Icon from "@ant-design/icons/lib/components/Icon";
 import { CloseOutlined } from "@ant-design/icons";
-import { set } from "react-hook-form";
-import { constants } from "buffer";
+// import { set } from "react-hook-form";
+// import { constants } from "buffer";
 
 if (typeof window == "undefined") {
 } else {
@@ -241,7 +241,7 @@ if (typeof window == "undefined") {
     require("highcharts/modules/full-screen")(Highcharts);
     require("highcharts/modules/stock-tools")(Highcharts);
     require("highcharts/highcharts-more")(Highcharts);
-    console
+    
 }
 
 // The wrapper exports only a default component that at the same time is a
@@ -810,12 +810,12 @@ export default function Page({
             </LayoutContainer>
         );
     }
-    return (
-        <div>
-            {/* <div>{slug}</div> */}
-            <div>{JSON.stringify(value)}</div>
-        </div>
-    );
+    // return (
+    //     <div>
+    //         {/* <div>{slug}</div> */}
+    //         <div>{JSON.stringify(value)}</div>
+    //     </div>
+    // );
 }
 
 const getInitialProps = async (type: string, params: Object) => {
