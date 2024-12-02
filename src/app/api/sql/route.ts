@@ -69,7 +69,7 @@ const get_catalogue = () => {
 // 获取所有国家
 const get_countryname_cn = () => {
     const sql = `
-     select count( distinct countryname_cn) as a from stockmarket.df_central_gov_debt_total
+     select  distinct countryname_cn  from stockmarket.df_central_gov_debt_total
   `;
     return sql;
 };
@@ -113,6 +113,12 @@ export async function GET(request: NextRequest) {
             break;
         case "indexshortname": //获取指数
             sql = get_indexshortname();
+            break;
+        case "catalogue":
+            sql = get_catalogue();
+            break;
+        case "countryname":
+            sql=get_countryname_cn();
             break;
 
         default:

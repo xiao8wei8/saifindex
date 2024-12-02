@@ -38,13 +38,40 @@ const getInitialProps = async () => {
     // );
     // const items = response.data;
     // console.log("[items]", items);
+   let ret:any = {}
    try {
        const res = await fetch(geturl + "?type=indexshortname");
        const json = await res.json();
-       return { data: json };
+       ret['indexshortname'] = json
+    //    return { data: json };
    } catch (error:any) {
-       return { data: {}, state: error?.message };
+    //    return { data: {}, state: error?.message };
+       ret['indexshortname'] =  { data: {}, state: error?.message }
    }
+
+   try {
+    const res = await fetch(geturl + "?type=catalogue");
+    const json = await res.json();
+    ret['catalogue'] = json
+        // return { data: json };
+    } catch (error:any) {
+        // return { data: {}, state: error?.message };
+        ret['catalogue'] =  { data: {}, state: error?.message }
+    }
+
+    try {
+        const res = await fetch(geturl + "?type=countryname");
+        const json = await res.json();
+        ret['countryname'] = json
+            // return { data: json };
+        } catch (error:any) {
+            // return { data: {}, state: error?.message };
+            ret['countryname'] =  { data: {}, state: error?.message }
+        }
+    
+
+    return ret
+
     
   }
 

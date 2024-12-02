@@ -15,6 +15,34 @@ import "./index.css";
 import { NextPageContext } from "next";
 import {TDataContext} from "./DataProvider";
 
+// initData::
+// {
+//     "indexshortname": {
+//         "data": {
+//             "results": [
+//                 {
+//                     "indexcode": "399001.SZ",
+//                     "t": "深证成指"
+//                 }
+//             ]
+//         },
+//         "msg": "成功"
+//     },
+//     "catalogue": {
+//         "data": {
+//             "results": [
+//                 {
+//                     "object_name": "df_central_gov_debt_total",
+//                     "db_name": "stockmarket",
+//                     "object_name_cn": "中央政府债务总额（占GDP的百分比）"
+//                 },
+               
+//             ]
+//         },
+//         "msg": "成功"
+//     }
+// }
+
 const Page =   ({
     children,
     currentpathname
@@ -24,14 +52,21 @@ const Page =   ({
 
 }) => {
     const initData:any = useContext(TDataContext);
-    const results = initData?.data?.data?.results||[]
+    // debugger
+    const catalogue = initData.catalogue
+    const indexshortname = initData.indexshortname
+    
+    const catalogue_results = catalogue?.data?.results||[]
+    const indexshortname_results = indexshortname?.data?.results||[]
     // const revenue = await fetchRevenue();
-    console.log("[initData]",results);
-    let routes:any = [
+    console.log("[initData]",catalogue_results,indexshortname_results);
+
+
+    let indexshortname_routes:any = [
         
     ]
-    results.forEach((item:any) => {
-        routes.push({
+    indexshortname_results.forEach((item:any) => {
+        indexshortname_routes.push({
             path: "/indexs/"+item.indexcode,
             name: item.t,
             icon: (
@@ -43,9 +78,41 @@ const Page =   ({
             component: "./Welcome",
         });
     });
-    console.log("[routes]",routes);
+
+    console.log("[indexshortname_routes]",indexshortname_routes);
     let newPros:any = defaultProps
-    newPros.route.routes[3]['routes'] = routes;
+    newPros.route.routes[3]['routes'] = indexshortname_routes;
+
+
+
+    let catalogue_routes:any = [
+        
+    ]
+
+
+    // "object_name": "df_central_gov_debt_total",
+    // //                     "db_name": "stockmarket",
+    // //                     "object_name_cn": "中央政府债务总额（占GDP的百分比）"
+
+    catalogue_results.forEach((item:any) => {
+        catalogue_routes.push({
+            path: "/catalogues/"+item.db_name+","+item.object_name,
+            name: item.object_name_cn,
+            icon: (
+                <CrownFilled
+                    onPointerEnterCapture={undefined}
+                    onPointerLeaveCapture={undefined}
+                />
+            ),
+            component: "./Welcome",
+        });
+    });
+    
+    newPros.route.routes[4]['routes'] = catalogue_routes;
+
+
+
+
 
     // {
     //     path: "/hs300",
