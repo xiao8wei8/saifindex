@@ -73,7 +73,7 @@ const get_countryname_cn = () => {
   `;
     return sql;
 };
-const get_catalogue_list = (table: any, countryname_cn?: any, year?: any) => {
+const get_catalogue_list = (table?: any, countryname_cn?: any, year?: any) => {
     table = table || "stockmarket.df_central_gov_debt_total";
     countryname_cn = countryname_cn || "('中国','美国')";
     year =
@@ -120,7 +120,10 @@ export async function GET(request: NextRequest) {
         case "countryname":
             sql=get_countryname_cn();
             break;
-
+        case "cataloguelist":
+            sql=get_catalogue_list();
+            break;
+            
         default:
             break;
     }
