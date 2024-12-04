@@ -81,9 +81,19 @@ const get_catalogue_list = (table?: any, countryname_cn?: any, year?: any) => {
         "2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023";
 
     const sql = `
-  select * from stockmarket.df_central_gov_debt_total where countryname_cn in ('中国','美国') and year>=2000 and year<=2023 
+
+ select countryname_cn,year,total_gov_debt from stockmarket.df_central_gov_debt_total where countryname_cn in ('中国','美国') and year>=2000 and year<=2023  order by countryname_cn ,year
+ 
   `;
     return sql;
+
+    // {
+    //     name: "中国",
+    //     data: [
+    //         43934, 48656, 65165, 81827, 112143, 142383, 171533, 165174,
+    //         155157, 161454, 154610, 168960,
+    //     ],
+    // },
 };
 
 import { query } from "@/libs/db";

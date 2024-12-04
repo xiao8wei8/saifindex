@@ -34,6 +34,8 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import styles from "./index.module.less";
 // import LayoutContainer from "../components/LayoutContainer";
 import { SearchOutlined } from "@ant-design/icons";
+import  Dayjs  from 'dayjs';
+
 const mockVal = (str: string, repeat = 1) => ({
     value: str.repeat(repeat),
 });
@@ -146,16 +148,58 @@ const App = ({ countryname }: any) => {
     });
     init_state.cards = _countryname;
     const [state, dispatch] = useReducer(cardReducer, init_state);
+    const [dates,setDates] = useState<any>([]);
+    const [countrys, setCountrys] = useState<any>([]);
 
-    const getSeries = (keys: any) => {
-        var ret = [];
-        for (let index = 0; index < lineSeries.length; index++) {
-            const element = lineSeries[index];
-            if (keys.includes(element.name)) {
-                ret.push(element);
+    useEffect(() => {
+        console.log("[dates,countrys]")
+    },[dates,countrys])
+    const getSeries = async(ops:any) => {
+        // var ret = [];
+        // for (let index = 0; index < lineSeries.length; index++) {
+        //     const element = lineSeries[index];
+        //     if (keys.includes(element.name)) {
+        //         ret.push(element);
+        //     }
+        // }
+        // return ret;
+
+        let data = await getSeriesByCountry(ops)
+        console.log("[getSeries]", data)
+        const results = data?.data?.data?.results;
+
+
+    // {
+    //     name: "中国",
+    //     data: [
+    //         43934, 48656, 65165, 81827, 112143, 142383, 171533, 165174,
+    //         155157, 161454, 154610, 168960,
+    //     ],
+    // },
+        let ret = []
+        let maps:any = {}
+        results.map((item: any, index: number) => {
+            const itemt = item;
+            const countryname_cn = item.countryname_cn;
+            const total_gov_debt = parseFloat(item.total_gov_debt||0);
+            if(maps[countryname_cn]){
+                maps[countryname_cn].push(total_gov_debt)
+            }else{
+                maps[countryname_cn] = [total_gov_debt]
             }
+
+        })
+
+        for(let key in maps){
+            const data = maps[key]
+            ret.push({
+                name: key,
+                data,
+            })
         }
-        return ret;
+        console.log("[getSeries]", ret)
+        return ret||[]
+
     };
 
     const lineSeries = [
@@ -198,11 +242,36 @@ const App = ({ countryname }: any) => {
     const [currentLineSeries, setCurrentLineSeries] = useState([] as any);
     const [crurrentChatType, setCrurrentChatType] = useState("line");
     useEffect(() => {
-        const _series: any[] = getSeries([lineSeries[0].name]);
-        console.log("[_series]", _series);
-        // return
-        handleItemSelection(0, false, false);
-        setCurrentLineSeries(_series);
+
+        const fn = async () => {
+            console.log("[fn]");
+            // slug = (await params).slug;
+            // const data = await getInitialProps("weight", {
+            //     indexcode: slug,
+            // });
+            // console.log("[data]", data);
+            // let results = data.data.data.results;
+            // results.map((item: any, index: number) => {
+            //     item.colorValue = 300 + index;
+            //     item.value = parseFloat(item.value);
+            //     item.name =
+            //         item.name + "</br>" + item.id + "</br>" + item.value;
+            // });
+            // console.log("[results]", results);
+            // setWeighValue(results);
+
+            const _series: any[] =await getSeries({
+                date:[],
+                country:[]
+            });
+            console.log("[_series]", _series);
+            // return
+            handleItemSelection(0, false, false);
+            setCurrentLineSeries(_series);
+        };
+        fn();
+
+       
         console.log("[currentLineSeries]", currentLineSeries);
     }, []);
 
@@ -225,7 +294,10 @@ const App = ({ countryname }: any) => {
         // ret.push(dropResult.name);
         // alert(JSON.stringify(ret));
         // const _series:any[] = myRandom([...lineSeries],_selectedCards.length)'
-        const _series: any[] = getSeries(ret);
+        const _series: any = getSeries({
+            date:[],
+            country:[]
+        });
         console.log("[_series]", _series, dropResult.type);
         // return
         setCrurrentChatType(dropResult.type);
@@ -484,11 +556,19 @@ const App = ({ countryname }: any) => {
     //   setValue(data);
     // };
     const loadMoreData = () => {};
+    const onChangePicker = (date: any, dateString: any) => {
+        console.log('[onChangePicker]',date, dateString);
+
+        // getSeries({
+        //     date:dateString,
+        //     country:[]
+        // });
+    }
     return (
         <Row>
             <Col span={18} push={6}>
                 {/* <Space direction={"vertical"} align={"center"} style={{ width: "100%" }}> */}
-                <RangePicker picker="year" />
+                <RangePicker picker="year" defaultValue={[Dayjs('2000'), Dayjs('2023')]} onChange={onChangePicker} />
                 <Tabs
                     type="editable-card"
                     onChange={onChange}
@@ -697,13 +777,13 @@ const getInitialProps = async (type: string, params: Object) => {
     return { data: json };
 };
 
-const getStockDataByCode = async (type: string, params: Object) => {
+const getSeriesByCountry = async (params: any) => {
     // case "stock": //获取股票
     // const symbol = params.indexcode;
     //     sql = get_stock(symbol);
 
     const urlStr =
-        geturl + "?type=" + type + "&params=" + JSON.stringify(params);
+        geturl + "?type=cataloguelist&params=" + JSON.stringify(params);
     console.log("[urlStr]", urlStr);
     const res = await fetch(urlStr);
     const json = await res.json();
