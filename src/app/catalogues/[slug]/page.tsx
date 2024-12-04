@@ -15,6 +15,8 @@ import {
     AutoComplete,
     AutoCompleteProps,
     Spin,
+    Skeleton,
+    Divider,
 } from "antd";
 import { useContext, useEffect, useReducer, useRef, useState } from "react";
 import { DndProvider } from "react-dnd";
@@ -27,13 +29,14 @@ import Chart from "@/components/Chart";
 import React from "react";
 import HighchartsReact from "highcharts-react-official";
 import Highcharts from "highcharts";
+import InfiniteScroll from "react-infinite-scroll-component";
 // @ts-ignore
 import styles from "./index.module.less";
 // import LayoutContainer from "../components/LayoutContainer";
 import { SearchOutlined } from "@ant-design/icons";
 const mockVal = (str: string, repeat = 1) => ({
     value: str.repeat(repeat),
-  });
+});
 
 let init_cards = [
     {
@@ -127,21 +130,21 @@ const cardReducer = (state: any, action: any) => {
     }
 };
 
-const App = ({countryname}:any) => {
-    let _countryname:any =[]
+const App = ({ countryname }: any) => {
+    let _countryname: any = [];
     // {
     //     id: 5,
     //     order: 4,
     //     name: "英国",
     // },
-    countryname.map((item:any,index:any)=>{
+    countryname.map((item: any, index: any) => {
         _countryname.push({
             id: index,
             order: index,
             name: item.countryname_cn,
-        })
-    })
-    init_state.cards = _countryname
+        });
+    });
+    init_state.cards = _countryname;
     const [state, dispatch] = useReducer(cardReducer, init_state);
 
     const getSeries = (keys: any) => {
@@ -227,11 +230,10 @@ const App = ({countryname}:any) => {
         // return
         setCrurrentChatType(dropResult.type);
         setCurrentLineSeries(_series);
-       
     };
     useEffect(() => {
         add();
-    },[currentLineSeries])
+    }, [currentLineSeries]);
     const handleItemSelection = (index: number, cmdKey: any, shiftKey: any) => {
         let newSelectedCards: any[];
 
@@ -320,58 +322,58 @@ const App = ({countryname}:any) => {
         },
     };
     const gridStyle: React.CSSProperties = {
-        width: '25%',
+        width: "25%",
         minWidth: 200,
         minHeight: 200,
-        textAlign: 'center',
+        textAlign: "center",
         padding: 2,
-      };
+    };
     const initialItems = [
         {
             label: "图标选择",
             children: (
-          
-                      <Card title="将左边内容拖拽到图标上即可">
-                          <Card.Grid style={gridStyle}>
-                    <DropBox
-                        name="折线图"
-                        selectedCards={state.selectedCards}
-                        type="line"
-                    />
+                <Card title="将左边内容拖拽到图标上即可">
+                    <Card.Grid style={gridStyle}>
+                        <DropBox
+                            name="折线图"
+                            selectedCards={state.selectedCards}
+                            type="line"
+                        />
                     </Card.Grid>
                     <Card.Grid style={gridStyle}>
-                    <DropBox
-                        name="柱状图"
-                        selectedCards={state.selectedCards}
-                        type="column"
-                    /> </Card.Grid>
-                     <Card.Grid style={gridStyle}>
-                    <DropBox
-                        name="线图"
-                        selectedCards={state.selectedCards}
-                        type="bar"
-                    /> </Card.Grid>
-                     <Card.Grid style={gridStyle}>
-                    <DropBox
-                        name="表格"
-                        selectedCards={state.selectedCards}
-                        type="table"
-                    /> </Card.Grid>
-                    <Card.Grid style={gridStyle}>
-                    <DropBox
-                        name="面积图"
-                        selectedCards={state.selectedCards}
-                        type="area"
-                    />
+                        <DropBox
+                            name="柱状图"
+                            selectedCards={state.selectedCards}
+                            type="column"
+                        />{" "}
                     </Card.Grid>
-                    </Card>
+                    <Card.Grid style={gridStyle}>
+                        <DropBox
+                            name="线图"
+                            selectedCards={state.selectedCards}
+                            type="bar"
+                        />{" "}
+                    </Card.Grid>
+                    {/* <Card.Grid style={gridStyle}>
+                        <DropBox
+                            name="表格"
+                            selectedCards={state.selectedCards}
+                            type="table"
+                        />{" "}
+                    </Card.Grid> */}
+                    <Card.Grid style={gridStyle}>
+                        <DropBox
+                            name="面积图"
+                            selectedCards={state.selectedCards}
+                            type="area"
+                        />
+                    </Card.Grid>
+                </Card>
             ),
             key: "1",
             closable: false,
-        }
-        ,
+        },
         // { label: "Tab 2", children: "Content of Tab 2", key: "2" },
-      
     ];
     const [activeKey, setActiveKey] = useState(initialItems[0].key);
     const [items, setItems] = useState(initialItems);
@@ -382,30 +384,32 @@ const App = ({countryname}:any) => {
     };
 
     const add = () => {
-        if(currentLineSeries.length === 0) return
+        if (currentLineSeries.length === 0) return;
         const newActiveKey = `newTab${newTabIndex.current++}`;
         const newPanes = [...items];
-        console.log("[add]",currentLineSeries.length)
+        console.log("[add]", currentLineSeries.length);
         newPanes.push({
-            label: "New-"+crurrentChatType,
+            label: "New-" + crurrentChatType,
             closable: true,
             children: (
                 <div>
-                {currentLineSeries.length > 0 && (
-                    <div>
-                        <HighchartsReact
-                        highcharts={Highcharts}
-                        options={{
-                            
-                            series: currentLineSeries,
-                            chart: { type:crurrentChatType, events: { load: () => {} } },
-                        }}
-                        // constructorType={"bar"}
-                    />
-                    <Slider range defaultValue={[20, 50]}/>
-                    </div>
-                )}
-            </div>
+                    {currentLineSeries.length > 0 && (
+                        <div>
+                            <HighchartsReact
+                                highcharts={Highcharts}
+                                options={{
+                                    series: currentLineSeries,
+                                    chart: {
+                                        type: crurrentChatType,
+                                        events: { load: () => {} },
+                                    },
+                                }}
+                                // constructorType={"bar"}
+                            />
+                            <Slider range defaultValue={[20, 50]} />
+                        </div>
+                    )}
+                </div>
             ) as any,
             key: newActiveKey,
         });
@@ -457,40 +461,49 @@ const App = ({countryname}:any) => {
     const handleChange = (value: string) => {
         console.log(`selected ${value}`);
     };
-    const [value, setValue] = useState('');
-    const [options, setOptions] = useState<AutoCompleteProps['options']>([]);
-    const [anotherOptions, setAnotherOptions] = useState<AutoCompleteProps['options']>([]);
-  
+    const [value, setValue] = useState("");
+    const [options, setOptions] = useState<AutoCompleteProps["options"]>([]);
+    const [anotherOptions, setAnotherOptions] = useState<
+        AutoCompleteProps["options"]
+    >([]);
+
     const getPanelValue = (searchText: string) =>
-      !searchText ? [] : [mockVal(searchText), mockVal(searchText, 2), mockVal(searchText, 3)];
-  
+        !searchText
+            ? []
+            : [
+                  mockVal(searchText),
+                  mockVal(searchText, 2),
+                  mockVal(searchText, 3),
+              ];
+
     const onSelect = (data: string) => {
-      console.log('onSelect', data);
+        console.log("onSelect", data);
     };
-  
+
     // const onChange = (data: string) => {
     //   setValue(data);
     // };
+    const loadMoreData = () => {};
     return (
         <Row>
             <Col span={18} push={6}>
                 {/* <Space direction={"vertical"} align={"center"} style={{ width: "100%" }}> */}
-                    <RangePicker picker="year" />
-                    <Tabs
-                        type="editable-card"
-                        onChange={onChange}
-                        activeKey={activeKey}
-                        onEdit={onEdit}
-                        items={items}
-                        style={{ width: "100%" }}
-                    />
+                <RangePicker picker="year" />
+                <Tabs
+                    type="editable-card"
+                    onChange={onChange}
+                    activeKey={activeKey}
+                    onEdit={onEdit}
+                    items={items}
+                    style={{ width: "100%" }}
+                />
                 {/* </Space> */}
             </Col>
             <Col span={6} pull={18}>
                 {/* <Space direction={"vertical"} align={"center"}> */}
-                    {/* <Space> */}
-                        {/* 类型选择{" "} */}
-                        {/* <Select
+                {/* <Space> */}
+                {/* 类型选择{" "} */}
+                {/* <Select
                             defaultValue="GDP"
                             style={{ width: 200 }}
                             onChange={handleChange}
@@ -511,27 +524,37 @@ const App = ({countryname}:any) => {
                                 },
                             ]}
                         />{" "} */}
-                          <AutoComplete
-                            options={options}
-                            style={{ width: '100%' }}
-                            onSelect={onSelect}
-                            onSearch={(text) => setOptions(getPanelValue(text))}
-                            placeholder="input here"
-                        />
-                        {/* <Input placeholder="查询GDP或者Inflation"   prefix={<SearchOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />}/> */}
-                    {/* </Space> */}
-
+                <AutoComplete
+                    options={options}
+                    style={{ width: "100%" }}
+                    onSelect={onSelect}
+                    onSearch={(text) => setOptions(getPanelValue(text))}
+                    placeholder="input here"
+                />
+                {/* <Input placeholder="查询GDP或者Inflation"   prefix={<SearchOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />}/> */}
+                {/* </Space> */}
+                {/* <InfiniteScroll
+                    dataLength={data.length}
+                    next={loadMoreData}
+                    hasMore={data.length < 50}
+                    loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}
+                    endMessage={
+                        <Divider plain>It is all, nothing more 🤐</Divider>
+                    }
+                    scrollableTarget="scrollableDiv"
+                > */}
                     <List
                         bordered
                         dataSource={state.cards}
-                        itemLayout="vertical"
-                        size="large"
-                        pagination={{
-                          onChange: (page) => {
-                            console.log(page);
-                          },
-                          pageSize: 15,
-                        }}
+                        // itemLayout="vertical"
+                        // size="large"
+                        // pagination={{
+                        //     onChange: (page) => {
+                        //         console.log(page);
+                        //     },
+                        //     pageSize: 15,
+                        // }}
+                        style={{ maxHeight: "400px", overflow: "auto" }}
                         renderItem={(card: any, i: any) => {
                             const insertLineOnLeft =
                                 state.hoverIndex === i &&
@@ -566,38 +589,32 @@ const App = ({countryname}:any) => {
                             // </List.Item>
                         }}
                     />
+                {/* </InfiniteScroll> */}
                 {/* </Space> */}
             </Col>
         </Row>
     );
 };
-const SimpleDemo = (   {countryname}:any) => {
+const SimpleDemo = ({ countryname }: any) => {
     if (typeof window == "undefined") {
         return null;
-    } 
+    }
     if (countryname.length == 0) {
         return (
             <div>
-              
                 <Spin />
             </div>
         );
     }
 
-    
-        return (
-            <div className="App">
-                <DndProvider backend={HTML5Backend}>
-                    <App countryname={countryname}/>
-                </DndProvider>
-            </div>
-        );
-    
+    return (
+        <div className="App">
+            <DndProvider backend={HTML5Backend}>
+                <App countryname={countryname} />
+            </DndProvider>
+        </div>
+    );
 };
-
-
-
-
 
 // @ts-ignore
 import config from "@/libs/config";
@@ -613,7 +630,6 @@ export default function Page({
 }: {
     params: Promise<{ slug: string }>;
 }) {
-    
     // {id:"688981",name:"中芯国际",value:4.807,colorValue:300},
     // {id:"688599",name:"天合光能",value:3.252,colorValue:299},
     // const dd = [
@@ -626,18 +642,17 @@ export default function Page({
 
     // ];
     // const [weighValue, setWeighValue] = useState([]);
-    const initData:any = useContext(TDataContext);
+    const initData: any = useContext(TDataContext);
     const [countryname, setCountryname] = useState([]);
     useEffect(() => {
         console.log("[params]", geturl);
-        
+
         const fn = async () => {
-            
             slug = (await params).slug;
-            console.log("[catalogues-slug]",slug);
-            console.log("[catalogues-initData]",initData);
-            const countryname = initData?.countryname?.data?.results||[];
-            console.log("[catalogues-countryname]",countryname);
+            console.log("[catalogues-slug]", slug);
+            console.log("[catalogues-initData]", initData);
+            const countryname = initData?.countryname?.data?.results || [];
+            console.log("[catalogues-countryname]", countryname);
             setCountryname(countryname);
             const data = await getInitialProps("cataloguelist", {
                 indexcode: slug,
@@ -657,11 +672,11 @@ export default function Page({
     }, []);
 
     if (typeof window == "undefined") {
-        return ( <div>hello 1</div>)
+        return <div>hello 1</div>;
     } else {
         return (
             <LayoutContainer currentpathname="/gdp">
-                <SimpleDemo  countryname={countryname}/>
+                <SimpleDemo countryname={countryname} />
             </LayoutContainer>
         );
     }
