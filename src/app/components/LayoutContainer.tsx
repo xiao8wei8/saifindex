@@ -96,7 +96,7 @@ const Page =   ({
 
     catalogue_results.forEach((item:any) => {
         catalogue_routes.push({
-            path: "/catalogues/"+item.db_name+","+item.object_name,
+            path: "/catalogues/"+item.db_name+"."+item.object_name,
             name: item.object_name_cn,
             icon: (
                 <CrownFilled

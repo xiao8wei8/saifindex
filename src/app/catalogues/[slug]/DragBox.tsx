@@ -30,7 +30,7 @@ let _selectedCards:any = []
 export const DragBox: any= (props: any) => {
   const {selectedCards} = props
   _selectedCards = selectedCards
-  console.log("[//selectedCards]",selectedCards)
+  // console.log("[//selectedCards]",selectedCards)
   const ref = useRef(null);
   // let styleClasses: Array<string> = [];
   // const [isSelected, setIsSelected] = useState(false);
@@ -78,7 +78,7 @@ export const DragBox: any= (props: any) => {
         props.clearItemSelection();
       },
       isDragging: (monitor:any) => {
-        console.log("[//_selectedCards]",monitor.getItem().cardsIDs)
+        // console.log("[//_selectedCards]",monitor.getItem().cardsIDs)
         return monitor.getItem().cardsIDs.includes(props.id);
         return false
       },

@@ -73,16 +73,15 @@ const get_countryname_cn = () => {
   `;
     return sql;
 };
-const get_catalogue_list = (table?: any, countryname_cn?: any, year?: any) => {
-    table = table || "stockmarket.df_central_gov_debt_total";
-    countryname_cn = countryname_cn || "('中国','美国')";
-    year =
-        year ||
-        "2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023";
+const get_catalogue_list = (params?: any) => {
+    const table = params.table || "stockmarket.df_central_gov_debt_total";
+    const countrys = params.countrys || ['中国','美国'];
+    console.log("[dates]", params.dates);
+    const years = params.dates||[2010,2023]; ;
 
     const sql = `
 
- select countryname_cn,year,total_gov_debt from stockmarket.df_central_gov_debt_total where countryname_cn in ('中国','美国') and year>=2000 and year<=2023  order by countryname_cn ,year
+ select * from ${table} where countryname_cn in (\'${countrys.join("\',\'")}\') and year>=${years[0]} and year<=${years[1]}  order by countryname_cn ,year
  
   `;
     return sql;
@@ -131,7 +130,7 @@ export async function GET(request: NextRequest) {
             sql=get_countryname_cn();
             break;
         case "cataloguelist":
-            sql=get_catalogue_list();
+            sql=get_catalogue_list(params);
             break;
             
         default:

@@ -131,7 +131,10 @@ const cardReducer = (state: any, action: any) => {
             throw new Error();
     }
 };
-
+let countrys: any[] = []
+// let stype = 'line'
+let dates: any[] = ['2000','2023']
+let crurrentChatType = 'line'
 const App = ({ countryname }: any) => {
     let _countryname: any = [];
     // {
@@ -148,12 +151,16 @@ const App = ({ countryname }: any) => {
     });
     init_state.cards = _countryname;
     const [state, dispatch] = useReducer(cardReducer, init_state);
-    const [dates,setDates] = useState<any>([]);
-    const [countrys, setCountrys] = useState<any>([]);
+    // const [dates,setDates] = useState<any>([]);
+    // const [countrys, setCountrys] = useState<any>([]);
+    // const [stype, setStype] = useState('line');
 
-    useEffect(() => {
-        console.log("[dates,countrys]")
-    },[dates,countrys])
+    
+
+    // useEffect(() => {
+    //     console.log("[dates,countrys]")
+    // },[dates,countrys])
+ 
     const getSeries = async(ops:any) => {
         // var ret = [];
         // for (let index = 0; index < lineSeries.length; index++) {
@@ -178,10 +185,14 @@ const App = ({ countryname }: any) => {
     // },
         let ret = []
         let maps:any = {}
+      
+        let slugs = slug.split(".")
+        let total=slugs[1].replace("df_global","")//'total_gov_debt' 
         results.map((item: any, index: number) => {
             const itemt = item;
             const countryname_cn = item.countryname_cn;
-            const total_gov_debt = parseFloat(item.total_gov_debt||0);
+
+            const total_gov_debt = parseFloat(item[total]||0);
             if(maps[countryname_cn]){
                 maps[countryname_cn].push(total_gov_debt)
             }else{
@@ -240,36 +251,38 @@ const App = ({ countryname }: any) => {
         },
     ];
     const [currentLineSeries, setCurrentLineSeries] = useState([] as any);
-    const [crurrentChatType, setCrurrentChatType] = useState("line");
+    // const [crurrentChatType, setCrurrentChatType] = useState("line");
     useEffect(() => {
 
-        const fn = async () => {
-            console.log("[fn]");
-            // slug = (await params).slug;
-            // const data = await getInitialProps("weight", {
-            //     indexcode: slug,
-            // });
-            // console.log("[data]", data);
-            // let results = data.data.data.results;
-            // results.map((item: any, index: number) => {
-            //     item.colorValue = 300 + index;
-            //     item.value = parseFloat(item.value);
-            //     item.name =
-            //         item.name + "</br>" + item.id + "</br>" + item.value;
-            // });
-            // console.log("[results]", results);
-            // setWeighValue(results);
+        // const fn = async () => {
+        //     console.log("[fn]");
+        //     // slug = (await params).slug;
+        //     // const data = await getInitialProps("weight", {
+        //     //     indexcode: slug,
+        //     // });
+        //     // console.log("[data]", data);
+        //     // let results = data.data.data.results;
+        //     // results.map((item: any, index: number) => {
+        //     //     item.colorValue = 300 + index;
+        //     //     item.value = parseFloat(item.value);
+        //     //     item.name =
+        //     //         item.name + "</br>" + item.id + "</br>" + item.value;
+        //     // });
+        //     // console.log("[results]", results);
+        //     // setWeighValue(results);
 
-            const _series: any[] =await getSeries({
-                date:[],
-                country:[]
-            });
-            console.log("[_series]", _series);
-            // return
-            handleItemSelection(0, false, false);
-            setCurrentLineSeries(_series);
-        };
-        fn();
+        //     const _series: any[] =await getSeries({
+        //         date:[],
+        //         country:[]
+        //     });
+        //     console.log("[_series]", _series);
+        //     // return
+        //     handleItemSelection(0, false, false);
+        //     setCurrentLineSeries(_series);
+        // };
+        // fn();
+        updateSeries();
+        handleItemSelection(0, false, false);
 
        
         console.log("[currentLineSeries]", currentLineSeries);
@@ -290,17 +303,30 @@ const App = ({ countryname }: any) => {
         _selectedCards.forEach((item: any) => {
             ret.push(item.name);
         });
+        countrys = ret;
         // ret.push("in");
         // ret.push(dropResult.name);
         // alert(JSON.stringify(ret));
         // const _series:any[] = myRandom([...lineSeries],_selectedCards.length)'
-        const _series: any = getSeries({
-            date:[],
-            country:[]
+        
+        // setCrurrentChatType(stype);
+        crurrentChatType = dropResult.type
+        updateSeries();
+    };
+    const updateSeries = async() => {
+        console.log("[updateSeries]",dates);
+        let _dates:any = []
+        dates.forEach((item: any) => {
+            _dates.push(parseInt(item))
+        })
+        const _series: any = await getSeries({
+            dates:_dates,
+            countrys:countrys,
+            table:slug
         });
-        console.log("[_series]", _series, dropResult.type);
+        console.log("[_series]", _series, crurrentChatType);
         // return
-        setCrurrentChatType(dropResult.type);
+        
         setCurrentLineSeries(_series);
     };
     useEffect(() => {
@@ -419,13 +445,13 @@ const App = ({ countryname }: any) => {
                             type="column"
                         />{" "}
                     </Card.Grid>
-                    <Card.Grid style={gridStyle}>
+                    {/* <Card.Grid style={gridStyle}>
                         <DropBox
                             name="线图"
                             selectedCards={state.selectedCards}
                             type="bar"
                         />{" "}
-                    </Card.Grid>
+                    </Card.Grid> */}
                     {/* <Card.Grid style={gridStyle}>
                         <DropBox
                             name="表格"
@@ -459,7 +485,125 @@ const App = ({ countryname }: any) => {
         if (currentLineSeries.length === 0) return;
         const newActiveKey = `newTab${newTabIndex.current++}`;
         const newPanes = [...items];
-        console.log("[add]", currentLineSeries.length);
+        console.log("[add]", currentLineSeries.length,dates[0],currentLineSeries,crurrentChatType);
+        const _newPanes = {
+
+            title: {
+                text: 'U.S Solar Employment Growth',
+                align: 'left'
+            },
+        
+            subtitle: {
+                text: 'By Job Category. Source: <a href="https://irecusa.org/programs/solar-jobs-census/" target="_blank">IREC</a>.',
+                align: 'left'
+            },
+        
+            yAxis: {
+                title: {
+                    text: 'Number of Employees'
+                }
+            },
+        
+            xAxis: {
+                accessibility: {
+                    rangeDescription: 'Range: 2010 to 2022'
+                }
+            },
+        
+            legend: {
+                layout: 'vertical',
+                align: 'right',
+                verticalAlign: 'middle'
+            },
+        
+            plotOptions: {
+                series: {
+                    label: {
+                        connectorAllowed: false
+                    },
+                    pointStart: parseInt(dates[0])
+                }
+            },
+        
+            series:[
+                {
+                    "name": "阿富汗",
+                    "data": [
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "name": "非洲西部及中部",
+                    "data": [
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                }
+            ],
+            chart: {
+                        type: crurrentChatType,
+                        events: { load: () => {} },
+                    },
+            responsive: {
+                rules: [{
+                    condition: {
+                        maxWidth: 500
+                    },
+                    chartOptions: {
+                        legend: {
+                            layout: 'horizontal',
+                            align: 'center',
+                            verticalAlign: 'bottom'
+                        }
+                    }
+                }]
+            }
+        }
         newPanes.push({
             label: "New-" + crurrentChatType,
             closable: true,
@@ -469,22 +613,34 @@ const App = ({ countryname }: any) => {
                         <div>
                             <HighchartsReact
                                 highcharts={Highcharts}
-                                options={{
-                                    series: currentLineSeries,
-                                    chart: {
-                                        type: crurrentChatType,
-                                        events: { load: () => {} },
-                                    },
-                                }}
+                                options={  
+                                    {
+                                        plotOptions: {
+                                            series: {
+                                                label: {
+                                                    connectorAllowed: false
+                                                },
+                                                pointStart: parseInt(dates[0]),
+                                            }
+                                        },
+                                        series: currentLineSeries,
+                                        chart: {
+                                            type: crurrentChatType,
+                                            events: { load: () => {} },
+                                        },
+                                    }}
+                              
                                 // constructorType={"bar"}
                             />
-                            <Slider range defaultValue={[20, 50]} />
+                            {/* <Slider range defaultValue={[20, 50]} /> */}
                         </div>
                     )}
                 </div>
             ) as any,
             key: newActiveKey,
         });
+
+        
         setItems(newPanes);
         setActiveKey(newActiveKey);
     };
@@ -558,7 +714,8 @@ const App = ({ countryname }: any) => {
     const loadMoreData = () => {};
     const onChangePicker = (date: any, dateString: any) => {
         console.log('[onChangePicker]',date, dateString);
-
+        dates=dateString
+        // updateSeries();
         // getSeries({
         //     date:dateString,
         //     country:[]
@@ -567,8 +724,11 @@ const App = ({ countryname }: any) => {
     return (
         <Row>
             <Col span={18} push={6}>
+            <div style={{ paddingLeft: "8px" }}>
+
+            
                 {/* <Space direction={"vertical"} align={"center"} style={{ width: "100%" }}> */}
-                <RangePicker picker="year" defaultValue={[Dayjs('2000'), Dayjs('2023')]} onChange={onChangePicker} />
+                <RangePicker picker="year" defaultValue={[Dayjs(dates[0]), Dayjs(dates[1])]} onChange={onChangePicker} />
                 <Tabs
                     type="editable-card"
                     onChange={onChange}
@@ -578,6 +738,7 @@ const App = ({ countryname }: any) => {
                     style={{ width: "100%" }}
                 />
                 {/* </Space> */}
+                </div>
             </Col>
             <Col span={6} pull={18}>
                 {/* <Space direction={"vertical"} align={"center"}> */}
@@ -604,13 +765,13 @@ const App = ({ countryname }: any) => {
                                 },
                             ]}
                         />{" "} */}
-                <AutoComplete
+                {/* <AutoComplete
                     options={options}
                     style={{ width: "100%" }}
                     onSelect={onSelect}
                     onSearch={(text) => setOptions(getPanelValue(text))}
                     placeholder="input here"
-                />
+                /> */}
                 {/* <Input placeholder="查询GDP或者Inflation"   prefix={<SearchOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />}/> */}
                 {/* </Space> */}
                 {/* <InfiniteScroll
@@ -634,7 +795,7 @@ const App = ({ countryname }: any) => {
                         //     },
                         //     pageSize: 15,
                         // }}
-                        style={{ maxHeight: "400px", overflow: "auto" }}
+                        style={{ maxHeight: "488px", overflow: "auto" ,width:'250px'}}
                         renderItem={(card: any, i: any) => {
                             const insertLineOnLeft =
                                 state.hoverIndex === i &&
@@ -700,6 +861,7 @@ const SimpleDemo = ({ countryname }: any) => {
 import config from "@/libs/config";
 import { TDataContext } from "@/app/components/DataProvider";
 import LayoutContainer from "@/app/components/LayoutContainer";
+import { table } from "console";
 // import { use, useEffect, useState } from "react";
 const geturl = config.url;
 let slug = "";
@@ -732,8 +894,42 @@ export default function Page({
             console.log("[catalogues-slug]", slug);
             console.log("[catalogues-initData]", initData);
             const countryname = initData?.countryname?.data?.results || [];
-            console.log("[catalogues-countryname]", countryname);
-            setCountryname(countryname);
+            const _defaultCountry = ["瑞士",
+                "日本",
+                "美国",
+                "加拿大",
+                "澳大利亚",
+                "瑞典",
+                "德国",
+                "英国",
+                "新西兰",
+                "丹麦",
+                "挪威",
+                "法国",
+                "荷兰",
+                "新加坡",
+                "意大利",
+                "中国",
+                "阿联酋",
+                "韩国",
+                "西班牙",
+                "芬兰"]
+            let _countryname:any = []
+            _defaultCountry.map((item: any, index: number) => {
+                _countryname.push({
+                    countryname_cn:item
+                })
+            })
+            countryname.map((item: any, index: number) => {
+                if (_defaultCountry.includes(item.countryname_cn)) {
+                    
+                }else{
+                    _countryname.push(item)
+                }
+            })
+
+            console.log("[catalogues-countryname]", _countryname);
+            setCountryname(_countryname);
             const data = await getInitialProps("cataloguelist", {
                 indexcode: slug,
             });
