@@ -187,7 +187,7 @@ const App = ({ countryname }: any) => {
         let maps:any = {}
       
         let slugs = slug.split(".")
-        let total=slugs[1].replace("df_global","")//'total_gov_debt' 
+        let total=slugs[1].replace("df_global_","")//'total_gov_debt' 
         results.map((item: any, index: number) => {
             const itemt = item;
             const countryname_cn = item.countryname_cn;
@@ -886,11 +886,13 @@ export default function Page({
     // const [weighValue, setWeighValue] = useState([]);
     const initData: any = useContext(TDataContext);
     const [countryname, setCountryname] = useState([]);
+    const [currentpathname,setCurrentpathname] = useState('')
     useEffect(() => {
         console.log("[params]", geturl);
 
         const fn = async () => {
             slug = (await params).slug;
+            setCurrentpathname('/catalogues/'+slug)
             console.log("[catalogues-slug]", slug);
             console.log("[catalogues-initData]", initData);
             const countryname = initData?.countryname?.data?.results || [];
@@ -951,7 +953,7 @@ export default function Page({
         return <div>hello 1</div>;
     } else {
         return (
-            <LayoutContainer currentpathname="/gdp">
+            <LayoutContainer currentpathname={currentpathname}>
                 <SimpleDemo countryname={countryname} />
             </LayoutContainer>
         );
