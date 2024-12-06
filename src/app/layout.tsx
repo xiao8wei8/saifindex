@@ -13,6 +13,7 @@ import { DataProvider } from "./components/DataProvider";
 import axios from "axios";
 import { useRouter } from "next/router";
 import config from "@/libs/config";
+import { GetStaticPropsContext, GetServerSidePropsContext } from 'next';
 // import { use, useEffect, useState } from "react";
 const geturl = config.url;
 const getInitialProps = async () => {
@@ -74,9 +75,18 @@ const getInitialProps = async () => {
 
     
   }
+//   export async function getStaticProps() {
+//     const categories =  {}//await getCategoriesFromCMS();
+  
+//     return {
+//       props: { categories },
+//     };
+//   }
+  
+const RootLayout = async ({ children }: any) => {
+    // const initialItems = await getInitialProps();
+    const initialItems:any =[]
 
-const RootLayout = async ({ children }: React.PropsWithChildren) => {
-    const initialItems = await getInitialProps();
     console.log("[initialItems]",initialItems)
     return (
         <html lang="en">
@@ -146,10 +156,49 @@ const RootLayout = async ({ children }: React.PropsWithChildren) => {
         </html>
     )
 };
-RootLayout.getInitialProps = async () => {
-   
-    return { stars: {
-        test:1
-    }};
-};
 export default RootLayout;
+// RootLayout.getInitialProps = async () => {
+   
+//     return { stars: {
+//         test:1
+//     }};
+// };
+// export async function getStaticProps(context: GetStaticPropsContext) {
+//     let ret:any = {}
+//     try {
+//         const res = await fetch(geturl + "?type=indexshortname");
+//         const json = await res.json();
+//         ret['indexshortname'] = json
+//      //    return { data: json };
+//     } catch (error:any) {
+//      //    return { data: {}, state: error?.message };
+//         ret['indexshortname'] =  { data: {}, state: error?.message }
+//     }
+ 
+//     try {
+//      const res = await fetch(geturl + "?type=catalogue");
+//      const json = await res.json();
+//      ret['catalogue'] = json
+//          // return { data: json };
+//      } catch (error:any) {
+//          // return { data: {}, state: error?.message };
+//          ret['catalogue'] =  { data: {}, state: error?.message }
+//      }
+ 
+//      try {
+//          const res = await fetch(geturl + "?type=countryname");
+//          const json = await res.json();
+//          ret['countryname'] = json
+//              // return { data: json };
+//          } catch (error:any) {
+//              // return { data: {}, state: error?.message };
+//              ret['countryname'] =  { data: {}, state: error?.message }
+//          }
+     
+ 
+      
+  
+//     // Pass data to the page via props
+//     return { props: { data:ret } }
+//   }
+
