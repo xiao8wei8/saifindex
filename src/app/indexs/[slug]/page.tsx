@@ -776,12 +776,14 @@ export default function Page({
 
     // ];
     const [weighValue, setWeighValue] = useState([]);
+    const [currentpathname,setCurrentpathname] = useState('')
 
     useEffect(() => {
         console.log("[params]", geturl);
         const fn = async () => {
             console.log("[fn]");
             slug = (await params).slug;
+            setCurrentpathname('/indexs/'+slug)
             const data = await getInitialProps("weight", {
                 indexcode: slug,
             });
@@ -803,7 +805,7 @@ export default function Page({
         return <div></div>;
     } else {
         return (
-            <LayoutContainer currentpathname="/hs300">
+            <LayoutContainer currentpathname={currentpathname}>
                 <PickerContainer />
 
                 <App weighValue={weighValue} />

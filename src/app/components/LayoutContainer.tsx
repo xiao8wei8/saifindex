@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import {
     CrownFilled,
     GithubFilled,
@@ -13,7 +13,8 @@ import { useRouter } from "next/navigation";
 import weixins from "./weixins";
 import "./index.css";
 import { NextPageContext } from "next";
-import {TDataContext} from "./DataProvider";
+import { TDataContext } from "./DataProvider";
+import axios from "axios";
 
 // initData::
 // {
@@ -36,38 +37,34 @@ import {TDataContext} from "./DataProvider";
 //                     "db_name": "stockmarket",
 //                     "object_name_cn": "中央政府债务总额（占GDP的百分比）"
 //                 },
-               
+
 //             ]
 //         },
 //         "msg": "成功"
 //     }
 // }
 
-const Page =   ({
+const Page = ({
     children,
-    currentpathname
+    currentpathname,
 }: {
     children: React.ReactNode;
     currentpathname?: string;
-
 }) => {
-    const initData:any = useContext(TDataContext);
+    const initData: any = useContext(TDataContext);
     // debugger
-    const catalogue = initData.catalogue
-    const indexshortname = initData.indexshortname
-    
-    const catalogue_results = catalogue?.data?.results||[]
-    const indexshortname_results = indexshortname?.data?.results||[]
+    const catalogue = initData.catalogue;
+    const indexshortname = initData.indexshortname;
+
+    const catalogue_results = catalogue?.data?.results || [];
+    const indexshortname_results = indexshortname?.data?.results || [];
     // const revenue = await fetchRevenue();
-    console.log("[initData]",catalogue_results,indexshortname_results);
+    console.log("[initData]", catalogue_results, indexshortname_results);
 
-
-    let indexshortname_routes:any = [
-        
-    ]
-    indexshortname_results.forEach((item:any) => {
+    let indexshortname_routes: any = [];
+    indexshortname_results.forEach((item: any) => {
         indexshortname_routes.push({
-            path: "/indexs/"+item.indexcode,
+            path: "/indexs/" + item.indexcode,
             name: item.t,
             icon: (
                 <CrownFilled
@@ -79,24 +76,19 @@ const Page =   ({
         });
     });
 
-    console.log("[indexshortname_routes]",indexshortname_routes);
-    let newPros:any = defaultProps
-    newPros.route.routes[3]['routes'] = indexshortname_routes;
+    console.log("[indexshortname_routes]", indexshortname_routes);
+    let newPros: any = defaultProps;
+    newPros.route.routes[3]["routes"] = indexshortname_routes;
 
-
-
-    let catalogue_routes:any = [
-        
-    ]
-
+    let catalogue_routes: any = [];
 
     // "object_name": "df_central_gov_debt_total",
     // //                     "db_name": "stockmarket",
     // //                     "object_name_cn": "中央政府债务总额（占GDP的百分比）"
 
-    catalogue_results.forEach((item:any) => {
+    catalogue_results.forEach((item: any) => {
         catalogue_routes.push({
-            path: "/catalogues/"+item.db_name+"."+item.object_name,
+            path: "/catalogues/" + item.db_name + "." + item.object_name,
             name: item.object_name_cn,
             icon: (
                 <CrownFilled
@@ -107,12 +99,8 @@ const Page =   ({
             component: "./Welcome",
         });
     });
-    
-    newPros.route.routes[4]['routes'] = catalogue_routes;
 
-
-
-
+    newPros.route.routes[4]["routes"] = catalogue_routes;
 
     // {
     //     path: "/hs300",
@@ -133,12 +121,37 @@ const Page =   ({
     let curWeixin = "";
     if (typeof localStorage !== "undefined") {
         curWeixin = localStorage.getItem("curWeixin") || "";
+        if (!curWeixin) {
+            curWeixin = localStorage.getItem("token") || "";
+        }
     }
 
     useEffect(() => {
         let curWeixin = localStorage.getItem("curWeixin") || "";
         if (!weixins.includes(curWeixin)) {
-            router.push("/login");
+            let token = localStorage.getItem("token") || "";
+            if (!token) {
+                router.push("/login");
+            }else {
+                const main = async () => {
+                    const response:any = await axios.get(
+                        "/api/aes?type=validate30&message="+encodeURI(token),
+                        {
+                          
+                        } // Include the config object as the third argument
+                    );
+                    const val = response.data.validate;
+                    console.log("[items]", response.data);
+                    if(val) {
+                      
+                    }else{
+                        router.push("/login");
+                    }
+
+                   
+                }
+                main()
+            }
         }
     }, []);
     return !curWeixin ? null : (
@@ -253,9 +266,9 @@ const Page =   ({
     );
 };
 Page.getInitialProps = async (ctx: NextPageContext) => {
-   console.log("[revenue]",2);
+    console.log("[revenue]", 2);
     // const res = await fetch('https://api.github.com/repos/vercel/next.js')
     // const json = await res.json()
-    return { stars: 1 }
-  }
+    return { stars: 1 };
+};
 export default Page;

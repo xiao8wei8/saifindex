@@ -20,7 +20,9 @@ import type { CSSProperties } from 'react';
 import { useState } from 'react';
 import { useRouter } from "next/navigation";
 import weixins from "../components/weixins";
-type LoginType = 'phone' | 'account';
+type LoginType = 'phone' | 'account' |'token';
+import axios from "axios";
+axios.defaults.timeout = 50000;
 
 export default () => {
   const { token } = theme.useToken();
@@ -54,7 +56,12 @@ export default () => {
           }}
           onFinish={async (values) => {
             console.log('Success:', values);
-            localStorage.setItem("curWeixin", values.username);
+            if(values.token){
+              localStorage.setItem("token", values.token);
+            }else if(values.username){
+              localStorage.setItem("curWeixin", values.username);
+            }
+            
             router.push('/dingpan');
             // return true;
           }}
@@ -76,32 +83,68 @@ export default () => {
             activeKey={loginType}
             onChange={(activeKey) => setLoginType(activeKey as LoginType)}
           >
-            <Tabs.TabPane key={'account'} tab={'账号密码登录'} disabled/>
-            <Tabs.TabPane key={'phone'} tab={'手机号登录'}  disabled/>
+            <Tabs.TabPane key={'account'} tab={'账号密码登录'} />
+            <Tabs.TabPane key={'token'} tab={'Token登录'}  />
           </Tabs>
-          {loginType === 'account' && (
+          {loginType === 'token' && (
             <>
               <ProFormText
-                name="username"
+                name="token"
                 fieldProps={{
                   size: 'large',
                   prefix: <UserOutlined className={'prefixIcon'} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />,
                 }}
-                initialValue={curWeixin}
+                initialValue={''}
                 // disabled
-                placeholder={'用户名: 微信号'}
+                placeholder={'token：获取的token'}
                 rules={[
+                  // {
+                  //   required: true,
+                  //   message: '请输入获取的token!',
+                  // },
                   {
-                    required: true,
-                    message: '请输入绑定的微信号!',
-                  },
-                  {
-                    pattern:new RegExp(weixins.join("|")),
-                    message: '微信号未绑定，请联系管理员绑定',
+                    validator: (_, value,callback) => {
+                        value = value.trim()
+                        if(value=== "") {
+                          return Promise.reject('token不正确，请联系管理员绑定1');
+                        }
+                            const main = async () => {
+                                const response:any = await axios.get(
+                                    "/api/aes?type=validate30&message="+encodeURI(value),
+                                    {
+                                      
+                                    } // Include the config object as the third argument
+                                );
+                                const val = response.data.validate;
+                                console.log("[items]", response.data);
+                                if(val) {
+                                  callback()
+                                  return Promise.resolve();
+                                }else{
+                                   callback('token不正确，请联系管理员绑定1');
+                                }
+
+                                // callback(items)
+                                // return Promise.resolve();
+                               
+                            }
+                            main()
+
+                      // if (weixins.indexOf(value) === -1) {
+                       
+                        // return Promise.reject('token不正确，请联系管理员绑定');
+                      // }
+                      // return Promise.resolve();
+                    },
                   }
+                  // {
+                  //   pattern:new RegExp(weixins.join("|")),
+                  //   message: 'token不正确，请联系管理员绑定',
+                  // }
                 ]}
               />
-              <ProFormText.Password
+              {/* <ProFormText.Password
+                style={{ display: 'none' }}
                 name="password"
                 disabled
                 fieldProps={{
@@ -147,7 +190,79 @@ export default () => {
                     message: '请输入密码！',
                   },
                 ]}
+              /> */}
+            </>
+          )}
+          {loginType === 'account' && (
+            <>
+              <ProFormText
+                name="username"
+                fieldProps={{
+                  size: 'large',
+                  prefix: <UserOutlined className={'prefixIcon'} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />,
+                }}
+                initialValue={curWeixin}
+                // disabled
+                placeholder={'用户名: 微信号'}
+                rules={[
+                  {
+                    required: true,
+                    message: '请输入绑定的微信号!',
+                  },
+                  {
+                    pattern:new RegExp(weixins.join("|")),
+                    message: '微信号未绑定，请联系管理员绑定',
+                  }
+                ]}
               />
+              {/* <ProFormText.Password
+                style={{ display: 'none' }}
+                name="password"
+                disabled
+                fieldProps={{
+                  size: 'large',
+                  prefix: <LockOutlined className={'prefixIcon'} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />,
+                  // strengthText:
+                  //   'Password should contain numbers, letters and special characters, at least 8 characters long.',
+                  // statusRender: (value) => {
+                 
+                  //   const getStatus = () => {
+                  //     if (value && value.length > 12) {
+                  //       return 'ok';
+                  //     }
+                  //     if (value && value.length > 6) {
+                  //       return 'pass';
+                  //     }
+                  //     return 'poor';
+                  //   };
+                  //   const status = getStatus();
+                  //   if (status === 'pass') {
+                  //     return (
+                  //       <div style={{ color: token.colorWarning }}>
+                  //         强度：中
+                  //       </div>
+                  //     );
+                  //   }
+                  //   if (status === 'ok') {
+                  //     return (
+                  //       <div style={{ color: token.colorSuccess }}>
+                  //         强度：强
+                  //       </div>
+                  //     );
+                  //   }
+                  //   return (
+                  //     <div style={{ color: token.colorError }}>强度：弱</div>
+                  //   );
+                  // },
+                }}
+                placeholder={'密码: saifchat'}
+                rules={[
+                  {
+                    required: false,
+                    message: '请输入密码！',
+                  },
+                ]}
+              /> */}
             </>
           )}
           {loginType === 'phone' && (
@@ -203,7 +318,7 @@ export default () => {
               marginBlockEnd: 24,
             }}
           >
-              <Checkbox checked disabled>  自动登录</Checkbox>
+              <Checkbox checked disabled style={{display: 'none'}}>  自动登录</Checkbox>
             {/* <ProFormCheckbox noStyle name="autoLogin" disabled  checked={'autoLogin'} >
               自动登录
             </ProFormCheckbox> */}

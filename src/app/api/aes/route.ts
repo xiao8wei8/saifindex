@@ -4,6 +4,7 @@ import  AES from 'crypto-js/aes'
 import  CryptoJS from 'crypto-js'
 
 import { NextRequest, NextResponse } from "next/server";
+import { timeStamp } from 'console';
 
 
 // export const revalidate = 60;
@@ -21,7 +22,8 @@ export async function GET(request: NextRequest) {
     let ciphertext='';
    
     const t :any= new Date().getTime()+""
-    console.log('[type]',type,t);
+    console.log('[type]',type);
+    console.log('[message]',message);
     switch (type) {
         case 'encrypt':
             ciphertext = AES.encrypt(t, key).toString();
@@ -34,11 +36,19 @@ export async function GET(request: NextRequest) {
             // ciphertext = AES.decrypt(data.data,key).toString();
             ciphertext =  AES.decrypt(data.data,key).toString(CryptoJS.enc.Utf8);
             break;
+        case 'validate30':
+            // ciphertext = AES.decrypt(data.data,key).toString();
+            let timetext:any = AES.decrypt(message,key).toString(CryptoJS.enc.Utf8);
+            timetext = parseInt(timetext) 
+            const validate = (new Date().getTime()-timetext)/60000-30
+            return NextResponse.json({  success: true,validate: validate>0?false:true}, { status: 200 });
 
+            break;    
+            
             
         default:
             break;
     }
-   
-    return NextResponse.json({  success: true,data: encodeURI(ciphertext)}, { status: 200 });
+    console.log('[ciphertext]',ciphertext);
+    return NextResponse.json({  success: true,data: encodeURI(ciphertext),timestamp: t}, { status: 200 });
 }

@@ -795,7 +795,7 @@ const App = ({ countryname }: any) => {
                         //     },
                         //     pageSize: 15,
                         // }}
-                        style={{ maxHeight: "488px", overflow: "auto" ,width:'250px'}}
+                        style={{ maxHeight: "488px", overflow: "auto" }}
                         renderItem={(card: any, i: any) => {
                             const insertLineOnLeft =
                                 state.hoverIndex === i &&
