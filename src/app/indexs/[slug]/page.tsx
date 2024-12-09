@@ -241,6 +241,22 @@ if (typeof window == "undefined") {
     require("highcharts/modules/full-screen")(Highcharts);
     require("highcharts/modules/stock-tools")(Highcharts);
     require("highcharts/highcharts-more")(Highcharts);
+
+
+    require('highcharts/indicators/indicators-all')(Highcharts);
+    require('highcharts/modules/drag-panes')(Highcharts);
+
+    require('highcharts/modules/annotations-advanced')(Highcharts);
+    require('highcharts/modules/price-indicator')(Highcharts);
+    require('highcharts/modules/full-screen')(Highcharts);
+
+    require('highcharts/modules/stock-tools')(Highcharts);
+
+    require('highcharts/modules/heikinashi')(Highcharts);
+    require('highcharts/modules/hollowcandlestick')(Highcharts);
+    require('highcharts/modules/accessibility')(Highcharts);
+    // require('highcharts/connectors/morningstar/connectors-morningstar')(Highcharts);
+
     
 }
 
