@@ -78,7 +78,7 @@ const Page = ({
 
     console.log("[indexshortname_routes]", indexshortname_routes);
     let newPros: any = defaultProps;
-    newPros.route.routes[3]["routes"] = indexshortname_routes;
+    newPros.route.routes[2]["routes"] = indexshortname_routes;
 
     let catalogue_routes: any = [];
 
@@ -100,7 +100,7 @@ const Page = ({
         });
     });
 
-    newPros.route.routes[4]["routes"] = catalogue_routes;
+    newPros.route.routes[3]["routes"] = catalogue_routes;
 
     // {
     //     path: "/hs300",

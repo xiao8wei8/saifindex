@@ -12,17 +12,7 @@ export default {
     route: {
         path: "/",
         routes: [
-            {
-                path: "/chat",
-                name: "SAIF Chat Bot",
-                icon: (
-                    <CrownFilled
-                        onPointerEnterCapture={undefined}
-                        onPointerLeaveCapture={undefined}
-                    />
-                ),
-                component: "./Welcome",
-            },
+          
             {
                 path: "/dashboard",
                 name: "综合看板",
@@ -80,6 +70,24 @@ export default {
                         icon: "/images/logo-font/logo_star.png",
                         component: "./Welcome",
                     },
+                    {
+                        path: "/tradesignal",
+                        name: "股票买卖点查询",
+                        icon: "/images/logo-font/logo_star.png",
+                        component: "./Welcome",
+                    },
+                    {
+                        path: "/chat",
+                        name: "AI查询",
+                        icon: (
+                            <CrownFilled
+                                onPointerEnterCapture={undefined}
+                                onPointerLeaveCapture={undefined}
+                            />
+                        ),
+                        component: "./Welcome",
+                    },
+                    
                 ],
             },
             {

@@ -6,7 +6,7 @@ axios.defaults.timeout = 50000;
 
 // @ts-ignore
 import config from "@/libs/config";
-import { Table } from "antd";
+import { DatePicker, Input, Table } from "antd";
 // import { use, useEffect, useState } from "react";
 const geturl = config.url;
 
@@ -132,9 +132,13 @@ const APP = () => {
         };
         fn();
     },[])
+    const onPanelChange = (date: any, dateString: any) => {
+        console.log(date, dateString);
+    }
     return (
-        <LayoutContainer currentpathname="/shishi">
-           
+        <LayoutContainer currentpathname="/tradesignal">
+            <Input type="text" />
+            <DatePicker onChange={onPanelChange} picker="month" />
             <Table dataSource={dataSource} columns={columns} />;
         </LayoutContainer>
     );
