@@ -94,6 +94,37 @@ const get_catalogue_list = (params?: any) => {
     //     ],
     // },
 };
+const get_tradesignal = (params?: any) => {
+
+    let code = params?.stockcode || "601636";
+
+    const sql = `
+   select 
+    akts.tradedate as '交易日期', 
+    akts.symbol as '股票代码', 
+    akts.stockname_cn as '股票名称(中文)', 
+    akts.trade_act_name as '交易信号名称', 
+    akts.close as '当日收盘价', 
+    akts.pct_change as '当日涨跌额',
+    akts.pct_chg as '当日涨幅',
+    akts.cum_pct_chg as '周期累积涨幅',
+    akts.premium_rate as '溢价率%',
+    akts.risk_rate as '风险指数',
+    akts.turnover_rate_f as '当日自由流通股换手率',  
+    akts.cum_turnover_f_rate as '累积自由流通股换手率',
+    akts.cur_yield as '当日收益',
+    akts.cum_yield as '周期累积收益',
+    akts.cur_yield_ratio as '当日收益率',
+    akts.cum_yield_ratio as '周期累积收益率'
+  from stockmarketstatistics.ads_kdj_tradesignal_summary akts
+ where akts.symbol = '000001'
+   and akts.tradedate >= '2024-11-01' and akts.tradedate <= '2024-12-31'
+   and tradesignal_power = 2
+ `;
+   return sql;
+
+}
+
 
 import { query } from "@/libs/db";
 
@@ -131,6 +162,10 @@ export async function GET(request: NextRequest) {
             break;
         case "cataloguelist":
             sql=get_catalogue_list(params);
+            break;
+
+        case 'tradesignal':
+            sql=get_tradesignal(params);
             break;
             
         default:
