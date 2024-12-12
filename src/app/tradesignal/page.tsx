@@ -6,9 +6,32 @@ axios.defaults.timeout = 50000;
 
 // @ts-ignore
 import config from "@/libs/config";
-import { DatePicker, Input, Table } from "antd";
+import { AutoComplete, AutoCompleteProps, DatePicker, Flex, FlexProps, Input, Table } from "antd";
+import React from "react";
+import dayjs from "dayjs";
 // import { use, useEffect, useState } from "react";
 const geturl = config.url;
+
+const boxStyle: React.CSSProperties = {
+  width: '100%',
+  height: 40,
+  borderRadius: 6,
+  // border: '1px solid #40a9ff',
+};
+
+const justifyOptions = [
+  'flex-start',
+  'center',
+  'flex-end',
+  'space-between',
+  'space-around',
+  'space-evenly',
+];
+const alignOptions = ['flex-start', 'center', 'flex-end'];
+
+const mockVal = (str: string, repeat = 1) => ({
+  value: str.repeat(repeat),
+});
 
 
 const APP = () => {
@@ -119,7 +142,11 @@ const APP = () => {
                 date:""
             });
             console.log("[--data]", data);
-            setDataSource(data.data.data.results)
+            let results = data.data.data.results;
+            results.map((item: any, index: number) => {
+                item['交易日期'] = dayjs(new Date(item['交易日期'])).format('YYYY-MM-DD');
+            })
+            setDataSource(results)
             // let results = data.data.data.results;
             // results.map((item: any, index: number) => {
             //     item.colorValue = 300 + index;
@@ -135,10 +162,36 @@ const APP = () => {
     const onPanelChange = (date: any, dateString: any) => {
         console.log(date, dateString);
     }
+    const [justify, setJustify] = React.useState<FlexProps['justify']>(justifyOptions[0]);
+    const [alignItems, setAlignItems] = React.useState<FlexProps['align']>(alignOptions[0]);
+    const [value, setValue] = useState('');
+    const [options, setOptions] = useState<AutoCompleteProps['options']>([]);
+    const [anotherOptions, setAnotherOptions] = useState<AutoCompleteProps['options']>([]);
+  
+    const getPanelValue = (searchText: string) =>
+      !searchText ? [] : [mockVal(searchText), mockVal(searchText, 2), mockVal(searchText, 3)];
+  
+    const onSelect = (data: string) => {
+      console.log('onSelect', data);
+    };
+  
+    const onChange = (data: string) => {
+      setValue(data);
+    };
     return (
         <LayoutContainer currentpathname="/tradesignal">
-            <Input type="text" />
+           <Flex gap="middle" align="start" vertical>
+          <Flex style={boxStyle} justify={justify} align={alignItems}>
+          <AutoComplete
+            options={options}
+            style={{ width: 200 }}
+            onSelect={onSelect}
+            onSearch={(text) => setOptions(getPanelValue(text))}
+            placeholder="input here"
+          />
             <DatePicker onChange={onPanelChange} picker="month" />
+            </Flex>
+            </Flex>
             <Table dataSource={dataSource} columns={columns} />;
         </LayoutContainer>
     );
