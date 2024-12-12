@@ -9,6 +9,7 @@ import config from "@/libs/config";
 import { AutoComplete, AutoCompleteProps, DatePicker, Flex, FlexProps, Input, Table } from "antd";
 import React from "react";
 import dayjs from "dayjs";
+import symbols from "./symbol"
 // import { use, useEffect, useState } from "react";
 const geturl = config.url;
 
@@ -32,6 +33,20 @@ const alignOptions = ['flex-start', 'center', 'flex-end'];
 const mockVal = (str: string, repeat = 1) => ({
   value: str.repeat(repeat),
 });
+const mockVal2 = (str: string, repeat = 1) =>{
+  let ret:any = []
+  for (let index = 0; index < symbols.length; index++) {
+    const symbol = symbols[index];
+    if(symbol[0].indexOf(str)!=-1||symbol[1].indexOf(str)!=-1){
+      ret = [{value:symbol[0]+"-"+symbol[1]}]
+      break
+    }
+    
+  }
+
+  console.log("[ret]",ret)
+  return ret
+}
 
 
 const APP = () => {
@@ -130,23 +145,36 @@ const APP = () => {
         };
       });
       console.log("[columns]",columns)
+    
+    const getVal = async(stockcode:any)=>{
+        const data = await getStockDataByCode("tradesignal", {
+          stockcode:(stockcode|| "").trim(),
+          date:""
+      });
+      console.log("[--data]", data);
+      let results = data.data.data.results;
+      results.map((item: any, index: number) => {
+          item['交易日期'] = dayjs(new Date(item['交易日期'])).format('YYYY-MM-DD');
+      })
+      setDataSource(results)
+    }
 
     useEffect(() => {
         const fn = async () => {
             console.log("[fn]");
-
+            await getVal("");
             // slug = (await params).slug;
             // setCurrentpathname('/indexs/'+slug)
-            const data = await getStockDataByCode("tradesignal", {
-                stockcode: "",
-                date:""
-            });
-            console.log("[--data]", data);
-            let results = data.data.data.results;
-            results.map((item: any, index: number) => {
-                item['交易日期'] = dayjs(new Date(item['交易日期'])).format('YYYY-MM-DD');
-            })
-            setDataSource(results)
+            // const data = await getStockDataByCode("tradesignal", {
+            //     stockcode: "",
+            //     date:""
+            // });
+            // console.log("[--data]", data);
+            // let results = data.data.data.results;
+            // results.map((item: any, index: number) => {
+            //     item['交易日期'] = dayjs(new Date(item['交易日期'])).format('YYYY-MM-DD');
+            // })
+            // setDataSource(results)
             // let results = data.data.data.results;
             // results.map((item: any, index: number) => {
             //     item.colorValue = 300 + index;
@@ -169,10 +197,12 @@ const APP = () => {
     const [anotherOptions, setAnotherOptions] = useState<AutoCompleteProps['options']>([]);
   
     const getPanelValue = (searchText: string) =>
-      !searchText ? [] : [mockVal(searchText), mockVal(searchText, 2), mockVal(searchText, 3)];
+      !searchText ? [] : mockVal2(searchText);
   
-    const onSelect = (data: string) => {
+    const onSelect = async(data: string) => {
       console.log('onSelect', data);
+      const datats = data.split("-")
+       await getVal(datats[0])
     };
   
     const onChange = (data: string) => {
@@ -189,7 +219,7 @@ const APP = () => {
             onSearch={(text) => setOptions(getPanelValue(text))}
             placeholder="input here"
           />
-            <DatePicker onChange={onPanelChange} picker="month" />
+            {/* <DatePicker onChange={onPanelChange} picker="month" /> */}
             </Flex>
             </Flex>
             <Table dataSource={dataSource} columns={columns} />;

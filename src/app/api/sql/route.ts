@@ -94,8 +94,40 @@ const get_catalogue_list = (params?: any) => {
     //     ],
     // },
 };
-const get_tradesignal = (params?: any) => {
+function getLastMonthFirstDayAndCurrentMonthLastDay() {
+    // 获取当前日期
+    let today = new Date();
 
+    // 获取当前月份
+    let currentMonth = today.getMonth();
+
+    // 获取上个月的第一天
+    let lastMonthFirstDay = new Date(today.getFullYear(), currentMonth, 1);
+
+    // 获取上个月的最后一天
+    // 由于上个月的最后一天就是当前月的第一天的前一天，所以可以通过设置当前月的第一天，然后减去一天来获取
+    let lastMonthLastDay = new Date(today.getFullYear(), currentMonth, 0);
+
+    // 获取当前月的最后一天
+    // 同样的方法，设置下个月的第一天，然后减去一天，就是当前月的最后一天
+    let nextMonthFirstDay = new Date(today.getFullYear(), currentMonth + 1, 1);
+    let currentMonthLastDay = new Date(nextMonthFirstDay - 1);
+
+    // 返回结果
+    return {
+        lastMonthFirstDay: lastMonthFirstDay.toISOString().split('T')[0], // 格式化为 YYYY-MM-DD
+        lastMonthLastDay: lastMonthLastDay.toISOString().split('T')[0],
+        currentMonthLastDay: currentMonthLastDay.toISOString().split('T')[0]
+    };
+}
+
+// 调用函数并打印结果
+
+const get_tradesignal = (params?: any) => {
+    let result = getLastMonthFirstDayAndCurrentMonthLastDay();
+    console.log("上个月第一天:", result.lastMonthFirstDay);
+    console.log("上个月最后一天:", result.lastMonthLastDay);
+    console.log("当前月最后一天:", result.currentMonthLastDay);
     let code = params?.stockcode || "601636";
 
     const sql = `
@@ -117,8 +149,8 @@ const get_tradesignal = (params?: any) => {
     akts.cur_yield_ratio as '当日收益率',
     akts.cum_yield_ratio as '周期累积收益率'
   from stockmarketstatistics.ads_kdj_tradesignal_summary akts
- where akts.symbol = '000001'
-   and akts.tradedate >= '2024-11-01' and akts.tradedate <= '2024-12-31'
+ where akts.symbol = '${code}'
+   and akts.tradedate >= '${result.lastMonthFirstDay}' and akts.tradedate <= '${result.currentMonthLastDay}'
    and tradesignal_power = 2
  `;
    return sql;
