@@ -110,7 +110,7 @@ function getLastMonthFirstDayAndCurrentMonthLastDay() {
 
     // 获取当前月的最后一天
     // 同样的方法，设置下个月的第一天，然后减去一天，就是当前月的最后一天
-    let nextMonthFirstDay = new Date(today.getFullYear(), currentMonth + 1, 1);
+    let nextMonthFirstDay:any = new Date(today.getFullYear(), currentMonth + 1, 1);
     let currentMonthLastDay = new Date(nextMonthFirstDay - 1);
 
     // 返回结果
@@ -132,26 +132,26 @@ const get_tradesignal = (params?: any) => {
 
     const sql = `
    select 
-    akts.tradedate as '交易日期', 
-    akts.symbol as '股票代码', 
-    akts.stockname_cn as '股票名称(中文)', 
-    akts.trade_act_name as '交易信号名称', 
-    akts.close as '当日收盘价', 
-    akts.pct_change as '当日涨跌额',
-    akts.pct_chg as '当日涨幅',
-    akts.cum_pct_chg as '周期累积涨幅',
-    akts.premium_rate as '溢价率%',
-    akts.risk_rate as '风险指数',
-    akts.turnover_rate_f as '当日自由流通股换手率',  
-    akts.cum_turnover_f_rate as '累积自由流通股换手率',
-    akts.cur_yield as '当日收益',
-    akts.cum_yield as '周期累积收益',
-    akts.cur_yield_ratio as '当日收益率',
-    akts.cum_yield_ratio as '周期累积收益率'
+   akts.tradedate    as "交易日期", 
+       akts.symbol     as "股票代码", 
+       akts.stockname_cn   as "股票名称（中文", 
+       akts.trade_act_name   as "交易信号名称",
+       round(akts.close,2)     as "当日收盘价", 
+       akts.pct_change    as "当日涨跌额",
+       round(akts.pct_chg,2)    as "当日涨幅",
+       akts.cum_pct_chg   as "周期累积涨幅",
+       akts.premium_rate   as "溢价率%",
+       akts.risk_rate    as "风险指数%",
+       akts.turnover_rate_f  as "当日自由流通股换手率", 
+       akts.cum_turnover_f_rate as "累积自由流通股换手率",
+       akts.cur_yield    as "当日收益",
+       akts.cum_yield    as "周期累积收益",
+       round(akts.cur_yield_ratio * 100,2) as "当日收益率",
+       round(akts.cum_yield_ratio * 100,2)  as "周期累积收益率"
   from stockmarketstatistics.ads_kdj_tradesignal_summary akts
  where akts.symbol = '${code}'
    and akts.tradedate >= '${result.lastMonthFirstDay}' and akts.tradedate <= '${result.currentMonthLastDay}'
-   and tradesignal_power = 2
+   and tradesignal_power = 2   order by akts.tradedate desc
  `;
    return sql;
 

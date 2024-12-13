@@ -72,7 +72,7 @@ export default {
                     },
                     {
                         path: "/tradesignal",
-                        name: "股票买卖点查询",
+                        name: "个股概览",
                         icon: "/images/logo-font/logo_star.png",
                         component: "./Welcome",
                     },
