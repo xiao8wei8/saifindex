@@ -109,6 +109,11 @@ const APP = () => {
             key: "股票代码",
         },
         {
+            title: "股票名称(中文)",
+            dataIndex: "股票名称(中文)",
+            key: "股票名称(中文)",
+        },
+        {
             title: "周期累积收益",
             dataIndex: "周期累积收益",
             key: "周期累积收益",
@@ -164,15 +169,11 @@ const APP = () => {
             key: "累积自由流通股换手率",
         },
 
+       
         {
-            title: "股票名称(中文)",
-            dataIndex: "股票名称(中文)",
-            key: "股票名称(中文)",
-        },
-        {
-            title: "风险指数",
-            dataIndex: "风险指数",
-            key: "风险指数",
+            title: "风险指数%",
+            dataIndex: "风险指数%",
+            key: "风险指数%",
         },
     ];
     // columns = columns.map((item) => {
@@ -190,7 +191,7 @@ const APP = () => {
             item["width"] = 180;
         }
 
-        if (index <= 2) {
+        if (index <= 3) {
             item["fixed"] = "left";
         }
     }

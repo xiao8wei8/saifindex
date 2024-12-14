@@ -158,7 +158,7 @@ const get_tradesignal = (params?: any) => {
    select 
    akts.tradedate    as "交易日期", 
        akts.symbol     as "股票代码", 
-       akts.stockname_cn   as "股票名称（中文", 
+       akts.stockname_cn   as "股票名称(中文)", 
        akts.trade_act_name   as "交易信号名称",
        round(akts.close,2)     as "当日收盘价", 
        akts.pct_change    as "当日涨跌额",
