@@ -121,13 +121,37 @@ function getLastMonthFirstDayAndCurrentMonthLastDay() {
     };
 }
 
+// 获取当前日期
+const currentDate = new Date();
+
+// 定义一个函数来减去月份
+function subtractMonths(date:any, months:any) {
+  const newDate = new Date(date);
+  newDate.setMonth(newDate.getMonth() - months);
+  return newDate;
+}
+
+
+
 // 调用函数并打印结果
 
 const get_tradesignal = (params?: any) => {
-    let result = getLastMonthFirstDayAndCurrentMonthLastDay();
-    console.log("上个月第一天:", result.lastMonthFirstDay);
-    console.log("上个月最后一天:", result.lastMonthLastDay);
-    console.log("当前月最后一天:", result.currentMonthLastDay);
+
+    // 当前时间点
+    const currentFormattedDate = currentDate.toISOString().split('T')[0];
+
+    // 两个月前的时间点
+    const twoMonthsAgoDate = subtractMonths(currentDate, 2);
+    const twoMonthsAgoFormattedDate = twoMonthsAgoDate.toISOString().split('T')[0];
+
+    // 输出时间点
+    console.log(`当前时间: ${currentFormattedDate}`);
+    console.log(`两个月前: ${twoMonthsAgoFormattedDate}`);
+
+    // let result = getLastMonthFirstDayAndCurrentMonthLastDay();
+    // console.log("上个月第一天:", result.lastMonthFirstDay);
+    // console.log("上个月最后一天:", result.lastMonthLastDay);
+    // console.log("当前月最后一天:", result.currentMonthLastDay);
     let code = params?.stockcode || "601636";
 
     const sql = `
@@ -150,7 +174,7 @@ const get_tradesignal = (params?: any) => {
        round(akts.cum_yield_ratio * 100,2)  as "周期累积收益率"
   from stockmarketstatistics.ads_kdj_tradesignal_summary akts
  where akts.symbol = '${code}'
-   and akts.tradedate >= '${result.lastMonthFirstDay}' and akts.tradedate <= '${result.currentMonthLastDay}'
+   and akts.tradedate >= '${twoMonthsAgoFormattedDate}' and akts.tradedate <= '${currentFormattedDate}'
    and tradesignal_power = 2   order by akts.tradedate desc
  `;
    return sql;

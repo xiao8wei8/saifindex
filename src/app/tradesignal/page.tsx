@@ -315,7 +315,7 @@ const APP = () => {
                         style={{ width: 200 }}
                         onSelect={onSelect}
                         onSearch={(text) => setOptions(getPanelValue(text))}
-                        placeholder="input here"
+                        placeholder="输入股票代码或者名称"
                     />
                     {/* <DatePicker onChange={onPanelChange} picker="month" /> */}
                 </Flex>
