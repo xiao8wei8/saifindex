@@ -93,11 +93,7 @@ const APP = () => {
     const [dataSource, setDataSource] = useState([]);
 
     let columns = [
-        {
-            title: "交易信号名称",
-            dataIndex: "交易信号名称",
-            key: "交易信号名称",
-        },
+       
         {
             title: "交易日期",
             dataIndex: "交易日期",
@@ -114,29 +110,9 @@ const APP = () => {
             key: "股票名称(中文)",
         },
         {
-            title: "周期累积收益",
-            dataIndex: "周期累积收益",
-            key: "周期累积收益",
-        },
-        {
-            title: "周期累积收益率",
-            dataIndex: "周期累积收益率",
-            key: "周期累积收益率",
-        },
-        {
-            title: "周期累积涨幅",
-            dataIndex: "周期累积涨幅",
-            key: "周期累积涨幅",
-        },
-        {
-            title: "当日收益",
-            dataIndex: "当日收益",
-            key: "当日收益",
-        },
-        {
-            title: "当日收益率",
-            dataIndex: "当日收益率",
-            key: "当日收益率",
+            title: "交易信号名称",
+            dataIndex: "交易信号名称",
+            key: "交易信号名称",
         },
         {
             title: "当日收盘价",
@@ -144,24 +120,49 @@ const APP = () => {
             key: "当日收盘价",
         },
         {
-            title: "当日涨幅",
-            dataIndex: "当日涨幅",
-            key: "当日涨幅",
+            title: "当日收益",
+            dataIndex: "当日收益",
+            key: "当日收益",
+        },
+
+
+        {
+            title: "周期累积收益",
+            dataIndex: "周期累积收益",
+            key: "周期累积收益",
         },
         {
-            title: "当日涨跌额",
-            dataIndex: "当日涨跌额",
-            key: "当日涨跌额",
+            title: "当日收益率",
+            dataIndex: "当日收益率",
+            key: "当日收益率",
         },
+
+
+
+
         {
-            title: "当日自由流通股换手率",
-            dataIndex: "当日自由流通股换手率",
-            key: "当日自由流通股换手率",
+            title: "周期累积收益率",
+            dataIndex: "周期累积收益率",
+            key: "周期累积收益率",
         },
+
+        {
+            title: "周期累积涨幅",
+            dataIndex: "周期累积涨幅",
+            key: "周期累积涨幅",
+        },
+      
         {
             title: "溢价率%",
             dataIndex: "溢价率%",
             key: "溢价率%",
+        },
+
+ 
+        {
+            title: "风险指数%",
+            dataIndex: "风险指数%",
+            key: "风险指数%",
         },
         {
             title: "累积自由流通股换手率",
@@ -169,12 +170,29 @@ const APP = () => {
             key: "累积自由流通股换手率",
         },
 
+
+
+
+      
+        // {
+        //     title: "当日涨幅",
+        //     dataIndex: "当日涨幅",
+        //     key: "当日涨幅",
+        // },
+        // {
+        //     title: "当日涨跌额",
+        //     dataIndex: "当日涨跌额",
+        //     key: "当日涨跌额",
+        // },
+        // {
+        //     title: "当日自由流通股换手率",
+        //     dataIndex: "当日自由流通股换手率",
+        //     key: "当日自由流通股换手率",
+        // },
+     
        
-        {
-            title: "风险指数%",
-            dataIndex: "风险指数%",
-            key: "风险指数%",
-        },
+
+      
     ];
     // columns = columns.map((item) => {
     //   return {
