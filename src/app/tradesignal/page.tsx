@@ -3,7 +3,9 @@ import { use, useEffect, useState } from "react";
 import LayoutContainer from "../components/LayoutContainer";
 import axios from "axios";
 axios.defaults.timeout = 50000;
-
+import "./index.css";
+import HighchartsReact from "highcharts-react-official";
+import Highcharts from "highcharts";
 // @ts-ignore
 import config from "@/libs/config";
 import {
@@ -19,6 +21,8 @@ import React from "react";
 import dayjs from "dayjs";
 import symbols from "./symbol";
 import { createStyles } from "antd-style";
+import { set } from "react-hook-form";
+import { text } from "stream/consumers";
 // import { use, useEffect, useState } from "react";
 const geturl = config.url;
 
@@ -91,89 +95,132 @@ const APP = () => {
     // columns 为动态表格的表头数组 data为展示数据的数组
 
     const [dataSource, setDataSource] = useState([]);
+    const [currentLineSeries, setCurrentLineSeries] = useState([
+        {
+            name: "中国",
+            marker: {
+                symbol: "square",
+            },
+            data: [
+                43934,
+                {
+                    y: 48656,
+                    marker: {
+                        symbol: "url(/die.jpg)",
+                    },
+                },
+                65165,
+                81827,
+                112143,
+                142383,
+                171533,
+                165174,
+                155157,
+                161454,
+                154610,
+                168960,
+            ],
+        },
+    ]);
+    const [xAxis, setXAxis] = useState({});
+
+    const getWidth = (valueArr: any, num?: any) => {
+        // 计算平均值,保证列宽尽量保持均衡
+
+        let len = valueArr.length;
+
+        len = len * 20;
+        if (num) {
+            len += num;
+        }
+        return len;
+    };
 
     let columns = [
-       
         {
             title: "交易日期",
             dataIndex: "交易日期",
             key: "交易日期",
+            width: getWidth("交易日期", 20),
         },
         {
             title: "股票代码",
             dataIndex: "股票代码",
             key: "股票代码",
+            width: getWidth("股票代码"),
         },
         {
             title: "股票名称(中文)",
             dataIndex: "股票名称(中文)",
             key: "股票名称(中文)",
+            width: getWidth("股票名称(中文)"),
         },
         {
             title: "交易信号名称",
             dataIndex: "交易信号名称",
             key: "交易信号名称",
+            width: getWidth("交易信号名称"),
         },
         {
             title: "当日收盘价",
             dataIndex: "当日收盘价",
             key: "当日收盘价",
+            width: getWidth("当日收盘价"),
         },
         {
             title: "当日收益",
             dataIndex: "当日收益",
             key: "当日收益",
+            width: getWidth("当日收益"),
         },
-
 
         {
             title: "周期累积收益",
             dataIndex: "周期累积收益",
             key: "周期累积收益",
+            width: getWidth("周期累积收益"),
         },
         {
             title: "当日收益率",
             dataIndex: "当日收益率",
             key: "当日收益率",
+            width: getWidth("当日收益率"),
         },
-
-
-
 
         {
             title: "周期累积收益率",
             dataIndex: "周期累积收益率",
             key: "周期累积收益率",
+            width: getWidth("周期累积收益率"),
         },
 
         {
             title: "周期累积涨幅",
             dataIndex: "周期累积涨幅",
             key: "周期累积涨幅",
+            width: getWidth("周期累积涨幅"),
         },
-      
+
         {
             title: "溢价率%",
             dataIndex: "溢价率%",
             key: "溢价率%",
+            width: getWidth("溢价率%"),
         },
 
- 
         {
             title: "风险指数%",
             dataIndex: "风险指数%",
             key: "风险指数%",
+            width: getWidth("风险指数%"),
         },
         {
             title: "累积自由流通股换手率",
             dataIndex: "累积自由流通股换手率",
             key: "累积自由流通股换手率",
+            width: getWidth("累积自由流通股换手率"),
         },
 
-
-
-
-      
         // {
         //     title: "当日涨幅",
         //     dataIndex: "当日涨幅",
@@ -188,11 +235,8 @@ const APP = () => {
             title: "当日自由流通股换手率",
             dataIndex: "当日自由流通股换手率",
             key: "当日自由流通股换手率",
-        }
-     
-       
-
-      
+            width: getWidth("当日自由流通股换手率"),
+        },
     ];
     // columns = columns.map((item) => {
     //   return {
@@ -203,11 +247,11 @@ const APP = () => {
     for (let index = 0; index < columns.length; index++) {
         let item: any = columns[index];
 
-        if (index <= 6) {
-            item["width"] = 140;
-        } else {
-            item["width"] = 180;
-        }
+        // if (index <= 6) {
+        //     item["width"] = 140;
+        // } else {
+        //     item["width"] = 180;
+        // }
 
         if (index <= 3) {
             item["fixed"] = "left";
@@ -268,6 +312,60 @@ const APP = () => {
         // console.log("[columns]", columns);
 
         setDataSource(results);
+        let _series: any[] = [];
+        let _xAxis: any = [];
+        let _name = "";
+        results.map((item: any, index: number) => {
+            item["交易日期"] = dayjs(new Date(item["交易日期"])).format(
+                "YYYY-MM-DD"
+            );
+            
+            if (!_name) _name = item["股票名称(中文)"]; 
+
+            if (item["交易信号名称"] == "sell") {
+                _series.push({
+                    y: item["当日收盘价"]*1,
+                    marker: {
+                        symbol: "url(/die.jpg)",
+                    },
+                });
+            } else if (item["交易信号名称"] == "buy") {
+                _series.push({
+                    y: item["当日收盘价"]*1,
+                    marker: {
+                        symbol: "url(/zhang.jpg)",
+                    },
+                });
+            } else {
+                _series.push(item["当日收盘价"]*1);
+            }
+
+            _xAxis.push(item["交易日期"]);
+        });
+        console.log("[_xAxis]", _xAxis);
+        setXAxis({
+            categories: _xAxis,
+        });
+        console.log("[_series]", _series);
+        setCurrentLineSeries([
+            {
+                name: _name,
+                marker: {
+                    symbol: "square",
+                },
+                data: _series,
+                //  [
+                //     43934, {
+                //         y: 48656,
+                //         marker: {
+                //            symbol: 'url(/die.jpg)'
+                //         }
+                //      },65165, 81827, 112143, 142383, 171533, 165174,
+                //     155157, 161454, 154610, 168960,
+                // ],
+            },
+        ]);
+        // xAxis
     };
 
     useEffect(() => {
@@ -325,8 +423,9 @@ const APP = () => {
     const onChange = (data: string) => {
         setValue(data);
     };
+    const { styles } = useStyle();
     return (
-        <LayoutContainer currentpathname="/tradesignal">
+        <LayoutContainer currentpathname="/tradesignal" >
             <Flex gap="middle" align="start" vertical>
                 <Flex style={boxStyle} justify={justify} align={alignItems}>
                     <AutoComplete
@@ -340,13 +439,36 @@ const APP = () => {
                 </Flex>
             </Flex>
             <Table
+                className={styles.customTable}
                 dataSource={dataSource}
                 columns={columns}
                 bordered
-                pagination={{ pageSize: 30 }}
-                scroll={columns.length > 3 ? { x: 1500 } : {}}
+                // pagination={{ pageSize: 20 }}
+                // scroll={columns.length > 3 ? { x: 1500 } : {}}
+                pagination={{ pageSize: 50 }}
+                scroll={{ y: 55 * 7 }}
             />
-            ;
+            {currentLineSeries.length > 0 && (
+                <div>
+                    <HighchartsReact
+                        highcharts={Highcharts}
+                        options={{
+                            title:{
+                                text: "交易信号",
+                            },
+                            yAxis: {
+                                title: {
+                                    text: "收盘价",
+                                },
+                            },  
+                            xAxis: xAxis,
+                            series: currentLineSeries,
+                            chart: { type: "line", events: { load: () => {} } },
+                        }}
+                        // constructorType={"bar"}
+                    />
+                </div>
+            )}
         </LayoutContainer>
     );
 };
