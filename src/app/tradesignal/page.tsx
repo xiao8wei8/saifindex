@@ -343,17 +343,21 @@ const APP = () => {
             _xAxis.push(item["交易日期"]);
         });
         console.log("[_xAxis]", _xAxis);
+
+        const _reversed_xAxis = _xAxis.reverse();
+        const _reversed_series = _series.reverse();
+
         setXAxis({
-            categories: _xAxis,
+            categories: _reversed_xAxis,
         });
-        console.log("[_series]", _series);
+        console.log("[_series]", _reversed_series);
         setCurrentLineSeries([
             {
                 name: _name,
                 marker: {
                     symbol: "square",
                 },
-                data: _series,
+                data: _reversed_series,
                 //  [
                 //     43934, {
                 //         y: 48656,
