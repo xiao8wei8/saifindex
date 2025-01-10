@@ -91,10 +91,113 @@ const APP = () => {
     // const dataSource:any = [
 
     //   ];
+    const getWidth = (valueArr: any, num?: any) => {
+        // 计算平均值,保证列宽尽量保持均衡
+
+        let len = valueArr.length;
+
+        len = len * 20;
+        if (num) {
+            len += num;
+        }
+        return len;
+    };
 
     // columns 为动态表格的表头数组 data为展示数据的数组
+    let columns_dashboard_default = [
+        {
+            title: "交易日期",
+            dataIndex: "交易日期",
+            key: "交易日期",
+            width: getWidth("交易日期", 20),
+            fixed: "left"
+        },
+        {
+            title: "股票代码",
+            dataIndex: "股票代码",
+            key: "股票代码",
+            width: getWidth("股票代码"),
+             fixed: "left"
+        },
+        {
+            title: "股票名称(中文)",
+            dataIndex: "股票名称(中文)",
+            key: "股票名称(中文)",
+            width: getWidth("股票名称(中文)"),
+             fixed: "left"
+        },
+        {
+            title: "交易信号名称",
+            dataIndex: "交易信号名称",
+            key: "交易信号名称",
+            width: getWidth("交易信号名称"),
+        },
+        {
+            title: "当日收盘价",
+            dataIndex: "当日收盘价",
+            key: "当日收盘价",
+            width: getWidth("当日收盘价"),
+        },
+        {
+            title: "所在城市",
+            dataIndex: "所在城市",
+            key: "所在城市",
+            width: getWidth("所在城市"),
+        },
 
+        {
+            title: "所属行业",
+            dataIndex: "所属行业",
+            key: "所属行业",
+            width: getWidth("所属行业"),
+        },
+        {
+            title: "当日涨跌幅",
+            dataIndex: "当日涨跌幅",
+            key: "当日涨跌幅",
+            width: getWidth("当日涨跌幅"),
+        },
+
+        {
+            title: "总市值 （亿）",
+            dataIndex: "总市值 （亿）",
+            key: "总市值 （亿）",
+            width: getWidth("总市值 （亿）"),
+        },
+
+        {
+            title: "流通市值（亿）",
+            dataIndex: "流通市值（亿）",
+            key: "流通市值（亿）",
+            width: getWidth("流通市值（亿）"),
+        },
+
+        {
+            title: "非流通市值（亿）",
+            dataIndex: "非流通市值（亿）",
+            key: "非流通市值（亿）",
+            width: getWidth("非流通市值（亿）"),
+        },
+
+        {
+            title: "raising_limiting",
+            dataIndex: "raising_limiting",
+            key: "raising_limiting",
+            width: getWidth("raising_limiting"),
+        },
+        {
+            title: "descending_limiting",
+            dataIndex: "descending_limiting",
+            key: "descending_limiting",
+            width: getWidth("descending_limiting"),
+        },
+    ];
     const [dataSource, setDataSource] = useState([]);
+    const [dataSource_dashboard, setDataSourceDashboard] = useState([]);
+    const [columns_dashboard, setColumnsDashboard] = useState(
+        columns_dashboard_default
+    );
+
     const [currentLineSeries, setCurrentLineSeries] = useState([
         {
             name: "中国",
@@ -123,18 +226,6 @@ const APP = () => {
         },
     ]);
     const [xAxis, setXAxis] = useState({});
-
-    const getWidth = (valueArr: any, num?: any) => {
-        // 计算平均值,保证列宽尽量保持均衡
-
-        let len = valueArr.length;
-
-        len = len * 20;
-        if (num) {
-            len += num;
-        }
-        return len;
-    };
 
     let columns = [
         {
@@ -238,6 +329,7 @@ const APP = () => {
             width: getWidth("当日自由流通股换手率"),
         },
     ];
+
     // columns = columns.map((item) => {
     //   return {
     //     ...item,
@@ -259,6 +351,115 @@ const APP = () => {
     }
     console.log("[columns]", columns);
 
+    const getValDashboard = async (stockcode: any) => {
+        const data = await getStockDataByCode("tradesignaldashboard", {
+            // stockcode: (stockcode || "").trim(),
+            date: "",
+        });
+        console.log("[--data]", data);
+        let results = data.data.data.results;
+        let new_results: any = [];
+        results.map((item: any, index: number) => {
+            item["交易日期"] = dayjs(new Date(item["交易日期"])).format(
+                "YYYY-MM-DD"
+            );
+        });
+        let flag: any = {};
+        let columns_dashboard_add: any = [];
+        let isNo1 = 0;
+        results.map((item: any, index: number) => {
+            const symbol = item["股票代码"];
+            if (!flag[symbol]) {
+                isNo1 += 1;
+                flag[symbol] = item;
+            } else {
+                flag[symbol][item["交易日期"]] = item["当日收盘价"];
+                flag[symbol]['raising_limiting'] +=  item['raising_limiting']
+                flag[symbol]['descending_limiting'] +=  item['descending_limiting']
+                if (isNo1 == 1) {
+                    columns_dashboard_add.push({
+                        title: item["交易日期"],
+                        dataIndex: item["交易日期"],
+                        key: item["交易日期"],
+                        width: getWidth(item["交易日期"],-10),
+                    });
+                  
+                }
+            }
+        });
+     
+        for (var key in flag) {
+            new_results.push(flag[key]);
+        }
+        console.log("[flag]", flag);
+        console.log("[results]", results);
+        // 定义一个 Map 接收每列的长度值
+        // let widthMap: any = new Map();
+        // //作用是遍历所有数据拿到长度，记下每一列的宽度
+        // results.forEach((target: any) => {
+        //     for (let key in target) {
+        //         if (target.hasOwnProperty(key)) {
+        //             let keyWidth = getTextWidth(target[key]);
+        //             // 字段有值就放入数组
+        //             widthMap.has(key)
+        //                 ? widthMap.set(key, widthMap.get(key).concat(keyWidth))
+        //                 : widthMap.set(
+        //                       key,
+        //                       [].concat(keyWidth ? keyWidth : [])
+        //                   );
+        //         }
+        //     }
+        // });
+
+        // // 计算平均值,保证列宽尽量保持均衡
+        // for (let [mapKey] of widthMap) {
+        //     let valueArr = widthMap.get(mapKey);
+        //     let len = valueArr.length;
+        //     let value = valueArr.reduce(
+        //         (acc: any, cur: any) => acc + 1 / cur,
+        //         0
+        //     );
+        //     widthMap.set(mapKey, len / value);
+        // }
+
+        // //遍历表头，拿到对应表头的宽度与对应表头下内容比对，取最大值作为列宽，这样可以确保表头不换行。35为表头title左右的padding + border
+        // columns.map((item: any) => {
+        //     // title，dataIndex为 ant design Table对应参数
+        //     let textWidth = getTextWidth(item.title);
+        //     if (widthMap.get(item.dataIndex) < textWidth) {
+        //         widthMap.set(item.dataIndex, textWidth);
+        //     }
+        //     return (item.width = Math.ceil(widthMap.get(item.dataIndex)) + 35);
+        // });
+        // console.log("[columns]", columns);
+        // for (let index = 0; index < columns_dashboard_add.length; index++) {
+        //     let item: any = columns_dashboard_add[index];
+    
+        //     // if (index <= 6) {
+        //     //     item["width"] = 140;
+        //     // } else {
+        //     //     item["width"] = 180;
+        //     // }
+    
+        //     if (index <= 3) {
+        //         item["fixed"] = "left";
+        //     }
+        // }
+        setColumnsDashboard(
+            columns_dashboard_default.concat(columns_dashboard_add)
+        );
+        setDataSourceDashboard(new_results);
+        // let _series: any[] = [];
+        // let _xAxis: any = [];
+        // let _name = "";
+        // results.map((item: any, index: number) => {
+        //     item["交易日期"] = dayjs(new Date(item["交易日期"])).format(
+        //         "YYYY-MM-DD"
+        //     );
+
+        // });
+        // xAxis
+    };
     const getVal = async (stockcode: any) => {
         const data = await getStockDataByCode("tradesignal", {
             stockcode: (stockcode || "").trim(),
@@ -319,25 +520,25 @@ const APP = () => {
             item["交易日期"] = dayjs(new Date(item["交易日期"])).format(
                 "YYYY-MM-DD"
             );
-            
-            if (!_name) _name = item["股票名称(中文)"]; 
+
+            if (!_name) _name = item["股票名称(中文)"];
 
             if (item["交易信号名称"] == "sell") {
                 _series.push({
-                    y: item["当日收盘价"]*1,
+                    y: item["当日收盘价"] * 1,
                     marker: {
                         symbol: "url(/die.jpg)",
                     },
                 });
             } else if (item["交易信号名称"] == "buy") {
                 _series.push({
-                    y: item["当日收盘价"]*1,
+                    y: item["当日收盘价"] * 1,
                     marker: {
                         symbol: "url(/zhang.jpg)",
                     },
                 });
             } else {
-                _series.push(item["当日收盘价"]*1);
+                _series.push(item["当日收盘价"] * 1);
             }
 
             _xAxis.push(item["交易日期"]);
@@ -375,6 +576,7 @@ const APP = () => {
     useEffect(() => {
         const fn = async () => {
             console.log("[fn]");
+            await getValDashboard("");
             await getVal("");
             // slug = (await params).slug;
             // setCurrentpathname('/indexs/'+slug)
@@ -429,7 +631,7 @@ const APP = () => {
     };
     const { styles } = useStyle();
     return (
-        <LayoutContainer currentpathname="/tradesignal" >
+        <LayoutContainer currentpathname="/tradesignal">
             <Flex gap="middle" align="start" vertical>
                 <Flex style={boxStyle} justify={justify} align={alignItems}>
                     <AutoComplete
@@ -442,6 +644,16 @@ const APP = () => {
                     {/* <DatePicker onChange={onPanelChange} picker="month" /> */}
                 </Flex>
             </Flex>
+            <Table
+                className={styles.customTable}
+                dataSource={dataSource_dashboard}
+                columns={columns_dashboard}
+                bordered
+                // pagination={{ pageSize: 20 }}
+                // scroll={columns.length > 3 ? { x: 1500 } : {}}
+                pagination={{ pageSize: 50 }}
+                scroll={{ y: 55 * 7 }}
+            />
             <Table
                 className={styles.customTable}
                 dataSource={dataSource}
@@ -457,14 +669,14 @@ const APP = () => {
                     <HighchartsReact
                         highcharts={Highcharts}
                         options={{
-                            title:{
+                            title: {
                                 text: "交易信号",
                             },
                             yAxis: {
                                 title: {
                                     text: "收盘价",
                                 },
-                            },  
+                            },
                             xAxis: xAxis,
                             series: currentLineSeries,
                             chart: { type: "line", events: { load: () => {} } },

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import jsonwebtoken from "jsonwebtoken";
 import { encrypt } from "@/utils/auth";
 import { cookies } from "next/headers";
+export const dynamic = 'force-dynamic'
 // 获取股票基本信息
 const get_stock_basic_ash = () => {
     const sql = `
@@ -135,6 +136,77 @@ function subtractMonths(date:any, months:any) {
 
 // 调用函数并打印结果
 
+const get_tradesignal_dashboard = (params?: any) => {
+
+    // 当前时间点
+    const currentFormattedDate = currentDate.toISOString().split('T')[0];
+
+    // 两个月前的时间点
+    const twoMonthsAgoDate = subtractMonths(currentDate, 2);
+    const twoMonthsAgoFormattedDate = twoMonthsAgoDate.toISOString().split('T')[0];
+
+    // 输出时间点
+    console.log(`当前时间: ${currentFormattedDate}`);
+    console.log(`两个月前: ${twoMonthsAgoFormattedDate}`);
+
+    // let result = getLastMonthFirstDayAndCurrentMonthLastDay();
+    // console.log("上个月第一天:", result.lastMonthFirstDay);
+    // console.log("上个月最后一天:", result.lastMonthLastDay);
+    // console.log("当前月最后一天:", result.currentMonthLastDay);
+    let code = params?.stockcode || "601636";
+    const sql = `
+        
+    select dbf.tradedate as '交易日期',
+        dbf.symbol as '股票代码',
+        dbf.stockname_cn as '股票名称(中文)',
+        sba.area as '所在城市',
+        sba.industry as '所属行业',
+        dbf.pct_chg as '当日涨跌幅' ,
+        case when dbf.pct_chg > 9.8 then 1 else 0 end as "raising_limiting",
+        case when dbf.pct_chg <= -9.6 then 1 else 0 end as "descending_limiting",
+        ads_trd.trade_act_name as '交易信号名称',
+        dbf.close as '当日收盘价',
+        dbf.total_mv as "总市值 （亿）", 
+        dbf.circ_mv as "流通市值（亿）", 
+        round(dbf.total_mv - dbf.circ_mv,2) as "非流通市值（亿）"
+    from stockmarket.ts_daily_befadjust dbf inner join stockmarket.stock_basic_ash sba on dbf.symbol = sba.symbol
+    inner join (select akts.tradedate, akts.symbol, akts.trade_act_name from stockmarketstatistics.ads_kdj_tradesignal_summary akts
+                where   akts.tradedate >= '${twoMonthsAgoFormattedDate}' and akts.tradedate <= '${currentFormattedDate}'
+                    and tradesignal_power = 2) ads_trd on ads_trd.symbol = dbf.symbol and ads_trd.tradedate = dbf.tradedate
+    where  dbf.tradedate >='${twoMonthsAgoFormattedDate}' and dbf.tradedate <= '${currentFormattedDate}'
+    
+    and dbf.isst = 'N'
+    order by dbf.symbol,  dbf.tradedate desc
+    `
+// and dbf.close >= 10 and dbf.close <= 20
+    const sql1 = `
+   select 
+   akts.tradedate    as "交易日期", 
+       akts.symbol     as "股票代码", 
+       akts.stockname_cn   as "股票名称(中文)", 
+       akts.trade_act_name   as "交易信号名称",
+       round(akts.close,2)     as "当日收盘价", 
+       akts.pct_change    as "当日涨跌额",
+       round(akts.pct_chg,2)    as "当日涨幅",
+       akts.cum_pct_chg   as "周期累积涨幅",
+       akts.premium_rate   as "溢价率%",
+       akts.risk_rate    as "风险指数%",
+       akts.turnover_rate_f  as "当日自由流通股换手率", 
+       akts.cum_turnover_f_rate as "累积自由流通股换手率",
+       akts.cur_yield    as "当日收益",
+       akts.cum_yield    as "周期累积收益",
+       round(akts.cur_yield_ratio * 100,2) as "当日收益率",
+       round(akts.cum_yield_ratio * 100,2)  as "周期累积收益率"
+  from stockmarketstatistics.ads_kdj_tradesignal_summary akts
+ where akts.symbol = '${code}'
+   and akts.tradedate >= '${twoMonthsAgoFormattedDate}' and akts.tradedate <= '${currentFormattedDate}'
+   and tradesignal_power = 2   order by akts.tradedate desc
+ `;
+   return sql;
+
+}
+
+
 const get_tradesignal = (params?: any) => {
 
     // 当前时间点
@@ -223,7 +295,9 @@ export async function GET(request: NextRequest) {
         case 'tradesignal':
             sql=get_tradesignal(params);
             break;
-            
+        case 'tradesignaldashboard':
+            sql=get_tradesignal_dashboard(params);
+            break;
         default:
             break;
     }
