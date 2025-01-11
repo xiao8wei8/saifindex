@@ -169,7 +169,7 @@ const get_tradesignal_dashboard = (params?: any) => {
         CONVERT(dbf.close,DECIMAL(10,2)) as '当日收盘价',
       round(dbf.total_mv/100000000,2)  as "总市值 （亿）", 
        round(dbf.circ_mv/100000000,2)  as "流通市值（亿）", 
-        round((dbf.total_mv - dbf.circ_mv)/100000000,2)  as "流通市值（亿）"
+        round((dbf.total_mv - dbf.circ_mv)/100000000,2)  as "非流通市值（亿）"
 
 
     from stockmarket.ts_daily_befadjust dbf inner join stockmarket.stock_basic_ash sba on dbf.symbol = sba.symbol
