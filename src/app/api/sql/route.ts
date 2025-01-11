@@ -167,15 +167,28 @@ const get_tradesignal_dashboard = (params?: any) => {
         case when dbf.pct_chg <= -9.6 then 1 else 0 end as "跌幅次数",
         ads_trd.trade_act_name as '交易信号名称',
         CONVERT(dbf.close,DECIMAL(10,2)) as '当日收盘价',
-      
-        dbf.total_mv as "总市值 （亿）", 
-        dbf.circ_mv as "流通市值（亿）", 
-        round(dbf.total_mv - dbf.circ_mv,2) as "非流通市值（亿）"
+      round(dbf.total_mv/100000000,2)  as "总市值 （亿）", 
+       round(dbf.circ_mv/100000000,2)  as "流通市值（亿）", 
+        round((dbf.total_mv - dbf.circ_mv)/100000000,2)  as "流通市值（亿）"
+
+
     from stockmarket.ts_daily_befadjust dbf inner join stockmarket.stock_basic_ash sba on dbf.symbol = sba.symbol
     inner join (select akts.tradedate, akts.symbol, akts.trade_act_name from stockmarketstatistics.ads_kdj_tradesignal_summary akts
                 where   akts.tradedate >= '${twoMonthsAgoFormattedDate}' and akts.tradedate <= '${currentFormattedDate}'
                     and tradesignal_power = 2) ads_trd on ads_trd.symbol = dbf.symbol and ads_trd.tradedate = dbf.tradedate
-    where  dbf.tradedate >='${twoMonthsAgoFormattedDate}' and dbf.tradedate <= '${currentFormattedDate}' `
+    where  dbf.tradedate = (
+       
+    select dbf.tradedate 
+       
+
+
+    from stockmarket.ts_daily_befadjust dbf inner join stockmarket.stock_basic_ash sba on dbf.symbol = sba.symbol
+    inner join (select akts.tradedate, akts.symbol, akts.trade_act_name from stockmarketstatistics.ads_kdj_tradesignal_summary akts
+                where   akts.tradedate >= '${twoMonthsAgoFormattedDate}' and akts.tradedate <= '${currentFormattedDate}'
+                    and tradesignal_power = 2) ads_trd on ads_trd.symbol = dbf.symbol and ads_trd.tradedate = dbf.tradedate
+    where  dbf.tradedate >='${twoMonthsAgoFormattedDate}' and dbf.tradedate <= '${currentFormattedDate}' and dbf.symbol='000001'  order by dbf.symbol,  dbf.tradedate desc limit 1
+
+    ) `
 
     const sql2 =`and dbf.symbol = '${code}'`
 
@@ -187,6 +200,9 @@ const get_tradesignal_dashboard = (params?: any) => {
     sql = sql1 +" "+( code?sql2:"") +" "+ sql3;
 
 // and dbf.close >= 10 and dbf.close <= 20
+//         dbf.total_mv as "总市值 （亿）", 
+// dbf.circ_mv as "流通市值（亿）", 
+//         round(dbf.total_mv - dbf.circ_mv,2) as "非流通市值（亿）"
     const sqll = `
    select 
    akts.tradedate    as "交易日期", 
