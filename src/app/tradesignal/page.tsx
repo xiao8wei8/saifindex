@@ -11,6 +11,7 @@ import config from "@/libs/config";
 import {
     AutoComplete,
     AutoCompleteProps,
+    Button,
     DatePicker,
     Flex,
     FlexProps,
@@ -23,7 +24,9 @@ import symbols from "./symbol";
 import { createStyles } from "antd-style";
 import { set } from "react-hook-form";
 import { text } from "stream/consumers";
+import { CloseOutlined } from "@ant-design/icons";
 // import { use, useEffect, useState } from "react";
+
 const geturl = config.url;
 
 const boxStyle: React.CSSProperties = {
@@ -51,7 +54,7 @@ const mockVal2 = (str: string, repeat = 1) => {
     for (let index = 0; index < symbols.length; index++) {
         const symbol = symbols[index];
         if (symbol[0].indexOf(str) != -1 || symbol[1].indexOf(str) != -1) {
-            ret = [{ value: symbol[0] + "-" + symbol[1] }];
+            ret = [{ value: symbol[0].trim()     + "-" + symbol[1].trim() }];
             break;
         }
     }
@@ -91,6 +94,14 @@ const APP = () => {
     // const dataSource:any = [
 
     //   ];
+    const [loading, setLoading] = useState(true);
+    const handleLoadingChange = (enable: boolean) => {
+        setLoading(enable);
+    };
+    const [isShowStock, setIsShowStock] = useState(false);
+    const onClose = () => {
+        setIsShowStock(!isShowStock);
+    };
     const getWidth = (valueArr: any, num?: any) => {
         // 计算平均值,保证列宽尽量保持均衡
 
@@ -104,27 +115,27 @@ const APP = () => {
     };
 
     // columns 为动态表格的表头数组 data为展示数据的数组
-    let columns_dashboard_default = [
+    let columns_dashboard_default: any = [
         {
             title: "交易日期",
             dataIndex: "交易日期",
             key: "交易日期",
             width: getWidth("交易日期", 20),
-            fixed: "left"
+            fixed: "left",
         },
         {
             title: "股票代码",
             dataIndex: "股票代码",
             key: "股票代码",
             width: getWidth("股票代码"),
-             fixed: "left"
+            fixed: "left",
         },
         {
             title: "股票名称(中文)",
             dataIndex: "股票名称(中文)",
             key: "股票名称(中文)",
             width: getWidth("股票名称(中文)"),
-             fixed: "left"
+            fixed: "left",
         },
         {
             title: "交易信号名称",
@@ -180,16 +191,16 @@ const APP = () => {
         },
 
         {
-            title: "raising_limiting",
-            dataIndex: "raising_limiting",
-            key: "raising_limiting",
-            width: getWidth("raising_limiting"),
+            title: "涨幅次数",
+            dataIndex: "涨幅次数",
+            key: "涨幅次数",
+            width: getWidth("涨幅次数"),
         },
         {
-            title: "descending_limiting",
-            dataIndex: "descending_limiting",
-            key: "descending_limiting",
-            width: getWidth("descending_limiting"),
+            title: "跌幅次数",
+            dataIndex: "跌幅次数",
+            key: "跌幅次数",
+            width: getWidth("跌幅次数"),
         },
     ];
     const [dataSource, setDataSource] = useState([]);
@@ -353,7 +364,7 @@ const APP = () => {
 
     const getValDashboard = async (stockcode: any) => {
         const data = await getStockDataByCode("tradesignaldashboard", {
-            // stockcode: (stockcode || "").trim(),
+            stockcode: (stockcode || "").trim(),
             date: "",
         });
         console.log("[--data]", data);
@@ -374,20 +385,19 @@ const APP = () => {
                 flag[symbol] = item;
             } else {
                 flag[symbol][item["交易日期"]] = item["当日收盘价"];
-                flag[symbol]['raising_limiting'] +=  item['raising_limiting']
-                flag[symbol]['descending_limiting'] +=  item['descending_limiting']
+                flag[symbol]["涨幅次数"] += item["涨幅次数"];
+                flag[symbol]["跌幅次数"] += item["跌幅次数"];
                 if (isNo1 == 1) {
                     columns_dashboard_add.push({
                         title: item["交易日期"],
                         dataIndex: item["交易日期"],
                         key: item["交易日期"],
-                        width: getWidth(item["交易日期"],-10),
+                        width: 100,
                     });
-                  
                 }
             }
         });
-     
+
         for (var key in flag) {
             new_results.push(flag[key]);
         }
@@ -434,13 +444,13 @@ const APP = () => {
         // console.log("[columns]", columns);
         // for (let index = 0; index < columns_dashboard_add.length; index++) {
         //     let item: any = columns_dashboard_add[index];
-    
+
         //     // if (index <= 6) {
         //     //     item["width"] = 140;
         //     // } else {
         //     //     item["width"] = 180;
         //     // }
-    
+
         //     if (index <= 3) {
         //         item["fixed"] = "left";
         //     }
@@ -459,6 +469,7 @@ const APP = () => {
 
         // });
         // xAxis
+        handleLoadingChange(false);
     };
     const getVal = async (stockcode: any) => {
         const data = await getStockDataByCode("tradesignal", {
@@ -577,7 +588,7 @@ const APP = () => {
         const fn = async () => {
             console.log("[fn]");
             await getValDashboard("");
-            await getVal("");
+            // await getVal("");
             // slug = (await params).slug;
             // setCurrentpathname('/indexs/'+slug)
             // const data = await getStockDataByCode("tradesignal", {
@@ -612,18 +623,31 @@ const APP = () => {
         alignOptions[0]
     );
     const [value, setValue] = useState("");
-    const [options, setOptions] = useState<AutoCompleteProps["options"]>([]);
+    const defaultValue =  [{ value: "all-all", label: "all-all" }];
+    const [options, setOptions] = useState<AutoCompleteProps["options"]>(defaultValue);
     const [anotherOptions, setAnotherOptions] = useState<
         AutoCompleteProps["options"]
     >([]);
 
-    const getPanelValue = (searchText: string) =>
-        !searchText ? [] : mockVal2(searchText);
+    const getPanelValue = (searchText: string) =>{
+        let ret1 =  !searchText ? [] : mockVal2(searchText);
+        let ret = defaultValue.concat(ret1);
+        return ret
+    }
+        
 
     const onSelect = async (data: string) => {
         console.log("onSelect", data);
         const datats = data.split("-");
-        await getVal(datats[0]);
+        if (datats[0] == "all") datats[0] = "";
+        handleLoadingChange(true);
+        await getValDashboard(datats[0]);
+        // await getVal(datats[0]);
+    };
+    const onRowClick = async (record: any) => {
+        const symbol = record["股票代码"];
+        await getVal(symbol);
+        setIsShowStock(!isShowStock);
     };
 
     const onChange = (data: string) => {
@@ -632,57 +656,106 @@ const APP = () => {
     const { styles } = useStyle();
     return (
         <LayoutContainer currentpathname="/tradesignal">
-            <Flex gap="middle" align="start" vertical>
-                <Flex style={boxStyle} justify={justify} align={alignItems}>
-                    <AutoComplete
-                        options={options}
-                        style={{ width: 200 }}
-                        onSelect={onSelect}
-                        onSearch={(text) => setOptions(getPanelValue(text))}
-                        placeholder="输入股票代码或者名称"
-                    />
-                    {/* <DatePicker onChange={onPanelChange} picker="month" /> */}
-                </Flex>
-            </Flex>
-            <Table
-                className={styles.customTable}
-                dataSource={dataSource_dashboard}
-                columns={columns_dashboard}
-                bordered
-                // pagination={{ pageSize: 20 }}
-                // scroll={columns.length > 3 ? { x: 1500 } : {}}
-                pagination={{ pageSize: 50 }}
-                scroll={{ y: 55 * 7 }}
-            />
-            <Table
-                className={styles.customTable}
-                dataSource={dataSource}
-                columns={columns}
-                bordered
-                // pagination={{ pageSize: 20 }}
-                // scroll={columns.length > 3 ? { x: 1500 } : {}}
-                pagination={{ pageSize: 50 }}
-                scroll={{ y: 55 * 7 }}
-            />
-            {currentLineSeries.length > 0 && (
+            {!isShowStock ? (
                 <div>
-                    <HighchartsReact
-                        highcharts={Highcharts}
-                        options={{
-                            title: {
-                                text: "交易信号",
-                            },
-                            yAxis: {
-                                title: {
-                                    text: "收盘价",
-                                },
-                            },
-                            xAxis: xAxis,
-                            series: currentLineSeries,
-                            chart: { type: "line", events: { load: () => {} } },
+                  
+                    <Flex gap="middle" align="start" vertical>
+                        <Flex
+                            style={boxStyle}
+                            justify={justify}
+                            align={alignItems}
+                        >
+                            <AutoComplete
+                                options={options}
+                                style={{ width: 200 }}
+                                onSelect={onSelect}
+                                onSearch={(text) =>
+                                    setOptions(getPanelValue(text))
+                                }
+                                placeholder="输入股票代码或者名称"
+                                onClear={() => {
+                                    console.log("onMouseEnter");
+                                }}
+                            />
+                            {/* <DatePicker onChange={onPanelChange} picker="month" /> */}
+                        </Flex>
+                    </Flex>
+                    <Table
+                        loading={loading}
+                        className={styles.customTable}
+                        dataSource={dataSource_dashboard}
+                        columns={columns_dashboard}
+                        bordered
+                        // pagination={{ pageSize: 20 }}
+                        // scroll={columns.length > 3 ? { x: 1500 } : {}}
+                        pagination={{ pageSize: 50 }}
+                        scroll={{ y: 55 * 7 }}
+                        onRow={(record) => {
+                            return {
+                                onClick: (event) => {
+                                    console.log("record", record);
+                                    onRowClick(record);
+                                }, // 点击行
+                                onDoubleClick: (event) => {},
+                                onContextMenu: (event) => {},
+                                onMouseEnter: (event) => {}, // 鼠标移入行
+                                onMouseLeave: (event) => {},
+                            };
                         }}
-                        // constructorType={"bar"}
                     />
+                </div>
+            ) : (
+                <div>
+                      <div>
+                       
+                       <div className="right">
+                           <Button
+                               type="primary"
+                               icon={
+                                   <CloseOutlined
+                                       onPointerEnterCapture={undefined}
+                                       onPointerLeaveCapture={undefined}
+                                   />
+                               }
+                               onClick={onClose}
+                           >
+                               Close
+                           </Button>
+                       </div>
+                   </div>
+                    <Table
+                        className={styles.customTable}
+                        dataSource={dataSource}
+                        columns={columns}
+                        bordered
+                        // pagination={{ pageSize: 20 }}
+                        // scroll={columns.length > 3 ? { x: 1500 } : {}}
+                        pagination={{ pageSize: 50 }}
+                        scroll={{ y: 55 * 7 }}
+                    />
+
+                    <div>
+                        <HighchartsReact
+                            highcharts={Highcharts}
+                            options={{
+                                title: {
+                                    text: "交易信号",
+                                },
+                                yAxis: {
+                                    title: {
+                                        text: "收盘价",
+                                    },
+                                },
+                                xAxis: xAxis,
+                                series: currentLineSeries,
+                                chart: {
+                                    type: "line",
+                                    events: { load: () => {} },
+                                },
+                            }}
+                            // constructorType={"bar"}
+                        />
+                    </div>
                 </div>
             )}
         </LayoutContainer>
