@@ -688,7 +688,9 @@ const APP = () => {
                         bordered
                         // pagination={{ pageSize: 20 }}
                         // scroll={columns.length > 3 ? { x: 1500 } : {}}
-                        pagination={{ pageSize: 50 }}
+                        // pagination={{ pageSize: 50 }}
+                        pagination={{  defaultPageSize:50,
+                            defaultCurrent:1,total:dataSource_dashboard.length }}
                         scroll={{ y: 55 * 7 }}
                         onRow={(record) => {
                             return {
@@ -728,9 +730,13 @@ const APP = () => {
                         dataSource={dataSource}
                         columns={columns}
                         bordered
-                        // pagination={{ pageSize: 20 }}
+                        pagination={{  defaultPageSize:50,
+                        defaultCurrent:1,total:dataSource.length }}
                         // scroll={columns.length > 3 ? { x: 1500 } : {}}
-                        pagination={{ pageSize: 50 }}
+                        // pagination={{ pageSize: 50 }}
+
+                        // defaultCurrent={50} total={500}
+
                         scroll={{ y: 55 * 7 }}
                     />
 
