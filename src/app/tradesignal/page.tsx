@@ -458,6 +458,7 @@ const APP = () => {
         setColumnsDashboard(
             columns_dashboard_default.concat(columns_dashboard_add)
         );
+        new_results = new_results.sort((a: any, b: any) => parseInt(a["股票代码"]) - parseInt(b["股票代码"]));
         setDataSourceDashboard(new_results);
         // let _series: any[] = [];
         // let _xAxis: any = [];
