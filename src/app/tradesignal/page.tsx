@@ -399,10 +399,31 @@ const APP = () => {
         });
 
         for (var key in flag) {
-            new_results.push(flag[key]);
+            let keyItem = flag[key]
+            new_results.push(keyItem);
+            for (let index = 0; index < columns_dashboard_default.length; index++) {
+                let item = columns_dashboard_default[index];
+                let title = item["title"];
+
+               
+               
+
+                if(!item['filters']){
+                    item['filters'] = []
+                    item.onFilter= (value:any, record:any) => record.address.indexOf(value as string) === 0
+                    item.showSorterTooltip={ target: 'full-header' }
+                }
+                item['filters'].push({
+                    text: keyItem[title],
+                    value: keyItem[title],
+                })
+               
+
+            }
+            
         }
-        console.log("[flag]", flag);
-        console.log("[results]", results);
+        // console.log("[flag]", flag);
+        console.log("[columns_dashboard_default]", columns_dashboard_default);
         // 定义一个 Map 接收每列的长度值
         // let widthMap: any = new Map();
         // //作用是遍历所有数据拿到长度，记下每一列的宽度
@@ -455,8 +476,10 @@ const APP = () => {
         //         item["fixed"] = "left";
         //     }
         // }
+        let columns_dashboard_all = columns_dashboard_default.concat(columns_dashboard_add);
+
         setColumnsDashboard(
-            columns_dashboard_default.concat(columns_dashboard_add)
+            columns_dashboard_all
         );
         new_results = new_results.sort((a: any, b: any) => parseInt(a["股票代码"]) - parseInt(b["股票代码"]));
         setDataSourceDashboard(new_results);
@@ -682,6 +705,7 @@ const APP = () => {
                         </Flex>
                     </Flex>
                     <Table
+                         showSorterTooltip={{ target: 'sorter-icon' }}
                         loading={loading}
                         className={styles.customTable}
                         dataSource={dataSource_dashboard}
