@@ -59,7 +59,7 @@ const Page = ({
     const catalogue_results = catalogue?.data?.results || [];
     const indexshortname_results = indexshortname?.data?.results || [];
     // const revenue = await fetchRevenue();
-    console.log("[initData]", catalogue_results, indexshortname_results);
+    // console.log("[initData]", catalogue_results, indexshortname_results);
 
     let indexshortname_routes: any = [];
     indexshortname_results.forEach((item: any) => {

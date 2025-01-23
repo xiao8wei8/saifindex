@@ -803,7 +803,7 @@ export default function Page({
             const data = await getInitialProps("weight", {
                 indexcode: slug,
             });
-            console.log("[data]", data);
+            // console.log("[data]", data);
             let results = data.data.data.results;
             results.map((item: any, index: number) => {
                 item.colorValue = 300 + index;
@@ -811,7 +811,7 @@ export default function Page({
                 item.name =
                     item.name + "</br>" + item.id + "</br>" + item.value;
             });
-            console.log("[results]", results);
+            // console.log("[results]", results);
             setWeighValue(results);
         };
         fn();

@@ -146,8 +146,8 @@ const get_tradesignal_dashboard = (params?: any) => {
     const twoMonthsAgoFormattedDate = twoMonthsAgoDate.toISOString().split('T')[0];
 
     // 输出时间点
-    console.log(`当前时间: ${currentFormattedDate}`);
-    console.log(`两个月前: ${twoMonthsAgoFormattedDate}`);
+    console.log(`时间跨度: ${currentFormattedDate}` +' - '+`${twoMonthsAgoFormattedDate}`);
+    // console.log(`两个月前: ${twoMonthsAgoFormattedDate}`);
 
     // let result = getLastMonthFirstDayAndCurrentMonthLastDay();
     // console.log("上个月第一天:", result.lastMonthFirstDay);
@@ -192,9 +192,9 @@ const get_tradesignal_dashboard = (params?: any) => {
 
     const sql2 =`and dbf.symbol = '${code}'`
 
-    const sql3 =`and dbf.isst = 'N'
-    order by dbf.symbol,  dbf.tradedate desc
-    `
+    const sql3 = `and dbf.isst = 'N'
+     order by 2 desc,1
+    `;
 
     let sql = ''
     sql = sql1 +" "+( code?sql2:"") +" "+ sql3;
@@ -332,7 +332,7 @@ export async function GET(request: NextRequest) {
             query: sql,
         });
 
-        console.log(results); // results contains rows returned by server
+        // console.log(results); // results contains rows returned by server
         // console.log(fields); // fields contains extra meta data about results, if available
         return NextResponse.json({ data: { results }, msg: "成功" });
     } catch (err) {

@@ -23,7 +23,7 @@ function App() {
         recognition.current.interimResults = true;
 
         function onresult(event: { results: string | any[] }) {
-            console.log("[--]", event.results);
+            // console.log("[--]", event.results);
             // 这个事件会把前面识别的结果都返回回来，所以需要取最后一个识别结果
             const length = event.results.length;
             // 没有新的识别结果的时候，事件也会触发，所以这里判断一下如果没有新的识别结果，就不取最后一个识别结果了。
@@ -33,7 +33,7 @@ function App() {
 
             lastLength.current = length;
 
-            console.log(event.results);
+            // console.log(event.results);
 
             // 获取最后一个识别结果
             const transcript = event.results[length - 1]?.[0]?.transcript;
