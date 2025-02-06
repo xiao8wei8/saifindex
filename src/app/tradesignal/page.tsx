@@ -1,5 +1,5 @@
 "use client";
-import { use, useEffect, useState } from "react";
+import { use, useEffect, useRef, useState } from "react";
 import LayoutContainer from "../components/LayoutContainer";
 import axios from "axios";
 axios.defaults.timeout = 50000;
@@ -207,6 +207,11 @@ const APP = () => {
     ];
     const [dataSource, setDataSource] = useState([]);
     const [dataSource_dashboard, setDataSourceDashboard] = useState([]);
+    let first_dataSource_dashboard: any = [];
+    const dataSource_dashboardRef = useRef(dataSource_dashboard);
+    useEffect(() => {
+        dataSource_dashboardRef.current = dataSource_dashboard;
+      });
     const [typeoptions, setTypeoptions] = useState([]);
     const [columns_dashboard, setColumnsDashboard] = useState(
         columns_dashboard_default
@@ -483,15 +488,17 @@ const APP = () => {
             (a: any, b: any) =>
                 parseInt(a["股票代码"]) - parseInt(b["股票代码"])
         );
+        console.log("[new_results]", new_results);
+        first_dataSource_dashboard = new_results;
         setDataSourceDashboard(new_results);
 
         let _typeoptions: any= [];
         for (var item in filters) {
             let _item1 = filters[item];
-            let optionsArray:any = [{ "value": '', "label": 'all'}];
+            let optionsArray:any = [{ "value": '', "label": 'all',"title": item}];
             for(var item2 in _item1){
                 
-                optionsArray.push({ "value": item2, "label": item2});
+                optionsArray.push({ "value": item2, "label": item2,"title": item});
             }
             console.log("[filters][optionsArray]", optionsArray);
             _typeoptions.push(
@@ -506,7 +513,7 @@ const APP = () => {
                           }
                         
                          style={{ width: 120 }}
-                     
+                         onChange={onSelectChange}
                      options={optionsArray} />;
                 </Flex>
             );
@@ -707,6 +714,50 @@ const APP = () => {
     const onChange = (data: string) => {
         setValue(data);
     };
+    let changeOptions:any ={}
+    const onSelectChange = (value: string,option: any) => {
+        
+        const title = option.title;
+        // if(value) {
+            changeOptions[title] = value
+        // }
+      
+        for(var i in changeOptions) {
+            if(changeOptions[i]== "all"|| changeOptions[i]== "") {
+               delete changeOptions[i]
+            }
+        }
+        console.log("onSelectChange", option,changeOptions);
+        if(Object.keys(changeOptions).length==0) {
+            setDataSourceDashboard(first_dataSource_dashboard);
+            return
+        }
+        var _new_results:any = [];
+        first_dataSource_dashboard.map((item: any, index: number) => {
+            // if(item[title]==value) {
+            //     _new_results.push(item);
+            // }
+            var  flage = 0
+            for(var i in changeOptions) {
+                if(item[i]==changeOptions[i]) {
+                    flage=1
+                }else{
+                    flage=0
+                    break;
+                }
+            }
+            if(flage==1) {
+                _new_results.push(item);
+            }
+
+        })
+        setDataSourceDashboard(_new_results);
+
+        // setValue(data);
+    };
+
+    
+
     const { styles } = useStyle();
     return (
         <LayoutContainer currentpathname="/tradesignal">
