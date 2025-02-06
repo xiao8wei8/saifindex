@@ -16,6 +16,7 @@ import {
     Flex,
     FlexProps,
     Input,
+    Space,
     Table,
 } from "antd";
 import React from "react";
@@ -25,6 +26,7 @@ import { createStyles } from "antd-style";
 import { set } from "react-hook-form";
 import { text } from "stream/consumers";
 import { CloseOutlined } from "@ant-design/icons";
+import { Select } from "antd";
 // import { use, useEffect, useState } from "react";
 
 const geturl = config.url;
@@ -54,7 +56,7 @@ const mockVal2 = (str: string, repeat = 1) => {
     for (let index = 0; index < symbols.length; index++) {
         const symbol = symbols[index];
         if (symbol[0].indexOf(str) != -1 || symbol[1].indexOf(str) != -1) {
-            ret = [{ value: symbol[0].trim()     + "-" + symbol[1].trim() }];
+            ret = [{ value: symbol[0].trim() + "-" + symbol[1].trim() }];
             break;
         }
     }
@@ -205,6 +207,7 @@ const APP = () => {
     ];
     const [dataSource, setDataSource] = useState([]);
     const [dataSource_dashboard, setDataSourceDashboard] = useState([]);
+    const [typeoptions, setTypeoptions] = useState([]);
     const [columns_dashboard, setColumnsDashboard] = useState(
         columns_dashboard_default
     );
@@ -361,6 +364,7 @@ const APP = () => {
         }
     }
     console.log("[columns]", columns);
+    let filters: any = {};
 
     const getValDashboard = async (stockcode: any) => {
         const data = await getStockDataByCode("tradesignaldashboard", {
@@ -399,29 +403,23 @@ const APP = () => {
         });
 
         for (var key in flag) {
-            let keyItem = flag[key]
+            let keyItem = flag[key];
             new_results.push(keyItem);
-            for (let index = 0; index < columns_dashboard_default.length; index++) {
+            for (
+                let index = 0;
+                index < columns_dashboard_default.length;
+                index++
+            ) {
                 let item = columns_dashboard_default[index];
                 let title = item["title"];
 
-               
-               
-
-                if(!item['filters']){
-                    item['filters'] = []
-                    item.onFilter= (value:any, record:any) => record.address.indexOf(value as string) === 0
-                    item.showSorterTooltip={ target: 'full-header' }
+                if (!filters[title]) {
+                    filters[title] = {};
                 }
-                item['filters'].push({
-                    text: keyItem[title],
-                    value: keyItem[title],
-                })
-               
-
+                filters[title][keyItem[title]] = 1;
             }
-            
         }
+        console.log("[filters]", filters);
         // console.log("[flag]", flag);
         console.log("[columns_dashboard_default]", columns_dashboard_default);
         // 定义一个 Map 接收每列的长度值
@@ -476,13 +474,45 @@ const APP = () => {
         //         item["fixed"] = "left";
         //     }
         // }
-        let columns_dashboard_all = columns_dashboard_default.concat(columns_dashboard_add);
-
-        setColumnsDashboard(
-            columns_dashboard_all
+        let columns_dashboard_all = columns_dashboard_default.concat(
+            columns_dashboard_add
         );
-        new_results = new_results.sort((a: any, b: any) => parseInt(a["股票代码"]) - parseInt(b["股票代码"]));
+
+        setColumnsDashboard(columns_dashboard_all);
+        new_results = new_results.sort(
+            (a: any, b: any) =>
+                parseInt(a["股票代码"]) - parseInt(b["股票代码"])
+        );
         setDataSourceDashboard(new_results);
+
+        let _typeoptions: any= [];
+        for (var item in filters) {
+            let _item1 = filters[item];
+            let optionsArray:any = [{ "value": '', "label": 'all'}];
+            for(var item2 in _item1){
+                
+                optionsArray.push({ "value": item2, "label": item2});
+            }
+            console.log("[filters][optionsArray]", optionsArray);
+            _typeoptions.push(
+                <Flex>
+                    {item+" : "}
+
+                     <Select 
+                          showSearch
+                          placeholder="Select a person"
+                          filterOption={(input, option) =>
+                            ((option?.label ?? '') as string).toLowerCase().includes(input.toLowerCase())
+                          }
+                        
+                         style={{ width: 120 }}
+                     
+                     options={optionsArray} />;
+                </Flex>
+            );
+        }
+
+        setTypeoptions(_typeoptions);
         // let _series: any[] = [];
         // let _xAxis: any = [];
         // let _name = "";
@@ -647,18 +677,18 @@ const APP = () => {
         alignOptions[0]
     );
     const [value, setValue] = useState("");
-    const defaultValue =  [{ value: "all-all", label: "all-all" }];
-    const [options, setOptions] = useState<AutoCompleteProps["options"]>(defaultValue);
+    const defaultValue = [{ value: "all-all", label: "all-all" }];
+    const [options, setOptions] =
+        useState<AutoCompleteProps["options"]>(defaultValue);
     const [anotherOptions, setAnotherOptions] = useState<
         AutoCompleteProps["options"]
     >([]);
 
-    const getPanelValue = (searchText: string) =>{
-        let ret1 =  !searchText ? [] : mockVal2(searchText);
+    const getPanelValue = (searchText: string) => {
+        let ret1 = !searchText ? [] : mockVal2(searchText);
         let ret = defaultValue.concat(ret1);
-        return ret
-    }
-        
+        return ret;
+    };
 
     const onSelect = async (data: string) => {
         console.log("onSelect", data);
@@ -682,7 +712,6 @@ const APP = () => {
         <LayoutContainer currentpathname="/tradesignal">
             {!isShowStock ? (
                 <div>
-                  
                     <Flex gap="middle" align="start" vertical>
                         <Flex
                             style={boxStyle}
@@ -702,10 +731,29 @@ const APP = () => {
                                 }}
                             />
                             {/* <DatePicker onChange={onPanelChange} picker="month" /> */}
+                           
+                            {/* <Select 
+                              defaultValue="lucy"
+                              style={{ width: 120 }}
+                            options={[  { value: 'jack', label: 'Jack' }]} /> */}
+
+                            {/* <Select
+                            defaultValue="lucy"
+                            style={{ width: 120 }}
+                           
+                            options={[
+                                { value: 'jack', label: 'Jack' },
+                                { value: 'lucy', label: 'Lucy' },
+                                { value: 'Yiminghe', label: 'yiminghe' },
+                                { value: 'disabled', label: 'Disabled', disabled: true },
+                            ]}
+                            /> */}
+                            
                         </Flex>
+                        {typeoptions.length ?   <Space wrap>{typeoptions}</Space> : null}
                     </Flex>
                     <Table
-                         showSorterTooltip={{ target: 'sorter-icon' }}
+                        showSorterTooltip={{ target: "sorter-icon" }}
                         loading={loading}
                         className={styles.customTable}
                         dataSource={dataSource_dashboard}
@@ -714,8 +762,11 @@ const APP = () => {
                         // pagination={{ pageSize: 20 }}
                         // scroll={columns.length > 3 ? { x: 1500 } : {}}
                         // pagination={{ pageSize: 50 }}
-                        pagination={{  defaultPageSize:50,
-                            defaultCurrent:1,total:dataSource_dashboard.length }}
+                        pagination={{
+                            defaultPageSize: 50,
+                            defaultCurrent: 1,
+                            total: dataSource_dashboard.length,
+                        }}
                         scroll={{ y: 55 * 7 }}
                         onRow={(record) => {
                             return {
@@ -733,30 +784,32 @@ const APP = () => {
                 </div>
             ) : (
                 <div>
-                      <div>
-                       
-                       <div className="right">
-                           <Button
-                               type="primary"
-                               icon={
-                                   <CloseOutlined
-                                       onPointerEnterCapture={undefined}
-                                       onPointerLeaveCapture={undefined}
-                                   />
-                               }
-                               onClick={onClose}
-                           >
-                               Close
-                           </Button>
-                       </div>
-                   </div>
+                    <div>
+                        <div className="right">
+                            <Button
+                                type="primary"
+                                icon={
+                                    <CloseOutlined
+                                        onPointerEnterCapture={undefined}
+                                        onPointerLeaveCapture={undefined}
+                                    />
+                                }
+                                onClick={onClose}
+                            >
+                                Close
+                            </Button>
+                        </div>
+                    </div>
                     <Table
                         className={styles.customTable}
                         dataSource={dataSource}
                         columns={columns}
                         bordered
-                        pagination={{  defaultPageSize:50,
-                        defaultCurrent:1,total:dataSource.length }}
+                        pagination={{
+                            defaultPageSize: 50,
+                            defaultCurrent: 1,
+                            total: dataSource.length,
+                        }}
                         // scroll={columns.length > 3 ? { x: 1500 } : {}}
                         // pagination={{ pageSize: 50 }}
 
