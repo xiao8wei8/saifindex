@@ -26,7 +26,7 @@ const Home = ()=> {
             minHeight: 'calc(100vh - 200px)',
           }}
           request={async (messages) => {
-            const response = await fetch('/api/qwen', {
+            const response = await fetch('/api2/qwen', {
               method: 'POST',
               body: JSON.stringify({ messages: messages }),
             });
