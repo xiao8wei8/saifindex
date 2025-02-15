@@ -18,6 +18,7 @@ import {
     Input,
     Space,
     Table,
+    Tooltip,
 } from "antd";
 import React from "react";
 import dayjs from "dayjs";
@@ -131,6 +132,8 @@ const APP = () => {
             key: "股票代码",
             width: getWidth("股票代码"),
             fixed: "left",
+            sorter:  (a: any, b: any) =>
+                parseInt(a["股票代码"]) - parseInt(b["股票代码"])
         },
         {
             title: "股票名称(中文)",
@@ -138,24 +141,84 @@ const APP = () => {
             key: "股票名称(中文)",
             width: getWidth("股票名称(中文)"),
             fixed: "left",
+            sorter:  (a: any, b: any) =>{
+               
+             
+                let ret = 0
+                const nameA =a["股票名称(中文)"]//.toUpperCase(); // ignore upper and lowercase
+                const nameB =b["股票名称(中文)"]//.toUpperCase();; // ignore upper and lowercase
+                if (nameA < nameB) {
+                  ret= -1;
+                }
+                if (nameA > nameB) {
+                    ret= 1;
+                }
+              
+                // names must be equal
+                // console.log("[sorter]",ret,a["股票名称(中文)"],b["股票名称(中文)"])
+                return ret;
+
+               
+            }
+               
         },
         {
             title: "交易信号名称",
             dataIndex: "交易信号名称",
             key: "交易信号名称",
             width: getWidth("交易信号名称"),
+            sorter:  (a: any, b: any) =>{
+               
+             
+                let ret = 0
+                const nameA =a["交易信号名称"]//.toUpperCase(); // ignore upper and lowercase
+                const nameB =b["交易信号名称"]//.toUpperCase();; // ignore upper and lowercase
+                if (nameA < nameB) {
+                  ret= -1;
+                }
+                if (nameA > nameB) {
+                    ret= 1;
+                }
+              
+                // names must be equal
+                // console.log("[sorter]",ret,a["股票名称(中文)"],b["股票名称(中文)"])
+                return ret;
+
+               
+            }
         },
         {
             title: "当日收盘价",
             dataIndex: "当日收盘价",
             key: "当日收盘价",
             width: getWidth("当日收盘价"),
+            sorter:  (a: any, b: any) =>
+                parseFloat(a["当日收盘价"]) - parseFloat(b["当日收盘价"])
         },
         {
             title: "所在城市",
             dataIndex: "所在城市",
             key: "所在城市",
             width: getWidth("所在城市"),
+            sorter:  (a: any, b: any) =>{
+               
+             
+                let ret = 0
+                const nameA =a["所在城市"]//.toUpperCase(); // ignore upper and lowercase
+                const nameB =b["所在城市"]//.toUpperCase();; // ignore upper and lowercase
+                if (nameA < nameB) {
+                  ret= -1;
+                }
+                if (nameA > nameB) {
+                    ret= 1;
+                }
+              
+                // names must be equal
+                // console.log("[sorter]",ret,a["股票名称(中文)"],b["股票名称(中文)"])
+                return ret;
+
+               
+            }
         },
 
         {
@@ -163,12 +226,33 @@ const APP = () => {
             dataIndex: "所属行业",
             key: "所属行业",
             width: getWidth("所属行业"),
+            sorter:  (a: any, b: any) =>{
+               
+             
+                let ret = 0
+                const nameA =a["所属行业"]//.toUpperCase(); // ignore upper and lowercase
+                const nameB =b["所属行业"]//.toUpperCase();; // ignore upper and lowercase
+                if (nameA < nameB) {
+                  ret= -1;
+                }
+                if (nameA > nameB) {
+                    ret= 1;
+                }
+              
+                // names must be equal
+                // console.log("[sorter]",ret,a["股票名称(中文)"],b["股票名称(中文)"])
+                return ret;
+
+               
+            }
         },
         {
             title: "当日涨跌幅",
             dataIndex: "当日涨跌幅",
             key: "当日涨跌幅",
             width: getWidth("当日涨跌幅"),
+            sorter:  (a: any, b: any) =>
+                parseFloat(a["当日涨跌幅"]) - parseFloat(b["当日涨跌幅"])
         },
 
         {
@@ -176,6 +260,8 @@ const APP = () => {
             dataIndex: "总市值 （亿）",
             key: "总市值 （亿）",
             width: getWidth("总市值 （亿）"),
+            sorter:  (a: any, b: any) =>
+                parseFloat(a["总市值 （亿）"]) - parseFloat(b["总市值 （亿）"])
         },
 
         {
@@ -183,6 +269,8 @@ const APP = () => {
             dataIndex: "流通市值（亿）",
             key: "流通市值（亿）",
             width: getWidth("流通市值（亿）"),
+            sorter:  (a: any, b: any) =>
+                parseFloat(a["流通市值（亿）"]) - parseFloat(b["流通市值（亿）"])
         },
 
         {
@@ -190,6 +278,8 @@ const APP = () => {
             dataIndex: "非流通市值（亿）",
             key: "非流通市值（亿）",
             width: getWidth("非流通市值（亿）"),
+            sorter:  (a: any, b: any) =>
+                parseFloat(a["非流通市值（亿）"]) - parseFloat(b["非流通市值（亿）"])
         },
 
         {
@@ -484,39 +574,92 @@ const APP = () => {
         );
 
         setColumnsDashboard(columns_dashboard_all);
-        new_results = new_results.sort(
-            (a: any, b: any) =>
-                parseInt(a["股票代码"]) - parseInt(b["股票代码"])
-        );
-        console.log("[new_results]", new_results);
+        // new_results = new_results.sort(
+        //     (a: any, b: any) =>
+        //         parseInt(a["股票代码"]) - parseInt(b["股票代码"])
+        // );
+        // console.log("[new_results]", new_results);
         first_dataSource_dashboard = new_results;
         setDataSourceDashboard(new_results);
+        let priceRangeOptionsArray:any = [
+            { "value": 'x<1', "label": 'x<1',"title": ""},
+            { "value": '1<=x<2', "label":'1<=x<2',"title": ""},
+            { "value": '2<=x<3', "label": '2<=x<3',"title": ""},
+            { "value": '3<=x<4', "label": '3<=x<4',"title": ""},
+            { "value": '4<=x<5', "label": '4<=x<5',"title": ""},
+            { "value": '5<=x<10', "label":'5<=x<10',"title": ""},
+            { "value": '10<=x<20', "label": '10<=x<20',"title": ""},
+            { "value": '20<=x<30', "label": '20<=x<30',"title": ""},
+            { "value": '30<=x<40', "label":'30<=x<40',"title": ""},
+            { "value": '40<=x<50', "label": '40<=x<50',"title": ""},
+            { "value": '50<=x<60', "label": '50<=x<60',"title": ""},
+            { "value": '60<=x<70', "label": '60<=x<70',"title": ""},
+            { "value": '70<=x<80', "label": '70<=x<80',"title": ""},
+            { "value": '80<=x<90', "label": '80<=x<90',"title": ""},
+            { "value": '90<=x<100', "label":'90<=x<100',"title": ""},
+            { "value": '100<=x<200', "label": '100<=x<200',"title": ""},
+            { "value": 'x>=200', "label": 'x>=200',"title": ""},
+            
+        ];
+        let _typeoptions: any= [
+            // <Flex>
+                   
 
-        let _typeoptions: any= [];
+            //          <Select 
+            //               mode="multiple"
+            //               allowClear
+            //               showSearch
+            //               placeholder= {"股价区间"}
+            //               maxTagCount= 'responsive'
+            //               filterOption={(input, option) =>
+            //                 ((option?.label ?? '') as string).toLowerCase().includes(input.toLowerCase())
+            //               }
+                        
+            //              style={{ width: 120 }}
+            //              onChange={onSelectChange}
+            //          options={priceRangeOptionsArray} 
+            //          />
+            //     </Flex>
+
+        ];
         for (var item in filters) {
+            if(item=='交易日期'){
+                continue
+            }
             let _item1 = filters[item];
-            let optionsArray:any = [{ "value": '', "label": 'all',"title": item}];
+            let optionsArray:any = [];//{ "value": '', "label": '清除',"title": item}
             for(var item2 in _item1){
                 
                 optionsArray.push({ "value": item2, "label": item2,"title": item});
             }
             console.log("[filters][optionsArray]", optionsArray);
-            _typeoptions.push(
-                <Flex>
-                    {item+" : "}
-
-                     <Select 
-                          showSearch
-                          placeholder="Select a person"
-                          filterOption={(input, option) =>
-                            ((option?.label ?? '') as string).toLowerCase().includes(input.toLowerCase())
-                          }
+            (function(item){
+                _typeoptions.push(
+                    <Flex>
                         
-                         style={{ width: 120 }}
-                         onChange={onSelectChange}
-                     options={optionsArray} />;
-                </Flex>
-            );
+    
+                         <Select 
+                              mode="multiple"
+                              allowClear
+                              showSearch
+                              placeholder= {item}
+                              maxTagCount= 'responsive'
+                              filterOption={(input, option) =>
+                                ((option?.label ?? '') as string).toLowerCase().includes(input.toLowerCase())
+                              }
+                            
+                             style={{ width: 120 }}
+                             onChange={onSelectChange}
+                             onClear={()=>{
+                         
+                                onClear(item)
+                             }}
+                         options={optionsArray} 
+                         />
+                    </Flex>
+                );
+            })(item)
+           
         }
 
         setTypeoptions(_typeoptions);
@@ -700,7 +843,7 @@ const APP = () => {
     const onSelect = async (data: string) => {
         console.log("onSelect", data);
         const datats = data.split("-");
-        if (datats[0] == "all") datats[0] = "";
+        if (datats[0] == "清除") datats[0] = "";
         handleLoadingChange(true);
         await getValDashboard(datats[0]);
         // await getVal(datats[0]);
@@ -714,16 +857,20 @@ const APP = () => {
     const onChange = (data: string) => {
         setValue(data);
     };
+    const onClear = function(item:any) {
+        delete changeOptions[item]
+        console.log('[onClear]',item);
+    }
     let changeOptions:any ={}
-    const onSelectChange = (value: string,option: any) => {
+    const onSelectChange = (value: any,option: any) => {
         
-        const title = option.title;
+        const title = option[0]?.title;
         // if(value) {
-            changeOptions[title] = value
+            changeOptions[title] = typeof value=="string"?[value]:value
         // }
       
         for(var i in changeOptions) {
-            if(changeOptions[i]== "all"|| changeOptions[i]== "") {
+            if(changeOptions[i]== "undefined"|| changeOptions[i]== "") {
                delete changeOptions[i]
             }
         }
@@ -739,7 +886,7 @@ const APP = () => {
             // }
             var  flage = 0
             for(var i in changeOptions) {
-                if(item[i]==changeOptions[i]) {
+                if(  changeOptions[i].includes(item[i])) {
                     flage=1
                 }else{
                     flage=0
@@ -764,7 +911,7 @@ const APP = () => {
             {!isShowStock ? (
                 <div>
                     <Flex gap="middle" align="start" vertical>
-                        <Flex
+                        {/* <Flex
                             style={boxStyle}
                             justify={justify}
                             align={alignItems}
@@ -780,7 +927,7 @@ const APP = () => {
                                 onClear={() => {
                                     console.log("onMouseEnter");
                                 }}
-                            />
+                            /> */}
                             {/* <DatePicker onChange={onPanelChange} picker="month" /> */}
                            
                             {/* <Select 
@@ -800,9 +947,9 @@ const APP = () => {
                             ]}
                             /> */}
                             
-                        </Flex>
+                        {/* </Flex>*/}
                         {typeoptions.length ?   <Space wrap>{typeoptions}</Space> : null}
-                    </Flex>
+                    </Flex> 
                     <Table
                         showSorterTooltip={{ target: "sorter-icon" }}
                         loading={loading}
@@ -813,6 +960,7 @@ const APP = () => {
                         // pagination={{ pageSize: 20 }}
                         // scroll={columns.length > 3 ? { x: 1500 } : {}}
                         // pagination={{ pageSize: 50 }}
+                       
                         pagination={{
                             defaultPageSize: 50,
                             defaultCurrent: 1,
