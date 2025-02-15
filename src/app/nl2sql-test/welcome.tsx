@@ -132,7 +132,7 @@ const Home = () => {
             );
 
             const response = await axios.post(
-                "/api2/steps",
+                "/rest2/steps",
                 data,
                 config // Include the config object as the third argument
             );
@@ -180,7 +180,7 @@ const Home = () => {
                 </>
             );
             const response = await axios.post(
-                "/api2/steps",
+                "/rest2/steps",
                 data,
                 config // Include the config object as the third argument
             );
@@ -242,7 +242,7 @@ const Home = () => {
                 </>
             );
             const response = await axios.post(
-                "/api2/steps",
+                "/rest2/steps",
                 data,
                 config // Include the config object as the third argument
             );
@@ -291,7 +291,7 @@ const Home = () => {
                 </>
             );
             const response = await axios.post(
-                "/api2/steps",
+                "/rest2/steps",
                 data,
                 config // Include the config object as the third argument
             );
@@ -351,7 +351,7 @@ const Home = () => {
                 </>
             );
             const response = await axios.post(
-                "/api2/steps",
+                "/rest2/steps",
                 data,
                 config // Include the config object as the third argument
             );

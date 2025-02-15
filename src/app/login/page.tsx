@@ -110,7 +110,7 @@ export default () => {
                         }
                             const main = async () => {
                                 const response:any = await axios.get(
-                                    "/api2/aes?type=validate30&message="+encodeURI(value),
+                                    "/rest2/aes?type=validate30&message="+encodeURI(value),
                                     {
                                       
                                     } // Include the config object as the third argument

@@ -135,7 +135,7 @@ const Page = ({
             }else {
                 const main = async () => {
                     const response:any = await axios.get(
-                        "/api2/aes?type=validate30&message="+encodeURI(token),
+                        "/rest2/aes?type=validate30&message="+encodeURI(token),
                         {
                           
                         } // Include the config object as the third argument

@@ -5,7 +5,7 @@ export async function POST(request: Request) {
   try {
     const apiKey = DASHSCOPE_API_KEY; // 你的 API 密钥
     const response = await fetch(
-      'https://dashscope.aliyuncs.com/api2/v1/services/aigc/text-generation/generation',
+      'https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation',
       {
         method: 'POST',
         headers: {
