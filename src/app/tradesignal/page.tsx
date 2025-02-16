@@ -598,6 +598,7 @@ const APP = () => {
                     }
                     style={{ width: 120 }}
                     onChange={onSelectChange}
+                    defaultValue={changeOptions["股价区间"]||[]}
                     onDeselect={(value: any) => {
                         onDeselect(value,"股价区间");
                     }}
@@ -641,6 +642,7 @@ const APP = () => {
                             onDeselect={(value: any) => {
                                 onDeselect(value,item);
                             }}
+                            defaultValue={changeOptions[item]||[]}
                         />
                     </Flex>
                 );
@@ -928,8 +930,8 @@ const APP = () => {
     const { styles } = useStyle();
     return (
         <LayoutContainer currentpathname="/tradesignal">
-            {!isShowStock ? (
-                <div>
+            {/* {!isShowStock ? ( */}
+                <div style={{ display: !isShowStock?'block':'none'}}>
                     <Flex gap="middle" align="start" vertical>
                         {/* <Flex
                             style={boxStyle}
@@ -1003,8 +1005,8 @@ const APP = () => {
                         }}
                     />
                 </div>
-            ) : (
-                <div>
+             {/* ) : ( */}
+                <div  style={{ display: !isShowStock?'none':'block'}}>
                     <div>
                         <div className="right">
                             <Button
@@ -1062,7 +1064,7 @@ const APP = () => {
                         />
                     </div>
                 </div>
-            )}
+             {/* )} */}
         </LayoutContainer>
     );
 };
