@@ -267,18 +267,18 @@ const APP = () => {
                 parseFloat(b["非流通市值（亿）"]),
         },
 
-        {
-            title: "涨幅次数",
-            dataIndex: "涨幅次数",
-            key: "涨幅次数",
-            width: getWidth("涨幅次数"),
-        },
-        {
-            title: "跌幅次数",
-            dataIndex: "跌幅次数",
-            key: "跌幅次数",
-            width: getWidth("跌幅次数"),
-        },
+        // {
+        //     title: "涨幅次数",
+        //     dataIndex: "涨幅次数",
+        //     key: "涨幅次数",
+        //     width: getWidth("涨幅次数"),
+        // },
+        // {
+        //     title: "跌幅次数",
+        //     dataIndex: "跌幅次数",
+        //     key: "跌幅次数",
+        //     width: getWidth("跌幅次数"),
+        // },
     ];
     const [dataSource, setDataSource] = useState([]);
     const [dataSource_dashboard, setDataSourceDashboard] = useState([]);
@@ -291,7 +291,7 @@ const APP = () => {
     const [columns_dashboard, setColumnsDashboard] = useState(
         columns_dashboard_default
     );
-
+    const [options2, setOptions2] = useState({});
     const [currentLineSeries, setCurrentLineSeries] = useState([
         {
             name: "中国",
@@ -715,8 +715,8 @@ const APP = () => {
         // console.log("[columns]", columns);
 
         setDataSource(results);
-        let _series: any[] = [];
-        let _xAxis: any = [];
+        let _series2: any[] = [];
+        let _xAxis2: any = [];
         let _name = "";
         results.map((item: any, index: number) => {
             item["交易日期"] = dayjs(new Date(item["交易日期"])).format(
@@ -726,52 +726,97 @@ const APP = () => {
             if (!_name) _name = item["股票名称(中文)"];
 
             if (item["交易信号名称"] == "sell") {
-                _series.push({
+                _series2.push({
                     y: item["当日收盘价"] * 1,
                     marker: {
                         symbol: "url(/die.jpg)",
                     },
                 });
             } else if (item["交易信号名称"] == "buy") {
-                _series.push({
+                _series2.push({
                     y: item["当日收盘价"] * 1,
                     marker: {
                         symbol: "url(/zhang.jpg)",
                     },
                 });
             } else {
-                _series.push(item["当日收盘价"] * 1);
+                _series2.push({
+                    y: item["当日收盘价"] * 1,
+                    marker: {
+                       
+                    },
+                });
             }
 
-            _xAxis.push(item["交易日期"]);
+            _xAxis2.push(item["交易日期"]);
         });
-        console.log("[_xAxis]", _xAxis);
+        console.log("[_xAxis]", _xAxis2);
 
-        const _reversed_xAxis = _xAxis.reverse();
-        const _reversed_series = _series.reverse();
-
-        setXAxis({
-            categories: _reversed_xAxis,
-        });
+        const _reversed_xAxis = _xAxis2.reverse();
+        const _reversed_series = _series2.reverse();
+        console.log("[_reversed_xAxis]", _reversed_xAxis);
+        // setXAxis({
+        //     categories: _reversed_xAxis,
+        // });
         console.log("[_series]", _reversed_series);
-        setCurrentLineSeries([
-            {
-                name: _name,
-                marker: {
-                    symbol: "square",
-                },
-                data: _reversed_series,
-                //  [
-                //     43934, {
-                //         y: 48656,
-                //         marker: {
-                //            symbol: 'url(/die.jpg)'
-                //         }
-                //      },65165, 81827, 112143, 142383, 171533, 165174,
-                //     155157, 161454, 154610, 168960,
-                // ],
+        // setCurrentLineSeries([
+        //     {
+        //         name: _name,
+        //         marker: {
+        //             symbol: "square",
+        //         },
+        //         data: _reversed_series,
+        //         //  [
+        //         //     43934, {
+        //         //         y: 48656,
+        //         //         marker: {
+        //         //            symbol: 'url(/die.jpg)'
+        //         //         }
+        //         //      },65165, 81827, 112143, 142383, 171533, 165174,
+        //         //     155157, 161454, 154610, 168960,
+        //         // ],
+        //     },
+        // ]);
+        const _options  = {
+            title: {
+                text: _name + "交易信号",
             },
-        ]);
+            yAxis: {
+                title: {
+                    text: "收盘价",
+                },
+            },
+            xAxis: {
+                categories: _reversed_xAxis,
+            },
+            series: [
+                {
+                    name: _name,
+                    marker: {
+                        symbol: "square",
+                    },
+                    data: _reversed_series,
+                    //  [
+                    //     43934, {
+                    //         y: 48656,
+                    //         marker: {
+                    //            symbol: 'url(/die.jpg)'
+                    //         }
+                    //      },65165, 81827, 112143, 142383, 171533, 165174,
+                    //     155157, 161454, 154610, 168960,
+                    // ],
+                },
+            ],
+            chart: {
+                type: "line",
+                events: { load: () => {} },
+            },
+        }
+        console.log("[_options]", _options);
+        setTimeout(() => {
+            setOptions2(_options)
+        },100)
+        
         // xAxis
     };
 
@@ -1044,22 +1089,7 @@ const APP = () => {
                     <div>
                         <HighchartsReact
                             highcharts={Highcharts}
-                            options={{
-                                title: {
-                                    text: "交易信号",
-                                },
-                                yAxis: {
-                                    title: {
-                                        text: "收盘价",
-                                    },
-                                },
-                                xAxis: xAxis,
-                                series: currentLineSeries,
-                                chart: {
-                                    type: "line",
-                                    events: { load: () => {} },
-                                },
-                            }}
+                            options={options2}
                             // constructorType={"bar"}
                         />
                     </div>
@@ -1075,7 +1105,7 @@ const getStockDataByCode = async (type: string, params: Object) => {
     //     sql = get_stock(symbol);
 
     const urlStr =
-        geturl + "?type=" + type + "&params=" + JSON.stringify(params);
+        geturl + "?_t=" + new Date().getTime() + "&type=" + type + "&params=" + JSON.stringify(params);
     console.log("[urlStr]", urlStr);
     const res = await fetch(urlStr);
     const json = await res.json();

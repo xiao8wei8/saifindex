@@ -328,6 +328,7 @@ export async function GET(request: NextRequest) {
 
     try {
         console.log("[SQL]:", sql);
+       
         const results: any = await query({
             query: sql,
         });
