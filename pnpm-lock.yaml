@@ -86,6 +86,9 @@ dependencies:
   jszip:
     specifier: ^3.10.1
     version: 3.10.1
+  klinecharts:
+    specifier: 10.0.0-alpha3
+    version: 10.0.0-alpha3
   mysql2:
     specifier: ^3.11.1
     version: 3.11.3
@@ -6274,6 +6277,12 @@ packages:
   /kleur@4.1.5:
     resolution: {integrity: sha512-o+NO+8WrRiQEE4/7nwRJhN1HWpVmJm511pBHUxPLtp0BUISzlBplORYSmTclCnJvQq2tKu/sgl3xVpkc7ZWuQQ==, tarball: https://registry.npmmirror.com/kleur/-/kleur-4.1.5.tgz}
     engines: {node: '>=6'}
+    dev: false
+
+  /klinecharts@10.0.0-alpha3:
+    resolution: {integrity: sha512-zUlo2n1b0ZBN3UFnSmQnDYurSlubUFKwDUsLRxVOxfJas4mMlKh7M3nzzW2o6JYfydkn4r5yOeGz7IMmo8q/Gg==, tarball: https://registry.npmmirror.com/klinecharts/-/klinecharts-10.0.0-alpha3.tgz}
+    engines: {node: '>=0.10.0'}
+    requiresBuild: true
     dev: false
 
   /klona@2.0.6:

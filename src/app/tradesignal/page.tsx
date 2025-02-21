@@ -718,11 +718,26 @@ const APP = () => {
         let _series2: any[] = [];
         let _xAxis2: any = [];
         let _name = "";
+        let  applyNewDataOpt = []
+        
+
         results.map((item: any, index: number) => {
+            // let _item:any = {}
+            // _item["close"] = item["交易日期"];
+            // _item["close"] = item["当日收盘价"];
+            // _item["close"] = item["当日收盘价"];
+            // _item["close"] = item["当日收盘价"];
+            // _item["close"] = item["当日收盘价"];
+            // _item["close"] = item["当日收盘价"];
+            
+
+            // applyNewDataOpt.push(item)
+
+
             item["交易日期"] = dayjs(new Date(item["交易日期"])).format(
                 "YYYY-MM-DD"
             );
-
+           
             if (!_name) _name = item["股票名称(中文)"];
 
             if (item["交易信号名称"] == "sell") {
@@ -750,6 +765,8 @@ const APP = () => {
 
             _xAxis2.push(item["交易日期"]);
         });
+ 
+       
         console.log("[_xAxis]", _xAxis2);
 
         const _reversed_xAxis = _xAxis2.reverse();
@@ -1092,6 +1109,7 @@ const APP = () => {
                             options={options2}
                             // constructorType={"bar"}
                         />
+                        {/* <KlinechartsAPP  options={options2}/> */}
                     </div>
                 </div>
              {/* )} */}
@@ -1107,9 +1125,39 @@ const getStockDataByCode = async (type: string, params: Object) => {
     const urlStr =
         geturl + "?_t=" + new Date().getTime() + "&type=" + type + "&params=" + JSON.stringify(params);
     console.log("[urlStr]", urlStr);
-    const res = await fetch(urlStr);
+    const res = await fetch(urlStr,{
+        next: { revalidate: 0 }, // 看这个属性，它会选择退出缓存
+    });
     const json = await res.json();
     return { data: json };
 };
 
 export default APP;
+
+
+
+import { init, dispose } from 'klinecharts'
+const KlinechartsAPP= (options:any) => {
+  useEffect(() => {
+    const chart = init('chart')
+          
+    chart?.applyNewData([
+      { close: 4976.16, high: 4977.99, low: 4970.12, open: 4972.89, timestamp: 1587660000000, volume: 204 },
+      { close: 4977.33, high: 4979.94, low: 4971.34, open: 4973.20, timestamp: 1587660060000, volume: 194 },
+      { close: 4977.93, high: 4977.93, low: 4974.20, open: 4976.53, timestamp: 1587660120000, volume: 197 },
+      { close: 4966.77, high: 4968.53, low: 4962.20, open: 4963.88, timestamp: 1587660180000, volume: 28 },
+      { close: 4961.56, high: 4972.61, low: 4961.28, open: 4961.28, timestamp: 1587660240000, volume: 184 },
+      { close: 4964.19, high: 4964.74, low: 4961.42, open: 4961.64, timestamp: 1587660300000, volume: 191 },
+      { close: 4968.93, high: 4972.70, low: 4964.55, open: 4966.96, timestamp: 1587660360000, volume: 105 },
+      { close: 4979.31, high: 4979.61, low: 4973.99, open: 4977.06, timestamp: 1587660420000, volume: 35 },
+      { close: 4977.02, high: 4981.66, low: 4975.14, open: 4981.66, timestamp: 1587660480000, volume: 135 },
+      { close: 4985.09, high: 4988.62, low: 4980.30, open: 4986.72, timestamp: 1587660540000, volume: 76 }
+    ])
+          
+    return () => {
+      dispose('chart')
+    }
+  }, [])
+
+  return <div id="chart" style={{ width: '100%', height: 600 }}/>
+}

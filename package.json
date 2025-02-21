@@ -38,6 +38,7 @@
         "highcharts-react-official": "^3.2.1",
         "jsonwebtoken": "^9.0.2",
         "jszip": "^3.10.1",
+        "klinecharts": "10.0.0-alpha3",
         "mysql2": "^3.11.1",
         "next": "14.2.8",
         "next-plugin-antd-less": "^1.8.0",
