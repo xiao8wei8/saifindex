@@ -446,10 +446,10 @@ const APP = () => {
     console.log("[columns]", columns);
     let filters: any = {};
     let isFirst = true;
-    const getValDashboard = async (stockcode: any) => {
+    const getValDashboard = async (stockcode: any,date?:any) => {
         const data = await getStockDataByCode("tradesignaldashboard", {
             stockcode: (stockcode || "").trim(),
-            date: "",
+            date: date,
         });
         console.log("[--data]", data);
         let results = data.data.data.results;
@@ -868,6 +868,8 @@ const APP = () => {
     }, []);
     const onPanelChange = (date: any, dateString: any) => {
         console.log(date, dateString);
+
+        getValDashboard("",dateString);
     };
     const [justify, setJustify] = React.useState<FlexProps["justify"]>(
         justifyOptions[0]
@@ -995,12 +997,12 @@ const APP = () => {
             {/* {!isShowStock ? ( */}
                 <div style={{ display: !isShowStock?'block':'none'}}>
                     <Flex gap="middle" align="start" vertical>
-                        {/* <Flex
+                        <Flex
                             style={boxStyle}
                             justify={justify}
                             align={alignItems}
                         >
-                            <AutoComplete
+                            {/* <AutoComplete
                                 options={options}
                                 style={{ width: 200 }}
                                 onSelect={onSelect}
@@ -1012,7 +1014,7 @@ const APP = () => {
                                     console.log("onMouseEnter");
                                 }}
                             /> */}
-                        {/* <DatePicker onChange={onPanelChange} picker="month" /> */}
+                        <DatePicker onChange={onPanelChange} />
 
                         {/* <Select 
                               defaultValue="lucy"
@@ -1031,7 +1033,7 @@ const APP = () => {
                             ]}
                             /> */}
 
-                        {/* </Flex>*/}
+                        </Flex>
                         {typeoptions.length ? (
                             <Space wrap>{typeoptions}</Space>
                         ) : null}

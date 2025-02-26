@@ -123,7 +123,7 @@ function getLastMonthFirstDayAndCurrentMonthLastDay() {
 }
 
 // 获取当前日期
-// const currentDate = new Date();
+const currentDate = new Date();
 
 // 定义一个函数来减去月份
 function subtractMonths(date:any, months:any) {
@@ -137,8 +137,12 @@ function subtractMonths(date:any, months:any) {
 // 调用函数并打印结果
 
 const get_tradesignal_dashboard = (params?: any) => {
-    // 获取当前日期
-const currentDate = new Date();
+
+    console.log("#####################")
+
+    console.log("#####################",params)
+
+    console.log("#####################")
 
     // 当前时间点
     const currentFormattedDate = currentDate.toISOString().split('T')[0];
@@ -160,15 +164,18 @@ const currentDate = new Date();
     //   dbf.close as '当日收盘价',
 
 
-    let sql0=date?"'"+date+"'":`(select dbf.tradedate from stockmarket.ts_daily_befadjust dbf inner join stockmarket.stock_basic_ash sba on dbf.symbol = sba.symbol
+    let sql0=date?date:`
+    
+    select dbf.tradedate 
+       
+
+
+    from stockmarket.ts_daily_befadjust dbf inner join stockmarket.stock_basic_ash sba on dbf.symbol = sba.symbol
     inner join (select akts.tradedate, akts.symbol, akts.trade_act_name from stockmarketstatistics.ads_kdj_tradesignal_summary akts
                 where   akts.tradedate >= '${twoMonthsAgoFormattedDate}' and akts.tradedate <= '${currentFormattedDate}'
                     and tradesignal_power = 2) ads_trd on ads_trd.symbol = dbf.symbol and ads_trd.tradedate = dbf.tradedate
     where  dbf.tradedate >='${twoMonthsAgoFormattedDate}' and dbf.tradedate <= '${currentFormattedDate}' and dbf.symbol='000001'  order by dbf.symbol,  dbf.tradedate desc limit 1
- )
-    `
-
-
+`
 
     const sql1 = `
         
@@ -191,9 +198,11 @@ const currentDate = new Date();
     inner join (select akts.tradedate, akts.symbol, akts.trade_act_name from stockmarketstatistics.ads_kdj_tradesignal_summary akts
                 where   akts.tradedate >= '${twoMonthsAgoFormattedDate}' and akts.tradedate <= '${currentFormattedDate}'
                     and tradesignal_power = 2) ads_trd on ads_trd.symbol = dbf.symbol and ads_trd.tradedate = dbf.tradedate
-    where  dbf.tradedate = 
-       ${sql0}
-    `
+    where  dbf.tradedate = (
+       '${sql0}'
+    ) `
+    
+
 
     const sql2 =`and dbf.symbol = '${code}'`
 
@@ -237,8 +246,6 @@ const currentDate = new Date();
 
 
 const get_tradesignal = (params?: any) => {
-    // 获取当前日期
-const currentDate = new Date();
 
     // 当前时间点
     const currentFormattedDate = currentDate.toISOString().split('T')[0];
@@ -335,7 +342,6 @@ export async function GET(request: NextRequest) {
 
     try {
         console.log("[SQL]:", sql);
-       
         const results: any = await query({
             query: sql,
         });
