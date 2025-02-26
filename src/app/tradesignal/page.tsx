@@ -18,6 +18,7 @@ import {
     Input,
     Space,
     Table,
+    Tag,
     Tooltip,
 } from "antd";
 import React from "react";
@@ -162,6 +163,19 @@ const APP = () => {
             dataIndex: "交易信号名称",
             key: "交易信号名称",
             width: getWidth("交易信号名称"),
+            render: (tags: string[]) => (
+                <span>
+                  {[tags].map((tag:any) => {
+                    let color = tag =='sell' ? '#45b97c' : ( tag =='buy' ?'#df1345':'');
+                  
+                    return (
+                      <Tag color={color} key={tag}>
+                        {tag.toUpperCase()}
+                      </Tag>
+                    );
+                  })}
+                </span>
+              ),
             sorter: (a: any, b: any) => {
                 let ret = 0;
                 const nameA = a["交易信号名称"]; //.toUpperCase(); // ignore upper and lowercase
@@ -345,6 +359,19 @@ const APP = () => {
             dataIndex: "交易信号名称",
             key: "交易信号名称",
             width: getWidth("交易信号名称"),
+            render: (tags: string[]) => (
+                <span>
+                  {[tags].map((tag:any) => {
+                    let color = tag =='sell' ? '#45b97c' : ( tag =='buy' ?'#df1345':'');
+                  
+                    return (
+                      <Tag color={color} key={tag}>
+                        {tag.toUpperCase()}
+                      </Tag>
+                    );
+                  })}
+                </span>
+              ),
         },
         {
             title: "当日收盘价",
