@@ -1081,7 +1081,7 @@ const APP = () => {
                             defaultCurrent: 1,
                             total: dataSource_dashboard.length,
                         }}
-                        scroll={{ y: 55 * 7 }}
+                        scroll={{ y: 120 * 7 }}
                         onRow={(record) => {
                             return {
                                 onClick: (event) => {
