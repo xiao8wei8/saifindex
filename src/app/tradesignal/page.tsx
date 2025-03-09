@@ -1297,12 +1297,12 @@ const APP = () => {
                     />
 
                     <div>
-                        {/* <HighchartsReact
+                       <HighchartsReact
                             highcharts={Highcharts}
                             options={options2}
                             // constructorType={"bar"}
-                        /> */}
-                        <KlinechartsAPP  options={options2}/> 
+                        /> 
+                        {/* <KlinechartsAPP  options={options2}/>  */}
                     </div>
                 </div>
              {/* )} */}
