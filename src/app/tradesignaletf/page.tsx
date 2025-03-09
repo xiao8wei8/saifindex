@@ -2,7 +2,6 @@
 import { use, useEffect, useRef, useState } from "react";
 import LayoutContainer from "../components/LayoutContainer";
 import axios from "axios";
-
 axios.defaults.timeout = 50000;
 import "./index.css";
 import HighchartsReact from "highcharts-react-official";
@@ -20,7 +19,6 @@ import {
     Space,
     Table,
     Tag,
-    Spin,
     Tooltip,
 } from "antd";
 import React from "react";
@@ -97,42 +95,6 @@ function getTextWidth(text: any, font = "14px Microsoft YaHei") {
 }
 
 const APP = () => {
-
-    const [spinning, setSpinning] = React.useState(false);
-    // const [percent, setPercent] = React.useState(0);
-
-    const showLoader = () => {
-        setSpinning(true);
-        // let ptg = -10;
-
-        // const interval = setInterval(() => {
-        // ptg += 5;
-        // setPercent(ptg);
-
-        // if (ptg > 120) {
-        //     clearInterval(interval);
-        //     setSpinning(false);
-        //     setPercent(0);
-        // }
-        // }, 100);
-    };
-    const hideLoader = () => {
-        setSpinning(false);
-        // let ptg = -10;
-
-        // const interval = setInterval(() => {
-        // ptg += 5;
-        // setPercent(ptg);
-
-        // if (ptg > 120) {
-        //     clearInterval(interval);
-        //     setSpinning(false);
-        //     setPercent(0);
-        // }
-        // }, 100);
-    };
-
-        
     // const dataSource:any = [
 
     //   ];
@@ -319,83 +281,6 @@ const APP = () => {
                 parseFloat(b["非流通市值（亿）"]),
         },
 
-      
-      
-    
-
-        {
-            title: "K 值",
-            dataIndex: "K 值",
-            key: "K 值",
-            width: getWidth("K 值"),
-        },
-        {
-            title: "D 值",
-            dataIndex: "D 值",
-            key: "D 值",
-            width: getWidth("D 值"),
-        },
-        {
-            title: "J 值",
-            dataIndex: "J 值",
-            key: "J 值",
-            width: getWidth("J 值"),
-        },
-        {
-            title: "DIFF 值",
-            dataIndex: "DIFF 值",
-            key: "DIFF 值",
-            width: getWidth("DIFF 值"),
-        },
-        {
-            title: "DEA 值",
-            dataIndex: "DEA 值",
-            key: "DEA 值",
-            width: getWidth("DEA 值"),
-        },
-        {
-            title: "MACD 值",
-            dataIndex: "MACD 值",
-            key: "MACD 值",
-            width: getWidth("MACD 值"),
-        },
-        {
-            title: "20天下轨线",
-            dataIndex: "20天下轨线",
-            key: "20天下轨线",
-            width: getWidth("20天下轨线"),
-        },
-        {
-            title: "20天中轨线",
-            dataIndex: "20天中轨线",
-            key: "20天中轨线",
-            width: getWidth("20天中轨线"),
-        }
-        ,
-        {
-            title: "20天上轨线",
-            dataIndex: "20天上轨线",
-            key: "20天上轨线",
-            width: getWidth("20天上轨线"),
-        },
-        {
-            title: "50天下轨线",
-            dataIndex: "50天下轨线",
-            key: "50天下轨线",
-            width: getWidth("50天下轨线"),
-        },
-        {
-            title: "50天中轨线",
-            dataIndex: "50天中轨线",
-            key: "50天中轨线",
-            width: getWidth("50天中轨线"),
-        },
-        {
-            title: "50天上轨线",
-            dataIndex: "50天上轨线",
-            key: "50天上轨线",
-            width: getWidth("50天上轨线"),
-        }
         // {
         //     title: "涨幅次数",
         //     dataIndex: "涨幅次数",
@@ -589,27 +474,11 @@ const APP = () => {
     let filters: any = {};
     let isFirst = true;
     const getValDashboard = async (stockcode: any,date?:any) => {
-        handleLoadingChange(true);
-        const data = await getDataByCode("tradesignaldashboard", {
+        const data = await getStockDataByCode("tradesignaldashboard", {
             stockcode: (stockcode || "").trim(),
             date: date,
         });
         console.log("[--data]", data);
-
-        const datakdj = await getDataByCode("tradesignalkdj", {
-            stockcode: (stockcode || "").trim(),
-            date: date,
-        });
-      
-
-        let resultskdj = datakdj.data.data.results;
-        let resultskdjMap:any = {}
-        resultskdj.map((item: any, index: number) => {
-            resultskdjMap[item['股票代码']]= item;
-        })
-        console.log("[--resultskdjMap]", resultskdjMap);
-
-
         let results = data.data.data.results;
         let new_results: any = [];
         results.map((item: any, index: number) => {
@@ -641,37 +510,10 @@ const APP = () => {
                 }
             }
         });
-        // console.log("[flag]", flag);
-
-        /**
-         *  
-        kdj.kvalue   as "K 值",
-        kdj.dvalue   as "D 值",
-        kdj.jvalue   as "J 值",
-        macd.diff   as "DIFF 值",
-        macd.dea    as "DEA 值",
-        macd.macd   as "MACD 值",
-        boll.lower20   as "20天下轨线",
-        boll.middle20  as "20天中轨线",
-        boll.upper20   as "20天上轨线",
-        boll.lower50   as "50天下轨线",
-        boll.middle50  as "50天中轨线",
-        boll.upper50   as "50天上轨线"
-         * 
-         * 
-         */
 
         for (var key in flag) {
             let keyItem = flag[key];
-            let kdj = resultskdjMap[key]
-            for(var item in kdj){
-                // keyItem[item]=kdj[item]
-                if(!keyItem[item]){
-                    keyItem[item]=kdj[item]
-                }
-            }
-
-            new_results.push(keyItem);  
+            new_results.push(keyItem);
             for (
                 let index = 0;
                 index < columns_dashboard_default.length;
@@ -846,10 +688,9 @@ const APP = () => {
         // });
         // xAxis
         handleLoadingChange(false);
-
     };
     const getVal = async (stockcode: any) => {
-        const data = await getDataByCode("tradesignal", {
+        const data = await getStockDataByCode("tradesignal", {
             stockcode: (stockcode || "").trim(),
             date: "",
         });
@@ -1027,13 +868,10 @@ const APP = () => {
         const fn = async () => {
             console.log("[fn]");
             await getValDashboard("");
-
-            
-
             // await getVal("");
             // slug = (await params).slug;
             // setCurrentpathname('/indexs/'+slug)
-            // const data = await getDataByCode("tradesignal", {
+            // const data = await getStockDataByCode("tradesignal", {
             //     stockcode: "",
             //     date:""
             // });
@@ -1057,9 +895,8 @@ const APP = () => {
     }, []);
     const onPanelChange = (date: any, dateString: any) => {
         console.log(date, dateString);
-    
+
         getValDashboard("",dateString);
-       
     };
     const [justify, setJustify] = React.useState<FlexProps["justify"]>(
         justifyOptions[0]
@@ -1183,7 +1020,7 @@ const APP = () => {
 
     const { styles } = useStyle();
     return (
-        <LayoutContainer currentpathname="/tradesignal">
+        <LayoutContainer currentpathname="/tradesignaletf">
             {/* {!isShowStock ? ( */}
                 <div style={{ display: !isShowStock?'block':'none'}}>
                     <Flex gap="middle" align="start" vertical>
@@ -1205,7 +1042,6 @@ const APP = () => {
                                 }}
                             /> */}
                         <DatePicker onChange={onPanelChange} />
-                     
 
                         {/* <Select 
                               defaultValue="lucy"
@@ -1246,16 +1082,16 @@ const APP = () => {
                             total: dataSource_dashboard.length,
                         }}
                         scroll={{ y: 120 * 7 }}
-                        onRow={(record: any) => {
+                        onRow={(record) => {
                             return {
-                                onClick: () => {
+                                onClick: (event) => {
                                     console.log("record", record);
                                     onRowClick(record);
                                 }, // 点击行
-                                onDoubleClick: (_event: React.MouseEvent) => {},
-                                onContextMenu: (_event: React.MouseEvent) => {},
-                                onMouseEnter: (_event: React.MouseEvent) => {},
-                                onMouseLeave: (_event: React.MouseEvent) => {},
+                                onDoubleClick: (event) => {},
+                                onContextMenu: (event) => {},
+                                onMouseEnter: (event) => {}, // 鼠标移入行
+                                onMouseLeave: (event) => {},
                             };
                         }}
                     />
@@ -1297,12 +1133,12 @@ const APP = () => {
                     />
 
                     <div>
-                        {/* <HighchartsReact
+                        <HighchartsReact
                             highcharts={Highcharts}
                             options={options2}
                             // constructorType={"bar"}
-                        /> */}
-                        <KlinechartsAPP  options={options2}/> 
+                        />
+                        {/* <KlinechartsAPP  options={options2}/> */}
                     </div>
                 </div>
              {/* )} */}
@@ -1310,8 +1146,7 @@ const APP = () => {
     );
 };
 
-
-const getKDJ = async (type: string, params: Object) => {
+const getStockDataByCode = async (type: string, params: Object) => {
     // case "stock": //获取股票
     // const symbol = params.indexcode;
     //     sql = get_stock(symbol);
@@ -1326,49 +1161,32 @@ const getKDJ = async (type: string, params: Object) => {
     return { data: json };
 };
 
-const getDataByCode = async (type: string, params: Object) => {
-    // case "stock": //获取股票
-    // const symbol = params.indexcode;
-    //     sql = get_stock(symbol);
-
-    const urlStr =
-        geturl + "?_t=" + new Date().getTime() + "&type=" + type + "&params=" + JSON.stringify(params);
-    console.log("[urlStr]", urlStr);
-    const res = await fetch(urlStr,{
-        // next: { revalidate: 0 }, // 看这个属性，它会选择退出缓存
-    });
-    const json = await res.json();
-    return { data: json };
-};
-
 export default APP;
 
 
 
-import { init, dispose } from 'klinecharts'
-const KlinechartsAPP= (options:any) => {
-    
-  useEffect(() => {
-    // console.log("[KlinechartsAPP]",options)
-    const chart = init('chart')
+// import { init, dispose } from 'klinecharts'
+// const KlinechartsAPP= (options:any) => {
+//   useEffect(() => {
+//     const chart = init('chart')
           
-    chart?.applyNewData([
-      { close: 4976.16, high: 4977.99, low: 4970.12, open: 4972.89, timestamp: 1587660000000, volume: 204 },
-      { close: 4977.33, high: 4979.94, low: 4971.34, open: 4973.20, timestamp: 1587660060000, volume: 194 },
-      { close: 4977.93, high: 4977.93, low: 4974.20, open: 4976.53, timestamp: 1587660120000, volume: 197 },
-      { close: 4966.77, high: 4968.53, low: 4962.20, open: 4963.88, timestamp: 1587660180000, volume: 28 },
-      { close: 4961.56, high: 4972.61, low: 4961.28, open: 4961.28, timestamp: 1587660240000, volume: 184 },
-      { close: 4964.19, high: 4964.74, low: 4961.42, open: 4961.64, timestamp: 1587660300000, volume: 191 },
-      { close: 4968.93, high: 4972.70, low: 4964.55, open: 4966.96, timestamp: 1587660360000, volume: 105 },
-      { close: 4979.31, high: 4979.61, low: 4973.99, open: 4977.06, timestamp: 1587660420000, volume: 35 },
-      { close: 4977.02, high: 4981.66, low: 4975.14, open: 4981.66, timestamp: 1587660480000, volume: 135 },
-      { close: 4985.09, high: 4988.62, low: 4980.30, open: 4986.72, timestamp: 1587660540000, volume: 76 }
-    ])
+//     chart?.applyNewData([
+//       { close: 4976.16, high: 4977.99, low: 4970.12, open: 4972.89, timestamp: 1587660000000, volume: 204 },
+//       { close: 4977.33, high: 4979.94, low: 4971.34, open: 4973.20, timestamp: 1587660060000, volume: 194 },
+//       { close: 4977.93, high: 4977.93, low: 4974.20, open: 4976.53, timestamp: 1587660120000, volume: 197 },
+//       { close: 4966.77, high: 4968.53, low: 4962.20, open: 4963.88, timestamp: 1587660180000, volume: 28 },
+//       { close: 4961.56, high: 4972.61, low: 4961.28, open: 4961.28, timestamp: 1587660240000, volume: 184 },
+//       { close: 4964.19, high: 4964.74, low: 4961.42, open: 4961.64, timestamp: 1587660300000, volume: 191 },
+//       { close: 4968.93, high: 4972.70, low: 4964.55, open: 4966.96, timestamp: 1587660360000, volume: 105 },
+//       { close: 4979.31, high: 4979.61, low: 4973.99, open: 4977.06, timestamp: 1587660420000, volume: 35 },
+//       { close: 4977.02, high: 4981.66, low: 4975.14, open: 4981.66, timestamp: 1587660480000, volume: 135 },
+//       { close: 4985.09, high: 4988.62, low: 4980.30, open: 4986.72, timestamp: 1587660540000, volume: 76 }
+//     ])
           
-    return () => {
-      dispose('chart')
-    }
-  }, [])
+//     return () => {
+//       dispose('chart')
+//     }
+//   }, [])
 
-  return <div id="chart" style={{ width: '100%', height: 300 }}/>
-}
+//   return <div id="chart" style={{ width: '100%', height: 600 }}/>
+// }

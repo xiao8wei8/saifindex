@@ -72,7 +72,19 @@ export default {
                     },
                     {
                         path: "/tradesignal",
-                        name: "个股概览",
+                        name: "A股概览",
+                        icon: "/images/logo-font/logo_star.png",
+                        component: "./Welcome",
+                    },
+                    {
+                        path: "/tradesignalus",
+                        name: "美股概览",
+                        icon: "/images/logo-font/logo_star.png",
+                        component: "./Welcome",
+                    },
+                    {
+                        path: "/tradesignaletf",
+                        name: "ETF概览",
                         icon: "/images/logo-font/logo_star.png",
                         component: "./Welcome",
                     },

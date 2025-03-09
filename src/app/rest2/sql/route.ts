@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import jsonwebtoken from "jsonwebtoken";
 import { encrypt } from "@/utils/auth";
-import { cookies } from "next/headers";
+// import { cookies } from "next/headers";
 export const dynamic = 'force-dynamic'
 // 获取股票基本信息
 const get_stock_basic_ash = () => {
@@ -235,6 +235,145 @@ const currentDate = new Date();
 
 }
 
+const get_tradesignal_kdj = (params?: any) => {
+    // 获取当前日期
+    const currentDate = new Date();
+
+    // 当前时间点
+    const currentFormattedDate = currentDate.toISOString().split('T')[0];
+
+    // 两个月前的时间点
+    const twoMonthsAgoDate = subtractMonths(currentDate, 2);
+    const twoMonthsAgoFormattedDate = twoMonthsAgoDate.toISOString().split('T')[0];
+
+    // 输出时间点
+    console.log(`时间跨度: ${currentFormattedDate}` +' - '+`${twoMonthsAgoFormattedDate}`);
+    // console.log(`两个月前: ${twoMonthsAgoFormattedDate}`);
+
+    // let result = getLastMonthFirstDayAndCurrentMonthLastDay();
+    // console.log("上个月第一天:", result.lastMonthFirstDay);
+    // console.log("上个月最后一天:", result.lastMonthLastDay);
+    // console.log("当前月最后一天:", result.currentMonthLastDay);
+    let code = params?.stockcode || null//"601636";
+    let date = params?.date || null
+    //   dbf.close as '当日收盘价',
+
+
+    let sql0=date?"'"+date+"'":`(select dbf.tradedate from stockmarket.ts_daily_befadjust dbf inner join stockmarket.stock_basic_ash sba on dbf.symbol = sba.symbol
+    inner join (select akts.tradedate, akts.symbol, akts.trade_act_name from stockmarketstatistics.ads_kdj_tradesignal_summary akts
+                where   akts.tradedate >= '${twoMonthsAgoFormattedDate}' and akts.tradedate <= '${currentFormattedDate}'
+                    and tradesignal_power = 2) ads_trd on ads_trd.symbol = dbf.symbol and ads_trd.tradedate = dbf.tradedate
+    where  dbf.tradedate >='${twoMonthsAgoFormattedDate}' and dbf.tradedate <= '${currentFormattedDate}' and dbf.symbol='000001'  order by dbf.symbol,  dbf.tradedate desc limit 1
+ )
+    `
+const sql1 = `
+
+select kdj.symbol    as "股票代码",
+       kdj.tradedate   as "交易日期", 
+       kdj.stockname_cn  as "股票名称", 
+       kdj.kvalue   as "K 值",
+       kdj.dvalue   as "D 值", 
+       kdj.jvalue   as "J 值", 
+       macd.diff   as "DIFF 值", 
+       macd.dea    as "DEA 值",
+       macd.macd   as "MACD 值",
+       boll.lower20   as "20天下轨线",
+       boll.middle20  as "20天中轨线", 
+       boll.upper20   as "20天上轨线",
+       boll.lower50   as "50天下轨线",
+       boll.middle50  as "50天中轨线", 
+       boll.upper50   as "50天上轨线"
+  from (select kdi.symbol,kdi.tradedate, kdi.stockname_cn, kdi.rsvvalue, kdi.kvalue, kdi.dvalue, kdi.jvalue 
+       from stockmarketstatistics.kdj_daily_index kdi
+      where kdi.tradedate =  ${sql0}
+        and kdi.kdjcycle = '9-3-3') kdj
+  left join(
+    select mdi.symbol, mdi.tradedate, mdi.macdperiod, mdi.diff, mdi.dea, mdi.macd
+      from stockmarketstatistics.macd_daily_index mdi 
+     where mdi.tradedate =  ${sql0}
+       and mdi.macdperiod = '12-26-9'
+  ) macd on kdj.symbol = macd.symbol and kdj.tradedate = macd.tradedate
+  left join(
+    select symbol, tradedate,
+         MAX(CASE WHEN bdi.bollperiod = 20 THEN bdi.lowerband END) AS "lower20",
+         MAX(CASE WHEN bdi.bollperiod = 20 THEN bdi.middleband END) AS "middle20",
+         MAX(CASE WHEN bdi.bollperiod = 20 THEN bdi.upperband END) AS "upper20",
+         MAX(CASE WHEN bdi.bollperiod = 50 THEN bdi.lowerband END) AS "lower50",
+         MAX(CASE WHEN bdi.bollperiod = 50 THEN bdi.middleband END) AS "middle50",
+         MAX(CASE WHEN bdi.bollperiod = 50 THEN bdi.upperband END) AS "upper50"
+     from stockmarketstatistics.boll_daily_index bdi
+   where bdi.tradedate = ${sql0}
+       and bdi.bollperiod in ('20','50')
+    GROUP by symbol, tradedate
+  ) boll on kdj.symbol = boll.symbol and kdj.tradedate = boll.tradedate
+order by kdj.symbol
+`
+
+
+    const sql22 = `
+        
+    select dbf.tradedate as '交易日期',
+        dbf.symbol as '股票代码',
+        dbf.stockname_cn as '股票名称(中文)',
+        sba.area as '所在城市',
+        sba.industry as '所属行业',
+        dbf.pct_chg as '当日涨跌幅' ,
+        case when dbf.pct_chg > 9.8 then 1 else 0 end as "涨幅次数",
+        case when dbf.pct_chg <= -9.6 then 1 else 0 end as "跌幅次数",
+        ads_trd.trade_act_name as '交易信号名称',
+        CONVERT(dbf.close,DECIMAL(10,2)) as '当日收盘价',
+      round(dbf.total_mv/100000000,2)  as "总市值 （亿）", 
+       round(dbf.circ_mv/100000000,2)  as "流通市值（亿）", 
+        round((dbf.total_mv - dbf.circ_mv)/100000000,2)  as "非流通市值（亿）"
+
+
+    from stockmarket.ts_daily_befadjust dbf inner join stockmarket.stock_basic_ash sba on dbf.symbol = sba.symbol
+    inner join (select akts.tradedate, akts.symbol, akts.trade_act_name from stockmarketstatistics.ads_kdj_tradesignal_summary akts
+                where   akts.tradedate >= '${twoMonthsAgoFormattedDate}' and akts.tradedate <= '${currentFormattedDate}'
+                    and tradesignal_power = 2) ads_trd on ads_trd.symbol = dbf.symbol and ads_trd.tradedate = dbf.tradedate
+    where  dbf.tradedate = 
+       ${sql0}
+    `
+
+    const sql2 =`and dbf.symbol = '${code}'`
+
+    const sql3 = `and dbf.isst = 'N'
+     order by 2 desc,1
+    `;
+
+    let sql = ''
+    sql = sql1// +" "+( code?sql2:"") +" "+ sql3;
+
+// and dbf.close >= 10 and dbf.close <= 20
+//         dbf.total_mv as "总市值 （亿）", 
+// dbf.circ_mv as "流通市值（亿）", 
+//         round(dbf.total_mv - dbf.circ_mv,2) as "非流通市值（亿）"
+    const sqll44 = `
+   select 
+   akts.tradedate    as "交易日期", 
+       akts.symbol     as "股票代码", 
+       akts.stockname_cn   as "股票名称(中文)", 
+       akts.trade_act_name   as "交易信号名称",
+       round(akts.close,2)     as "当日收盘价", 
+       akts.pct_change    as "当日涨跌额",
+       round(akts.pct_chg,2)    as "当日涨幅",
+       akts.cum_pct_chg   as "周期累积涨幅",
+       akts.premium_rate   as "溢价率%",
+       akts.risk_rate    as "风险指数%",
+       akts.turnover_rate_f  as "当日自由流通股换手率", 
+       akts.cum_turnover_f_rate as "累积自由流通股换手率",
+       akts.cur_yield    as "当日收益",
+       akts.cum_yield    as "周期累积收益",
+       round(akts.cur_yield_ratio * 100,2) as "当日收益率",
+       round(akts.cum_yield_ratio * 100,2)  as "周期累积收益率"
+  from stockmarketstatistics.ads_kdj_tradesignal_summary akts
+ where akts.symbol = '${code}'
+   and akts.tradedate >= '${twoMonthsAgoFormattedDate}' and akts.tradedate <= '${currentFormattedDate}'
+   and tradesignal_power = 2   order by akts.tradedate desc
+ `;
+   return sql;
+
+}
 
 const get_tradesignal = (params?: any) => {
     // 获取当前日期
@@ -329,6 +468,11 @@ export async function GET(request: NextRequest) {
         case 'tradesignaldashboard':
             sql=get_tradesignal_dashboard(params);
             break;
+        case 'tradesignalkdj':
+            sql=get_tradesignal_kdj(params);
+            break;
+
+            
         default:
             break;
     }
