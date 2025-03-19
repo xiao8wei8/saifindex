@@ -22,6 +22,7 @@ import {
     Tag,
     Spin,
     Tooltip,
+    Switch,
 } from "antd";
 import React from "react";
 import dayjs from "dayjs";
@@ -29,7 +30,7 @@ import symbols from "./symbol";
 import { createStyles } from "antd-style";
 import { set } from "react-hook-form";
 import { text } from "stream/consumers";
-import { CloseOutlined } from "@ant-design/icons";
+import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
 import { Select } from "antd";
 // import { use, useEffect, useState } from "react";
 
@@ -98,6 +99,7 @@ function getTextWidth(text: any, font = "14px Microsoft YaHei") {
 
 const APP = () => {
 
+    
     const [spinning, setSpinning] = React.useState(false);
     // const [percent, setPercent] = React.useState(0);
 
@@ -156,8 +158,321 @@ const APP = () => {
         return len;
     };
 
+    const columns_default = [  {
+        title: "交易日期",
+        dataIndex: "交易日期",
+        key: "交易日期",
+        width: getWidth("交易日期", 20),
+        fixed: "left",
+    },
+    {
+        title: "股票代码",
+        dataIndex: "股票代码",
+        key: "股票代码",
+        width: getWidth("股票代码"),
+        fixed: "left",
+        sorter: (a: any, b: any) =>
+            parseInt(a["股票代码"]) - parseInt(b["股票代码"]),
+    },
+    {
+        title: "股票名称(中文)",
+        dataIndex: "股票名称(中文)",
+        key: "股票名称(中文)",
+        width: getWidth("股票名称(中文)"),
+        fixed: "left",
+        sorter: (a: any, b: any) => {
+            let ret = 0;
+            const nameA = a["股票名称(中文)"]; //.toUpperCase(); // ignore upper and lowercase
+            const nameB = b["股票名称(中文)"]; //.toUpperCase();; // ignore upper and lowercase
+            if (nameA < nameB) {
+                ret = -1;
+            }
+            if (nameA > nameB) {
+                ret = 1;
+            }
+
+            // names must be equal
+            // console.log("[sorter]",ret,a["股票名称(中文)"],b["股票名称(中文)"])
+            return ret;
+        },
+    },
+    {
+        title: "交易信号名称",
+        dataIndex: "交易信号名称",
+        key: "交易信号名称",
+        width: getWidth("交易信号名称"),
+        render: (tags: string[]) => (
+            <span>
+              {[tags].map((tag:any) => {
+                let color = tag =='sell' ? '#45b97c' : ( tag =='buy' ?'#df1345':'');
+              
+                return (
+                  <Tag color={color} key={tag}>
+                    {tag.toUpperCase()}
+                  </Tag>
+                );
+              })}
+            </span>
+          ),
+        sorter: (a: any, b: any) => {
+            let ret = 0;
+            const nameA = a["交易信号名称"]; //.toUpperCase(); // ignore upper and lowercase
+            const nameB = b["交易信号名称"]; //.toUpperCase();; // ignore upper and lowercase
+            if (nameA < nameB) {
+                ret = -1;
+            }
+            if (nameA > nameB) {
+                ret = 1;
+            }
+
+            // names must be equal
+            // console.log("[sorter]",ret,a["股票名称(中文)"],b["股票名称(中文)"])
+            return ret;
+        },
+    },
+    {
+        title: "当日收盘价",
+        dataIndex: "当日收盘价",
+        key: "当日收盘价",
+        width: getWidth("当日收盘价"),
+        sorter: (a: any, b: any) =>
+            parseFloat(a["当日收盘价"]) - parseFloat(b["当日收盘价"]),
+    },
+    {
+        title: "所在城市",
+        dataIndex: "所在城市",
+        key: "所在城市",
+        width: getWidth("所在城市"),
+        sorter: (a: any, b: any) => {
+            let ret = 0;
+            const nameA = a["所在城市"]; //.toUpperCase(); // ignore upper and lowercase
+            const nameB = b["所在城市"]; //.toUpperCase();; // ignore upper and lowercase
+            if (nameA < nameB) {
+                ret = -1;
+            }
+            if (nameA > nameB) {
+                ret = 1;
+            }
+
+            // names must be equal
+            // console.log("[sorter]",ret,a["股票名称(中文)"],b["股票名称(中文)"])
+            return ret;
+        },
+    },
+
+    {
+        title: "所属行业",
+        dataIndex: "所属行业",
+        key: "所属行业",
+        width: getWidth("所属行业"),
+        sorter: (a: any, b: any) => {
+            let ret = 0;
+            const nameA = a["所属行业"]; //.toUpperCase(); // ignore upper and lowercase
+            const nameB = b["所属行业"]; //.toUpperCase();; // ignore upper and lowercase
+            if (nameA < nameB) {
+                ret = -1;
+            }
+            if (nameA > nameB) {
+                ret = 1;
+            }
+
+            // names must be equal
+            // console.log("[sorter]",ret,a["股票名称(中文)"],b["股票名称(中文)"])
+            return ret;
+        },
+    },
+    {
+        title: "当日涨跌幅",
+        dataIndex: "当日涨跌幅",
+        key: "当日涨跌幅",
+        width: getWidth("当日涨跌幅"),
+        sorter: (a: any, b: any) =>
+            parseFloat(a["当日涨跌幅"]) - parseFloat(b["当日涨跌幅"]),
+    },
+
+    {
+        title: "总市值 （亿）",
+        dataIndex: "总市值 （亿）",
+        key: "总市值 （亿）",
+        width: getWidth("总市值 （亿）"),
+        sorter: (a: any, b: any) =>
+            parseFloat(a["总市值 （亿）"]) - parseFloat(b["总市值 （亿）"]),
+    },
+
+    {
+        title: "流通市值（亿）",
+        dataIndex: "流通市值（亿）",
+        key: "流通市值（亿）",
+        width: getWidth("流通市值（亿）"),
+        sorter: (a: any, b: any) =>
+            parseFloat(a["流通市值（亿）"]) -
+            parseFloat(b["流通市值（亿）"]),
+    },
+
+    {
+        title: "非流通市值（亿）",
+        dataIndex: "非流通市值（亿）",
+        key: "非流通市值（亿）",
+        width: getWidth("非流通市值（亿）"),
+        sorter: (a: any, b: any) =>
+            parseFloat(a["非流通市值（亿）"]) -
+            parseFloat(b["非流通市值（亿）"]),
+    }]
+    
+    const columns_kdj = [
+        {
+            title: "交易日期",
+            dataIndex: "交易日期",
+            key: "交易日期",
+            width: getWidth("交易日期", 20),
+            fixed: "left",
+        },
+        {
+            title: "股票代码",
+            dataIndex: "股票代码",
+            key: "股票代码",
+            width: getWidth("股票代码"),
+            fixed: "left",
+            sorter: (a: any, b: any) =>
+                parseInt(a["股票代码"]) - parseInt(b["股票代码"]),
+        },
+        {
+            title: "股票名称(中文)",
+            dataIndex: "股票名称(中文)",
+            key: "股票名称(中文)",
+            width: getWidth("股票名称(中文)"),
+            fixed: "left",
+            sorter: (a: any, b: any) => {
+                let ret = 0;
+                const nameA = a["股票名称(中文)"]; //.toUpperCase(); // ignore upper and lowercase
+                const nameB = b["股票名称(中文)"]; //.toUpperCase();; // ignore upper and lowercase
+                if (nameA < nameB) {
+                    ret = -1;
+                }
+                if (nameA > nameB) {
+                    ret = 1;
+                }
+
+                // names must be equal
+                // console.log("[sorter]",ret,a["股票名称(中文)"],b["股票名称(中文)"])
+                return ret;
+            },
+        },
+        {
+            title: "交易信号名称",
+            dataIndex: "交易信号名称",
+            key: "交易信号名称",
+            width: getWidth("交易信号名称"),
+            render: (tags: string[]) => (
+                <span>
+                  {[tags].map((tag:any) => {
+                    let color = tag =='sell' ? '#45b97c' : ( tag =='buy' ?'#df1345':'');
+                  
+                    return (
+                      <Tag color={color} key={tag}>
+                        {tag.toUpperCase()}
+                      </Tag>
+                    );
+                  })}
+                </span>
+              ),
+            sorter: (a: any, b: any) => {
+                let ret = 0;
+                const nameA = a["交易信号名称"]; //.toUpperCase(); // ignore upper and lowercase
+                const nameB = b["交易信号名称"]; //.toUpperCase();; // ignore upper and lowercase
+                if (nameA < nameB) {
+                    ret = -1;
+                }
+                if (nameA > nameB) {
+                    ret = 1;
+                }
+
+                // names must be equal
+                // console.log("[sorter]",ret,a["股票名称(中文)"],b["股票名称(中文)"])
+                return ret;
+            },
+        },
+        {
+            title: "K 值",
+            dataIndex: "K 值",
+            key: "K 值",
+            width: getWidth("K 值"),
+        },
+        {
+            title: "D 值",
+            dataIndex: "D 值",
+            key: "D 值",
+            width: getWidth("D 值"),
+        },
+        {
+            title: "J 值",
+            dataIndex: "J 值",
+            key: "J 值",
+            width: getWidth("J 值"),
+        },
+        {
+            title: "DIFF 值",
+            dataIndex: "DIFF 值",
+            key: "DIFF 值",
+            width: getWidth("DIFF 值"),
+        },
+        {
+            title: "DEA 值",
+            dataIndex: "DEA 值",
+            key: "DEA 值",
+            width: getWidth("DEA 值"),
+        },
+        {
+            title: "MACD 值",
+            dataIndex: "MACD 值",
+            key: "MACD 值",
+            width: getWidth("MACD 值"),
+        },
+        {
+            title: "20天下轨线",
+            dataIndex: "20天下轨线",
+            key: "20天下轨线",
+            width: getWidth("20天下轨线"),
+        },
+        {
+            title: "20天中轨线",
+            dataIndex: "20天中轨线",
+            key: "20天中轨线",
+            width: getWidth("20天中轨线"),
+        }
+        ,
+        {
+            title: "20天上轨线",
+            dataIndex: "20天上轨线",
+            key: "20天上轨线",
+            width: getWidth("20天上轨线"),
+        },
+        {
+            title: "50天下轨线",
+            dataIndex: "50天下轨线",
+            key: "50天下轨线",
+            width: getWidth("50天下轨线"),
+        },
+        {
+            title: "50天中轨线",
+            dataIndex: "50天中轨线",
+            key: "50天中轨线",
+            width: getWidth("50天中轨线"),
+        },
+        {
+            title: "50天上轨线",
+            dataIndex: "50天上轨线",
+            key: "50天上轨线",
+            width: getWidth("50天上轨线"),
+        }
+    ]
+    const defaultCheckedList = columns_default.map((item) => item.key);
+    const defaultCheckedListKDJ = columns_kdj.map((item) => item.key);
+    
+    const [checkedList, setCheckedList] = useState(defaultCheckedListKDJ);
+
     // columns 为动态表格的表头数组 data为展示数据的数组
-    let columns_dashboard_default: any = [
+    let  columns_dashboard_default: any = [
         {
             title: "交易日期",
             dataIndex: "交易日期",
@@ -417,6 +732,8 @@ const APP = () => {
         dataSource_dashboardRef.current = dataSource_dashboard;
     });
     const [typeoptions, setTypeoptions] = useState([]);
+    // console.log("[checkedList]",checkedList);
+  
     const [columns_dashboard, setColumnsDashboard] = useState(
         columns_dashboard_default
     );
@@ -565,7 +882,9 @@ const APP = () => {
             width: getWidth("当日自由流通股换手率"),
         },
     ];
-
+    
+    // const defaultCheckedList = columns_dashboard_default.map((item:any) => item.key);
+// 
     // columns = columns.map((item) => {
     //   return {
     //     ...item,
@@ -607,7 +926,7 @@ const APP = () => {
         resultskdj.map((item: any, index: number) => {
             resultskdjMap[item['股票代码']]= item;
         })
-        console.log("[--resultskdjMap]", resultskdjMap);
+        // console.log("[--resultskdjMap]", resultskdjMap);
 
 
         let results = data.data.data.results;
@@ -686,66 +1005,18 @@ const APP = () => {
                 filters[title][keyItem[title]] = 1;
             }
         }
-        console.log("[filters]", filters);
-        // console.log("[flag]", flag);
-        console.log("[columns_dashboard_default]", columns_dashboard_default);
-        // 定义一个 Map 接收每列的长度值
-        // let widthMap: any = new Map();
-        // //作用是遍历所有数据拿到长度，记下每一列的宽度
-        // results.forEach((target: any) => {
-        //     for (let key in target) {
-        //         if (target.hasOwnProperty(key)) {
-        //             let keyWidth = getTextWidth(target[key]);
-        //             // 字段有值就放入数组
-        //             widthMap.has(key)
-        //                 ? widthMap.set(key, widthMap.get(key).concat(keyWidth))
-        //                 : widthMap.set(
-        //                       key,
-        //                       [].concat(keyWidth ? keyWidth : [])
-        //                   );
-        //         }
-        //     }
-        // });
-
-        // // 计算平均值,保证列宽尽量保持均衡
-        // for (let [mapKey] of widthMap) {
-        //     let valueArr = widthMap.get(mapKey);
-        //     let len = valueArr.length;
-        //     let value = valueArr.reduce(
-        //         (acc: any, cur: any) => acc + 1 / cur,
-        //         0
-        //     );
-        //     widthMap.set(mapKey, len / value);
-        // }
-
-        // //遍历表头，拿到对应表头的宽度与对应表头下内容比对，取最大值作为列宽，这样可以确保表头不换行。35为表头title左右的padding + border
-        // columns.map((item: any) => {
-        //     // title，dataIndex为 ant design Table对应参数
-        //     let textWidth = getTextWidth(item.title);
-        //     if (widthMap.get(item.dataIndex) < textWidth) {
-        //         widthMap.set(item.dataIndex, textWidth);
-        //     }
-        //     return (item.width = Math.ceil(widthMap.get(item.dataIndex)) + 35);
-        // });
-        // console.log("[columns]", columns);
-        // for (let index = 0; index < columns_dashboard_add.length; index++) {
-        //     let item: any = columns_dashboard_add[index];
-
-        //     // if (index <= 6) {
-        //     //     item["width"] = 140;
-        //     // } else {
-        //     //     item["width"] = 180;
-        //     // }
-
-        //     if (index <= 3) {
-        //         item["fixed"] = "left";
-        //     }
-        // }
+        
         let columns_dashboard_all = columns_dashboard_default.concat(
             columns_dashboard_add
         );
-
-        setColumnsDashboard(columns_dashboard_all);
+     
+    
+        const newColumns = columns_dashboard_all.map((item:any) => ({
+            ...item,
+            hidden: !checkedList.includes(item.key),
+          }));
+       
+        
         // if(isFirst) {
         // new_results = new_results.sort(
         //     (a: any, b: any) =>
@@ -768,6 +1039,8 @@ const APP = () => {
             { value: "256-512", label: "256-512", title: "股价区间" },
             { value: ">512", label: ">512", title: "股价区间" },
         ];
+        
+
         let _typeoptions: any = [
             <Flex>
                 <Select
@@ -795,15 +1068,18 @@ const APP = () => {
             </Flex>,
         ];
         for (var item in filters) {
-            if (item == "交易日期") {
+            if (item == "交易日期"||item == "当日收盘价") {
                 continue;
             }
+            // if( !checkedList.includes(item)){
+            //     continue; 
+            // }
             let _item1 = filters[item];
             let optionsArray: any = []; //{ "value": '', "label": '清除',"title": item}
             for (var item2 in _item1) {
                 optionsArray.push({ value: item2, label: item2, title: item });
             }
-            console.log("[filters][optionsArray]", optionsArray);
+            // console.log("[filters][optionsArray]", optionsArray);
             (function (item) {
                 _typeoptions.push(
                     <Flex>
@@ -835,6 +1111,8 @@ const APP = () => {
         }
 
         setTypeoptions(_typeoptions);
+
+        setColumnsDashboard(newColumns);
         // let _series: any[] = [];
         // let _xAxis: any = [];
         // let _name = "";
@@ -1180,8 +1458,26 @@ const APP = () => {
 
         // setValue(data);
     };
-
+    console.log("[options2]", options2);
     const { styles } = useStyle();
+
+    const onSwitchChange = (checked: boolean) => {
+        console.log(`switch to ${checked}`);
+        if(!checked){
+            setCheckedList(defaultCheckedList);
+        }else{
+            setCheckedList(defaultCheckedListKDJ);
+        }
+        
+    }
+    useEffect(() => {
+        const newColumns = columns_dashboard.map((item:any) => ({
+            ...item,
+            hidden: !checkedList.includes(item.key),
+          }));
+       
+        setColumnsDashboard(newColumns);
+    },[checkedList])
     return (
         <LayoutContainer currentpathname="/tradesignal">
             {/* {!isShowStock ? ( */}
@@ -1204,8 +1500,18 @@ const APP = () => {
                                     console.log("onMouseEnter");
                                 }}
                             /> */}
-                        <DatePicker onChange={onPanelChange} />
-                     
+                        <Space>
+                            
+                            <DatePicker onChange={onPanelChange} />
+                            技术指标 : <Switch
+                            onChange={onSwitchChange}
+                                checkedChildren={<CheckOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />}
+                                unCheckedChildren={<CloseOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />}
+                                defaultChecked
+                                />
+    
+                    
+                        </Space>
 
                         {/* <Select 
                               defaultValue="lucy"

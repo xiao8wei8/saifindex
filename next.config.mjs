@@ -22,8 +22,8 @@ const nextConfig = {
         MYSQL_HOST: "101.34.245.222",
         MYSQL_PORT: "3306",
         MYSQL_DATABASE: "stockmarket",
-        MYSQL_USER: "si_readonly",
-        MYSQL_PASSWORD: "]FYzgq#S3i[lksFF",
+        MYSQL_USER: "front_readonly",
+        MYSQL_PASSWORD: "a7^!BX0V][C>oa<P",
     },
     transpilePackages: [
         "shiki",
