@@ -487,7 +487,7 @@ const get_tradesignal_dashboard_us = (params?: any) => {
     `;
 
     const sql1 = `select  symbol as '股票代码', date as '交易日期', open  as '当日开盘价', high as '当日最高价', low as '当日最低价', close as '当日收盘价', adjusted_close  as '前一日收盘价' , volume  as '当日成交量' 
-from us_stockmarket.us_daily   dbf where date=  ${sql0}`;
+from us_stockmarket.us_daily   dbf where date=  '2002-01-23'`;
 
     const sql2 = `and dbf.symbol = '${code}'`;
 
@@ -615,7 +615,7 @@ const get_tradesignalus = (params?: any) => {
         from us_stockmarket.us_daily  akts
 
  where akts.symbol = '${code}'
-   and akts.date >= '${twoMonthsAgoFormattedDate}' and akts.date <= '${currentFormattedDate}'
+   and akts.date >= '2002-01-23' and akts.date <= '2002-03-23'
    order by akts.date desc
  `;
     return sql;

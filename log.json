@@ -1,5 +1,5 @@
 {
-    "086da35d2e0eea504979b0059f9683d4": {
+    "ae554492b088c52f03cadb679119fc08": {
         "tableResponse": {
             "success": true,
             "errorCode": null,
@@ -16,9 +16,9 @@
             "errorDetail": null,
             "solutionLink": null,
             "data": {
-                "token": "NwqGu+OEC+dwJHQszInki7j/eMzlpv+xB8vTyssTzpU=",
-                "chatId": 22428,
-                "questionId": 150421,
+                "token": "/4VAgMRl+X6PfCvDeeCjzZromxGz/nOW+HVDL4sPz1Q=",
+                "chatId": 74709,
+                "questionId": 252514,
                 "answerId": null,
                 "dashboardSchema": null,
                 "excelSchemas": null,
@@ -28,18 +28,18 @@
             },
             "traceId": null
         },
-        "chatResponse": "id:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\"Since\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\" the\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\" database\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\" schema\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\" is\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\" not\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\" provided\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\" and\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\" the\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\" task\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\" is\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\" to\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\" generate\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\" a\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\" SQL\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\" query\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\" to\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\" find\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\" C\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\"trip\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\"'s\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\" stock\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\" code\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\",\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\" I\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\" will\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\" assume\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\" a\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\" hypothetical\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\" table\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\" and\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\" column\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\" name\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\" for\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\" the\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\" purpose\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\" of\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\" this\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\" query\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\".\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\" Let\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\"'s\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\" assume\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\" the\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\" table\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\" is\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\" named\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\" `\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\"stocks\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\"`\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\" and\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\" the\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\" columns\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\" are\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\" `\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\"company\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\"_name\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\"`\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\" and\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\" `\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\"stock\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\"_code\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\"`.\\n\\n\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\"\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\"\\nSELECT\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\" stock\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\"_code\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\" FROM\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\" stocks\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\" WHERE\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\" company\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\"_name\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\" =\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\" '\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\"携程\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\"';\\n\"}\nretry:3000\n\nid:202412290959179d90d21d4f034bf3\ndata:{\"role\":\"assistant\",\"content\":\"\"}\nretry:3000\n\nid:[DONE]\ndata:[DONE]\nretry:3000\n\n",
+        "chatResponse": "id:202503240609120e25952ad59144d4\ndata:{\"role\":\"assistant\",\"content\":\"\"}\nretry:3000\n\nid:202503240609120e25952ad59144d4\ndata:{\"role\":\"assistant\",\"content\":\"\"}\nretry:3000\n\nid:202503240609120e25952ad59144d4\ndata:{\"role\":\"assistant\",\"content\":\"\\nSELECT\"}\nretry:3000\n\nid:202503240609120e25952ad59144d4\ndata:{\"role\":\"assistant\",\"content\":\" `\"}\nretry:3000\n\nid:202503240609120e25952ad59144d4\ndata:{\"role\":\"assistant\",\"content\":\"symbol\"}\nretry:3000\n\nid:202503240609120e25952ad59144d4\ndata:{\"role\":\"assistant\",\"content\":\"`\"}\nretry:3000\n\nid:202503240609120e25952ad59144d4\ndata:{\"role\":\"assistant\",\"content\":\" FROM\"}\nretry:3000\n\nid:202503240609120e25952ad59144d4\ndata:{\"role\":\"assistant\",\"content\":\" `\"}\nretry:3000\n\nid:202503240609120e25952ad59144d4\ndata:{\"role\":\"assistant\",\"content\":\"stock\"}\nretry:3000\n\nid:202503240609120e25952ad59144d4\ndata:{\"role\":\"assistant\",\"content\":\"market\"}\nretry:3000\n\nid:202503240609120e25952ad59144d4\ndata:{\"role\":\"assistant\",\"content\":\"`.`\"}\nretry:3000\n\nid:202503240609120e25952ad59144d4\ndata:{\"role\":\"assistant\",\"content\":\"ts\"}\nretry:3000\n\nid:202503240609120e25952ad59144d4\ndata:{\"role\":\"assistant\",\"content\":\"_stock\"}\nretry:3000\n\nid:202503240609120e25952ad59144d4\ndata:{\"role\":\"assistant\",\"content\":\"_company\"}\nretry:3000\n\nid:202503240609120e25952ad59144d4\ndata:{\"role\":\"assistant\",\"content\":\"`\"}\nretry:3000\n\nid:202503240609120e25952ad59144d4\ndata:{\"role\":\"assistant\",\"content\":\" WHERE\"}\nretry:3000\n\nid:202503240609120e25952ad59144d4\ndata:{\"role\":\"assistant\",\"content\":\" `\"}\nretry:3000\n\nid:202503240609120e25952ad59144d4\ndata:{\"role\":\"assistant\",\"content\":\"int\"}\nretry:3000\n\nid:202503240609120e25952ad59144d4\ndata:{\"role\":\"assistant\",\"content\":\"roduction\"}\nretry:3000\n\nid:202503240609120e25952ad59144d4\ndata:{\"role\":\"assistant\",\"content\":\"`\"}\nretry:3000\n\nid:202503240609120e25952ad59144d4\ndata:{\"role\":\"assistant\",\"content\":\" LIKE\"}\nretry:3000\n\nid:202503240609120e25952ad59144d4\ndata:{\"role\":\"assistant\",\"content\":\" '%\"}\nretry:3000\n\nid:202503240609120e25952ad59144d4\ndata:{\"role\":\"assistant\",\"content\":\"平安\"}\nretry:3000\n\nid:202503240609120e25952ad59144d4\ndata:{\"role\":\"assistant\",\"content\":\"银行\"}\nretry:3000\n\nid:202503240609120e25952ad59144d4\ndata:{\"role\":\"assistant\",\"content\":\"%\"}\nretry:3000\n\nid:202503240609120e25952ad59144d4\ndata:{\"role\":\"assistant\",\"content\":\"';\\n\"}\nretry:3000\n\nid:202503240609120e25952ad59144d4\ndata:{\"role\":\"assistant\",\"content\":\"\"}\nretry:3000\n\nid:[DONE]\ndata:[DONE]\nretry:3000\n\n",
         "executeResponse": {
             "success": true,
             "errorCode": null,
             "errorMessage": null,
             "data": [
                 {
-                    "sql": "Since the database schema is not provided and the task is to generate a SQL query to find Ctrip's stock code, I will assume a hypothetical table and column name for the purpose of this query. Let's assume the table is named `stocks` and the columns are `company_name` and `stock_code`.\n\n\nSELECT stock_code FROM stocks WHERE company_name = '携程'",
-                    "originalSql": "Since the database schema is not provided and the task is to generate a SQL query to find Ctrip's stock code, I will assume a hypothetical table and column name for the purpose of this query. Let's assume the table is named `stocks` and the columns are `company_name` and `stock_code`.\n\n\nSELECT stock_code FROM stocks WHERE company_name = '携程'",
-                    "description": null,
-                    "message": "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'Since the database schema is not provided and the task is to generate a SQL quer' at line 1",
-                    "success": false,
+                    "sql": "SELECT `symbol` FROM `stockmarket`.`ts_stock_company` WHERE `introduction` LIKE '%平安银行%'\n LIMIT 200",
+                    "originalSql": "SELECT `symbol` FROM `stockmarket`.`ts_stock_company` WHERE `introduction` LIKE '%平安银行%'",
+                    "description": "Execution successful",
+                    "message": null,
+                    "success": true,
                     "updateCount": null,
                     "headerList": [
                         {
@@ -53,24 +53,48 @@
                             "columnSize": null,
                             "decimalDigits": null,
                             "columnType": null
+                        },
+                        {
+                            "dataType": "STRING",
+                            "name": "symbol",
+                            "primaryKey": null,
+                            "comment": null,
+                            "defaultValue": null,
+                            "autoIncrement": 0,
+                            "nullable": null,
+                            "columnSize": null,
+                            "decimalDigits": null,
+                            "columnType": "CHAR"
                         }
                     ],
-                    "dataList": null,
-                    "sqlType": null,
+                    "dataList": [
+                        [
+                            "1",
+                            "000001"
+                        ]
+                    ],
+                    "sqlType": "SELECT",
                     "hasNextPage": false,
                     "pageNo": 1,
-                    "pageSize": 0,
-                    "fuzzyTotal": "0",
-                    "duration": null,
-                    "canEdit": false,
-                    "tableName": null,
+                    "pageSize": 200,
+                    "fuzzyTotal": "1",
+                    "duration": 144,
+                    "canEdit": true,
+                    "tableName": "`stockmarket`.`ts_stock_company`",
                     "extra": null,
                     "dataAccess": false,
                     "scriptAccess": false,
                     "noPermissionDetail": null,
-                    "refreshTargets": null,
+                    "refreshTargets": [
+                        {
+                            "dataSourceId": 46845,
+                            "databaseName": "",
+                            "schemaName": "",
+                            "tableName": null
+                        }
+                    ],
                     "comment": null,
-                    "resultSetId": null
+                    "resultSetId": 1
                 }
             ],
             "traceId": null,

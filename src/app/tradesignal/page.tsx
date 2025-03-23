@@ -33,7 +33,8 @@ import { text } from "stream/consumers";
 import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
 import { Select } from "antd";
 // import { use, useEffect, useState } from "react";
-
+import * as ExcelJs from 'exceljs';
+import { generateHeaders, saveWorkbook } from "@/libs/utils";
 const geturl = config.url;
 
 const boxStyle: React.CSSProperties = {
@@ -1554,6 +1555,21 @@ const APP = () => {
   
         setColumnsDashboard(newColumns);
     },[checkedList])
+    function onExportBasicExcel() {
+       
+        // 创建工作簿
+        const workbook = new (ExcelJs as any).Workbook();
+        // 添加sheet
+        const worksheet = workbook.addWorksheet('saifchat sheet');
+        // 设置 sheet 的默认行高
+        worksheet.properties.defaultRowHeight = 20;
+        // 设置列
+        worksheet.columns = generateHeaders(columns_dashboard);
+        // 添加行
+        worksheet.addRows(dataSource_dashboard);
+        // 导出excel
+        saveWorkbook(workbook, 'saifchat.xlsx');
+      }
     return (
         <LayoutContainer currentpathname="/tradesignal">
             {/* {!isShowStock ? ( */}
@@ -1564,6 +1580,7 @@ const APP = () => {
                             justify={justify}
                             align={alignItems}
                         >
+                            
                             {/* <AutoComplete
                                 options={options}
                                 style={{ width: 200 }}
@@ -1577,7 +1594,7 @@ const APP = () => {
                                 }}
                             /> */}
                         <Space>
-                            
+                       
                             <DatePicker onChange={onPanelChange} />
                             技术指标 : <Switch
                             onChange={onSwitchChange}
@@ -1585,7 +1602,7 @@ const APP = () => {
                                 unCheckedChildren={<CloseOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />}
                                 defaultChecked
                                 />
-    
+                             <Button type={'primary'} onClick={onExportBasicExcel}>导出excel</Button>
                     
                         </Space>
 

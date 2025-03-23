@@ -30,6 +30,8 @@ import { text } from "stream/consumers";
 import { CloseOutlined } from "@ant-design/icons";
 import { Select } from "antd";
 // import { use, useEffect, useState } from "react";
+import * as ExcelJs from 'exceljs';
+import { generateHeaders, saveWorkbook } from "@/libs/utils";
 
 const geturl = config.url;
 
@@ -815,48 +817,30 @@ const APP = () => {
     };
 
     const { styles } = useStyle();
+
+    function onExportBasicExcel() {
+       
+        // 创建工作簿
+        const workbook = new (ExcelJs as any).Workbook();
+        // 添加sheet
+        const worksheet = workbook.addWorksheet('saifchat sheet');
+        // 设置 sheet 的默认行高
+        worksheet.properties.defaultRowHeight = 20;
+        // 设置列
+        worksheet.columns = generateHeaders(columns_dashboard);
+        // 添加行
+        worksheet.addRows(dataSource_dashboard);
+        // 导出excel
+        saveWorkbook(workbook, 'saifchat.xlsx');
+      }
     return (
         <LayoutContainer currentpathname="/tradesignalus">
             {/* {!isShowStock ? ( */}
                 <div style={{ display: !isShowStock?'block':'none'}}>
                     <Flex gap="middle" align="start" vertical>
-                        <Flex
-                            style={boxStyle}
-                            justify={justify}
-                            align={alignItems}
-                        >
-                            {/* <AutoComplete
-                                options={options}
-                                style={{ width: 200 }}
-                                onSelect={onSelect}
-                                onSearch={(text) =>
-                                    setOptions(getPanelValue(text))
-                                }
-                                placeholder="输入股票代码或者名称"
-                                onClear={() => {
-                                    console.log("onMouseEnter");
-                                }}
-                            /> */}
-                        <DatePicker onChange={onPanelChange} />
-
-                        {/* <Select 
-                              defaultValue="lucy"
-                              style={{ width: 120 }}
-                            options={[  { value: 'jack', label: 'Jack' }]} /> */}
-
-                        {/* <Select
-                            defaultValue="lucy"
-                            style={{ width: 120 }}
-                           
-                            options={[
-                                { value: 'jack', label: 'Jack' },
-                                { value: 'lucy', label: 'Lucy' },
-                                { value: 'Yiminghe', label: 'yiminghe' },
-                                { value: 'disabled', label: 'Disabled', disabled: true },
-                            ]}
-                            /> */}
-
-                        </Flex>
+                        <Space style={{margin: 10,float: 'right'}}>
+                        <Button type={'primary'} onClick={onExportBasicExcel}>导出excel</Button>
+                        </Space>
                         {typeoptions.length ? (
                             <Space wrap>{typeoptions}</Space>
                         ) : null}
