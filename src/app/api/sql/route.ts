@@ -245,6 +245,73 @@ const get_tradesignal_dashboard = (params?: any) => {
 }
 
 
+const get_tradesignal_dashboard_etf = (params?: any) => {
+    
+
+    console.log("#####################")
+
+    console.log("#####################",params)
+
+    console.log("#####################")
+
+    // 当前时间点
+    const currentFormattedDate = currentDate.toISOString().split('T')[0];
+
+    // 两个月前的时间点
+    const twoMonthsAgoDate = subtractMonths(currentDate, 2);
+    const twoMonthsAgoFormattedDate = twoMonthsAgoDate.toISOString().split('T')[0];
+
+    // 输出时间点
+    console.log(`时间跨度: ${currentFormattedDate}` +' - '+`${twoMonthsAgoFormattedDate}`);
+    // console.log(`两个月前: ${twoMonthsAgoFormattedDate}`);
+
+    // let result = getLastMonthFirstDayAndCurrentMonthLastDay();
+    // console.log("上个月第一天:", result.lastMonthFirstDay);
+    // console.log("上个月最后一天:", result.lastMonthLastDay);
+    // console.log("当前月最后一天:", result.currentMonthLastDay);
+    let code = params?.stockcode || null//"601636";
+    let date = params?.date || null
+    //   dbf.close as '当日收盘价',
+
+
+    let sql0=date?date:`
+    
+    select dbf.tradedate 
+       
+
+
+    from stockmarket.ts_daily_befadjust dbf inner join stockmarket.stock_basic_ash sba on dbf.symbol = sba.symbol
+    inner join (select akts.tradedate, akts.symbol, akts.trade_act_name from stockmarketstatistics.ads_kdj_tradesignal_summary akts
+                where   akts.tradedate >= '${twoMonthsAgoFormattedDate}' and akts.tradedate <= '${currentFormattedDate}'
+                    and tradesignal_power = 2) ads_trd on ads_trd.symbol = dbf.symbol and ads_trd.tradedate = dbf.tradedate
+    where  dbf.tradedate >='${twoMonthsAgoFormattedDate}' and dbf.tradedate <= '${currentFormattedDate}' and dbf.symbol='000001'  order by dbf.symbol,  dbf.tradedate desc limit 1
+`
+
+    const sql1 = `
+        
+
+    select 
+fundcode, tradedate, fundsymbol, fundname_cn, open, high, low, close, pre_close, price_change, pct_chg, volumn, amount, fundareacode, fundareano, fundmarket
+
+from etfmarket.fund_daily  dbf where tradedate=  ('${sql0}')`
+
+
+
+    const sql2 =`and dbf.symbol = '${code}'`
+
+    const sql3 = ` 
+     order by 2 desc,1
+    `;
+
+    let sql = ''
+    sql = sql1 +" "+( code?sql2:"") +" "+ sql3;
+
+   return sql;
+
+
+}
+
+
 const get_tradesignal = (params?: any) => {
 
     // 当前时间点
@@ -306,7 +373,8 @@ export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams;
     const type: any = searchParams.get("type"); // 'xxx'
     const params: any = JSON.parse(searchParams.get("params") || "{}");
-
+    
+console.log("[GET]type", type);
     let sql = "";
     switch (type) {
         case "weight": //获取权重
@@ -335,6 +403,9 @@ export async function GET(request: NextRequest) {
             break;
         case 'tradesignaldashboard':
             sql=get_tradesignal_dashboard(params);
+            break;
+        case 'tradesignaldashboardetf':
+            sql=get_tradesignal_dashboard_etf(params);
             break;
         default:
             break;

@@ -119,6 +119,7 @@ const APP = () => {
     };
 
     // columns 为动态表格的表头数组 data为展示数据的数组
+   
     let columns_dashboard_default: any = [
         {
             title: "交易日期",
@@ -158,39 +159,14 @@ const APP = () => {
                 return ret;
             },
         },
+       
         {
-            title: "交易信号名称",
-            dataIndex: "交易信号名称",
-            key: "交易信号名称",
-            width: getWidth("交易信号名称"),
-            render: (tags: string[]) => (
-                <span>
-                  {[tags].map((tag:any) => {
-                    let color = tag =='sell' ? '#45b97c' : ( tag =='buy' ?'#df1345':'');
-                  
-                    return (
-                      <Tag color={color} key={tag}>
-                        {tag.toUpperCase()}
-                      </Tag>
-                    );
-                  })}
-                </span>
-              ),
-            sorter: (a: any, b: any) => {
-                let ret = 0;
-                const nameA = a["交易信号名称"]; //.toUpperCase(); // ignore upper and lowercase
-                const nameB = b["交易信号名称"]; //.toUpperCase();; // ignore upper and lowercase
-                if (nameA < nameB) {
-                    ret = -1;
-                }
-                if (nameA > nameB) {
-                    ret = 1;
-                }
-
-                // names must be equal
-                // console.log("[sorter]",ret,a["股票名称(中文)"],b["股票名称(中文)"])
-                return ret;
-            },
+            title: "当日开盘价",
+            dataIndex: "当日开盘价",
+            key: "当日开盘价",
+            width: getWidth("当日开盘价"),
+            sorter: (a: any, b: any) =>
+                parseFloat(a["当日开盘价"]) - parseFloat(b["当日开盘价"]),
         },
         {
             title: "当日收盘价",
@@ -201,36 +177,40 @@ const APP = () => {
                 parseFloat(a["当日收盘价"]) - parseFloat(b["当日收盘价"]),
         },
         {
-            title: "所在城市",
-            dataIndex: "所在城市",
-            key: "所在城市",
-            width: getWidth("所在城市"),
-            sorter: (a: any, b: any) => {
-                let ret = 0;
-                const nameA = a["所在城市"]; //.toUpperCase(); // ignore upper and lowercase
-                const nameB = b["所在城市"]; //.toUpperCase();; // ignore upper and lowercase
-                if (nameA < nameB) {
-                    ret = -1;
-                }
-                if (nameA > nameB) {
-                    ret = 1;
-                }
-
-                // names must be equal
-                // console.log("[sorter]",ret,a["股票名称(中文)"],b["股票名称(中文)"])
-                return ret;
-            },
+            title: "当日最高价",
+            dataIndex: "当日最高价",
+            key: "当日最高价",
+            width: getWidth("当日最高价"),
+            sorter: (a: any, b: any) =>
+                parseFloat(a["当日最高价"]) - parseFloat(b["当日最高价"]),
+        },
+       
+        {
+            title: "当日最低价",
+            dataIndex: "当日最低价",
+            key: "当日最低价",
+            width: getWidth("当日最低价"),
+            sorter: (a: any, b: any) =>
+                parseFloat(a["当日最低价"]) - parseFloat(b["当日最低价"]),
+        },
+        {
+            title: "前一日收盘价",
+            dataIndex: "前一日收盘价",
+            key: "前一日收盘价",
+            width: getWidth("前一日收盘价"),
+            sorter: (a: any, b: any) =>
+                parseFloat(a["前一日收盘价"]) - parseFloat(b["前一日收盘价"]),
         },
 
         {
-            title: "所属行业",
-            dataIndex: "所属行业",
-            key: "所属行业",
-            width: getWidth("所属行业"),
+            title: "所属交易所",
+            dataIndex: "所属交易所",
+            key: "所属交易所",
+            width: getWidth("所属交易所"),
             sorter: (a: any, b: any) => {
                 let ret = 0;
-                const nameA = a["所属行业"]; //.toUpperCase(); // ignore upper and lowercase
-                const nameB = b["所属行业"]; //.toUpperCase();; // ignore upper and lowercase
+                const nameA = a["所属交易所"]; //.toUpperCase(); // ignore upper and lowercase
+                const nameB = b["所属交易所"]; //.toUpperCase();; // ignore upper and lowercase
                 if (nameA < nameB) {
                     ret = -1;
                 }
@@ -251,49 +231,25 @@ const APP = () => {
             sorter: (a: any, b: any) =>
                 parseFloat(a["当日涨跌幅"]) - parseFloat(b["当日涨跌幅"]),
         },
-
         {
-            title: "总市值 （亿）",
-            dataIndex: "总市值 （亿）",
-            key: "总市值 （亿）",
-            width: getWidth("总市值 （亿）"),
+            title: "当日成交量",
+            dataIndex: "当日成交量",
+            key: "当日成交量",
+            width: getWidth("当日成交量"),
             sorter: (a: any, b: any) =>
-                parseFloat(a["总市值 （亿）"]) - parseFloat(b["总市值 （亿）"]),
+                parseFloat(a["当日成交量"]) - parseFloat(b["当日成交量"]),
         },
-
         {
-            title: "流通市值（亿）",
-            dataIndex: "流通市值（亿）",
-            key: "流通市值（亿）",
-            width: getWidth("流通市值（亿）"),
+            title: "当日成交额",
+            dataIndex: "当日成交额",
+            key: "当日成交额",
+            width: getWidth("当日成交额"),
             sorter: (a: any, b: any) =>
-                parseFloat(a["流通市值（亿）"]) -
-                parseFloat(b["流通市值（亿）"]),
+                parseFloat(a["当日成交额"]) - parseFloat(b["当日成交额"]),
         },
-
-        {
-            title: "非流通市值（亿）",
-            dataIndex: "非流通市值（亿）",
-            key: "非流通市值（亿）",
-            width: getWidth("非流通市值（亿）"),
-            sorter: (a: any, b: any) =>
-                parseFloat(a["非流通市值（亿）"]) -
-                parseFloat(b["非流通市值（亿）"]),
-        },
-
-        // {
-        //     title: "涨幅次数",
-        //     dataIndex: "涨幅次数",
-        //     key: "涨幅次数",
-        //     width: getWidth("涨幅次数"),
-        // },
-        // {
-        //     title: "跌幅次数",
-        //     dataIndex: "跌幅次数",
-        //     key: "跌幅次数",
-        //     width: getWidth("跌幅次数"),
-        // },
+       
     ];
+    
     const [dataSource, setDataSource] = useState([]);
     const [dataSource_dashboard, setDataSourceDashboard] = useState([]);
     let first_dataSource_dashboard: any = [];
@@ -335,121 +291,7 @@ const APP = () => {
     ]);
     const [xAxis, setXAxis] = useState({});
 
-    let columns = [
-        {
-            title: "交易日期",
-            dataIndex: "交易日期",
-            key: "交易日期",
-            width: getWidth("交易日期", 20),
-        },
-        {
-            title: "股票代码",
-            dataIndex: "股票代码",
-            key: "股票代码",
-            width: getWidth("股票代码"),
-        },
-        {
-            title: "股票名称(中文)",
-            dataIndex: "股票名称(中文)",
-            key: "股票名称(中文)",
-            width: getWidth("股票名称(中文)"),
-        },
-        {
-            title: "交易信号名称",
-            dataIndex: "交易信号名称",
-            key: "交易信号名称",
-            width: getWidth("交易信号名称"),
-            render: (tags: string[]) => (
-                <span>
-                  {[tags].map((tag:any) => {
-                    let color = tag =='sell' ? '#45b97c' : ( tag =='buy' ?'#df1345':'');
-                  
-                    return (
-                      <Tag color={color} key={tag}>
-                        {tag.toUpperCase()}
-                      </Tag>
-                    );
-                  })}
-                </span>
-              ),
-        },
-        {
-            title: "当日收盘价",
-            dataIndex: "当日收盘价",
-            key: "当日收盘价",
-            width: getWidth("当日收盘价"),
-        },
-        {
-            title: "当日收益",
-            dataIndex: "当日收益",
-            key: "当日收益",
-            width: getWidth("当日收益"),
-        },
-
-        {
-            title: "周期累积收益",
-            dataIndex: "周期累积收益",
-            key: "周期累积收益",
-            width: getWidth("周期累积收益"),
-        },
-        {
-            title: "当日收益率",
-            dataIndex: "当日收益率",
-            key: "当日收益率",
-            width: getWidth("当日收益率"),
-        },
-
-        {
-            title: "周期累积收益率",
-            dataIndex: "周期累积收益率",
-            key: "周期累积收益率",
-            width: getWidth("周期累积收益率"),
-        },
-
-        {
-            title: "周期累积涨幅",
-            dataIndex: "周期累积涨幅",
-            key: "周期累积涨幅",
-            width: getWidth("周期累积涨幅"),
-        },
-
-        {
-            title: "溢价率%",
-            dataIndex: "溢价率%",
-            key: "溢价率%",
-            width: getWidth("溢价率%"),
-        },
-
-        {
-            title: "风险指数%",
-            dataIndex: "风险指数%",
-            key: "风险指数%",
-            width: getWidth("风险指数%"),
-        },
-        {
-            title: "累积自由流通股换手率",
-            dataIndex: "累积自由流通股换手率",
-            key: "累积自由流通股换手率",
-            width: getWidth("累积自由流通股换手率"),
-        },
-
-        // {
-        //     title: "当日涨幅",
-        //     dataIndex: "当日涨幅",
-        //     key: "当日涨幅",
-        // },
-        // {
-        //     title: "当日涨跌额",
-        //     dataIndex: "当日涨跌额",
-        //     key: "当日涨跌额",
-        // },
-        {
-            title: "当日自由流通股换手率",
-            dataIndex: "当日自由流通股换手率",
-            key: "当日自由流通股换手率",
-            width: getWidth("当日自由流通股换手率"),
-        },
-    ];
+    let columns = columns_dashboard_default
 
     // columns = columns.map((item) => {
     //   return {
@@ -474,11 +316,12 @@ const APP = () => {
     let filters: any = {};
     let isFirst = true;
     const getValDashboard = async (stockcode: any,date?:any) => {
-        const data = await getStockDataByCode("tradesignaldashboard", {
+        const data = await getStockDataByCode("tradesignaldashboardetf", {
             stockcode: (stockcode || "").trim(),
             date: date,
         });
         console.log("[--data]", data);
+
         let results = data.data.data.results;
         let new_results: any = [];
         results.map((item: any, index: number) => {
@@ -588,6 +431,12 @@ const APP = () => {
         );
 
         setColumnsDashboard(columns_dashboard_all);
+
+        // const newColumns = columns_dashboard_all.map((item:any) => ({
+        //     ...item,
+        // hidden: !checkedList.includes(item.key),
+        // }));
+        
         // if(isFirst) {
         // new_results = new_results.sort(
         //     (a: any, b: any) =>
@@ -596,101 +445,105 @@ const APP = () => {
         //     isFirst =false
         // }
 
-        // console.log("[new_results]", new_results);
         first_dataSource_dashboard = new_results;
         setDataSourceDashboard(new_results);
-        let priceRangeOptionsArray: any = [
-            { value: "<4", label: "<4", title: "股价区间" },
-            { value: "4-8", label: "4-8", title: "股价区间" },
-            { value: "8-16", label: "8-16", title: "股价区间" },
-            { value: "16-32", label: "16-32", title: "股价区间" },
-            { value: "32-64", label: "32-64", title: "股价区间" },
-            { value: "64-128", label: "64-128", title: "股价区间" },
-            { value: "128-256", label: "128-256", title: "股价区间" },
-            { value: "256-512", label: "256-512", title: "股价区间" },
-            { value: ">512", label: ">512", title: "股价区间" },
-        ];
-        let _typeoptions: any = [
-            <Flex>
-                <Select
-                    mode="multiple"
-                    allowClear
-                    showSearch
-                    placeholder={"股价区间"}
-                    maxTagCount="responsive"
-                    filterOption={(input, option) =>
-                        ((option?.label ?? "") as string)
-                            .toLowerCase()
-                            .includes(input.toLowerCase())
-                    }
-                    style={{ width: 120 }}
-                    onChange={onSelectChange}
-                    defaultValue={changeOptions["股价区间"]||[]}
-                    onDeselect={(value: any) => {
-                        onDeselect(value,"股价区间");
-                    }}
-                    options={priceRangeOptionsArray}
-                    onClear={() => {
-                        onClear("股价区间");
-                    }}
-                />
-            </Flex>,
-        ];
-        for (var item in filters) {
-            if (item == "交易日期") {
-                continue;
-            }
-            let _item1 = filters[item];
-            let optionsArray: any = []; //{ "value": '', "label": '清除',"title": item}
-            for (var item2 in _item1) {
-                optionsArray.push({ value: item2, label: item2, title: item });
-            }
-            console.log("[filters][optionsArray]", optionsArray);
-            (function (item) {
-                _typeoptions.push(
-                    <Flex>
-                        <Select
-                            mode="multiple"
-                            allowClear
-                            showSearch
-                            placeholder={item}
-                            maxTagCount="responsive"
-                            filterOption={(input, option) =>
-                                ((option?.label ?? "") as string)
-                                    .toLowerCase()
-                                    .includes(input.toLowerCase())
-                            }
-                            style={{ width: 120 }}
-                            onChange={onSelectChange}
-                            onClear={() => {
-                                onClear(item);
-                            }}
-                            options={optionsArray}
-                            onDeselect={(value: any) => {
-                                onDeselect(value,item);
-                            }}
-                            defaultValue={changeOptions[item]||[]}
-                        />
-                    </Flex>
-                );
-            })(item);
-        }
+       
 
-        setTypeoptions(_typeoptions);
-        // let _series: any[] = [];
-        // let _xAxis: any = [];
-        // let _name = "";
-        // results.map((item: any, index: number) => {
-        //     item["交易日期"] = dayjs(new Date(item["交易日期"])).format(
-        //         "YYYY-MM-DD"
-        //     );
+        // // console.log("[new_results]", new_results);
+        // first_dataSource_dashboard = new_results;
+        // setDataSourceDashboard(new_results);
+        // let priceRangeOptionsArray: any = [
+        //     { value: "<4", label: "<4", title: "股价区间" },
+        //     { value: "4-8", label: "4-8", title: "股价区间" },
+        //     { value: "8-16", label: "8-16", title: "股价区间" },
+        //     { value: "16-32", label: "16-32", title: "股价区间" },
+        //     { value: "32-64", label: "32-64", title: "股价区间" },
+        //     { value: "64-128", label: "64-128", title: "股价区间" },
+        //     { value: "128-256", label: "128-256", title: "股价区间" },
+        //     { value: "256-512", label: "256-512", title: "股价区间" },
+        //     { value: ">512", label: ">512", title: "股价区间" },
+        // ];
+        // let _typeoptions: any = [
+        //     <Flex>
+        //         <Select
+        //             mode="multiple"
+        //             allowClear
+        //             showSearch
+        //             placeholder={"股价区间"}
+        //             maxTagCount="responsive"
+        //             filterOption={(input, option) =>
+        //                 ((option?.label ?? "") as string)
+        //                     .toLowerCase()
+        //                     .includes(input.toLowerCase())
+        //             }
+        //             style={{ width: 120 }}
+        //             onChange={onSelectChange}
+        //             defaultValue={changeOptions["股价区间"]||[]}
+        //             onDeselect={(value: any) => {
+        //                 onDeselect(value,"股价区间");
+        //             }}
+        //             options={priceRangeOptionsArray}
+        //             onClear={() => {
+        //                 onClear("股价区间");
+        //             }}
+        //         />
+        //     </Flex>,
+        // ];
+        // for (var item in filters) {
+        //     if (item == "交易日期") {
+        //         continue;
+        //     }
+        //     let _item1 = filters[item];
+        //     let optionsArray: any = []; //{ "value": '', "label": '清除',"title": item}
+        //     for (var item2 in _item1) {
+        //         optionsArray.push({ value: item2, label: item2, title: item });
+        //     }
+        //     console.log("[filters][optionsArray]", optionsArray);
+        //     (function (item) {
+        //         _typeoptions.push(
+        //             <Flex>
+        //                 <Select
+        //                     mode="multiple"
+        //                     allowClear
+        //                     showSearch
+        //                     placeholder={item}
+        //                     maxTagCount="responsive"
+        //                     filterOption={(input, option) =>
+        //                         ((option?.label ?? "") as string)
+        //                             .toLowerCase()
+        //                             .includes(input.toLowerCase())
+        //                     }
+        //                     style={{ width: 120 }}
+        //                     onChange={onSelectChange}
+        //                     onClear={() => {
+        //                         onClear(item);
+        //                     }}
+        //                     options={optionsArray}
+        //                     onDeselect={(value: any) => {
+        //                         onDeselect(value,item);
+        //                     }}
+        //                     defaultValue={changeOptions[item]||[]}
+        //                 />
+        //             </Flex>
+        //         );
+        //     })(item);
+        // }
 
-        // });
-        // xAxis
+        // setTypeoptions(_typeoptions);
+        // // let _series: any[] = [];
+        // // let _xAxis: any = [];
+        // // let _name = "";
+        // // results.map((item: any, index: number) => {
+        // //     item["交易日期"] = dayjs(new Date(item["交易日期"])).format(
+        // //         "YYYY-MM-DD"
+        // //     );
+
+        // // });
+        // // xAxis
         handleLoadingChange(false);
     };
     const getVal = async (stockcode: any) => {
-        const data = await getStockDataByCode("tradesignal", {
+        const data = await getStockDataByCode("tradesignaletf", {
             stockcode: (stockcode || "").trim(),
             date: "",
         });

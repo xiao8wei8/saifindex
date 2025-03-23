@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import jsonwebtoken from "jsonwebtoken";
 import { encrypt } from "@/utils/auth";
 // import { cookies } from "next/headers";
-export const dynamic = 'force-dynamic'
+export const dynamic = "force-dynamic";
 // 获取股票基本信息
 const get_stock_basic_ash = () => {
     const sql = `
@@ -76,13 +76,17 @@ const get_countryname_cn = () => {
 };
 const get_catalogue_list = (params?: any) => {
     const table = params.table || "stockmarket.df_central_gov_debt_total";
-    const countrys = params.countrys || ['中国','美国'];
+    const countrys = params.countrys || ["中国", "美国"];
     console.log("[dates]", params.dates);
-    const years = params.dates||[2010,2023]; ;
+    const years = params.dates || [2010, 2023];
 
     const sql = `
 
- select * from ${table} where countryname_cn in (\'${countrys.join("\',\'")}\') and year>=${years[0]} and year<=${years[1]}  order by countryname_cn ,year
+ select * from ${table} where countryname_cn in (\'${countrys.join(
+        "','"
+    )}\') and year>=${years[0]} and year<=${
+        years[1]
+    }  order by countryname_cn ,year
  
   `;
     return sql;
@@ -111,14 +115,18 @@ function getLastMonthFirstDayAndCurrentMonthLastDay() {
 
     // 获取当前月的最后一天
     // 同样的方法，设置下个月的第一天，然后减去一天，就是当前月的最后一天
-    let nextMonthFirstDay:any = new Date(today.getFullYear(), currentMonth + 1, 1);
+    let nextMonthFirstDay: any = new Date(
+        today.getFullYear(),
+        currentMonth + 1,
+        1
+    );
     let currentMonthLastDay = new Date(nextMonthFirstDay - 1);
 
     // 返回结果
     return {
-        lastMonthFirstDay: lastMonthFirstDay.toISOString().split('T')[0], // 格式化为 YYYY-MM-DD
-        lastMonthLastDay: lastMonthLastDay.toISOString().split('T')[0],
-        currentMonthLastDay: currentMonthLastDay.toISOString().split('T')[0]
+        lastMonthFirstDay: lastMonthFirstDay.toISOString().split("T")[0], // 格式化为 YYYY-MM-DD
+        lastMonthLastDay: lastMonthLastDay.toISOString().split("T")[0],
+        currentMonthLastDay: currentMonthLastDay.toISOString().split("T")[0],
     };
 }
 
@@ -126,49 +134,52 @@ function getLastMonthFirstDayAndCurrentMonthLastDay() {
 // const currentDate = new Date();
 
 // 定义一个函数来减去月份
-function subtractMonths(date:any, months:any) {
-  const newDate = new Date(date);
-  newDate.setMonth(newDate.getMonth() - months);
-  return newDate;
+function subtractMonths(date: any, months: any) {
+    const newDate = new Date(date);
+    newDate.setMonth(newDate.getMonth() - months);
+    return newDate;
 }
-
-
 
 // 调用函数并打印结果
 
 const get_tradesignal_dashboard = (params?: any) => {
     // 获取当前日期
-const currentDate = new Date();
+    const currentDate = new Date();
 
     // 当前时间点
-    const currentFormattedDate = currentDate.toISOString().split('T')[0];
+    const currentFormattedDate = currentDate.toISOString().split("T")[0];
 
     // 两个月前的时间点
     const twoMonthsAgoDate = subtractMonths(currentDate, 2);
-    const twoMonthsAgoFormattedDate = twoMonthsAgoDate.toISOString().split('T')[0];
+    const twoMonthsAgoFormattedDate = twoMonthsAgoDate
+        .toISOString()
+        .split("T")[0];
 
     // 输出时间点
-    console.log(`时间跨度: ${currentFormattedDate}` +' - '+`${twoMonthsAgoFormattedDate}`);
+    console.log(
+        `时间跨度: ${currentFormattedDate}` +
+            " - " +
+            `${twoMonthsAgoFormattedDate}`
+    );
     // console.log(`两个月前: ${twoMonthsAgoFormattedDate}`);
 
     // let result = getLastMonthFirstDayAndCurrentMonthLastDay();
     // console.log("上个月第一天:", result.lastMonthFirstDay);
     // console.log("上个月最后一天:", result.lastMonthLastDay);
     // console.log("当前月最后一天:", result.currentMonthLastDay);
-    let code = params?.stockcode || null//"601636";
-    let date = params?.date || null
+    let code = params?.stockcode || null; //"601636";
+    let date = params?.date || null;
     //   dbf.close as '当日收盘价',
 
-
-    let sql0=date?"'"+date+"'":`(select dbf.tradedate from stockmarket.ts_daily_befadjust dbf inner join stockmarket.stock_basic_ash sba on dbf.symbol = sba.symbol
+    let sql0 = date
+        ? "'" + date + "'"
+        : `(select dbf.tradedate from stockmarket.ts_daily_befadjust dbf inner join stockmarket.stock_basic_ash sba on dbf.symbol = sba.symbol
     inner join (select akts.tradedate, akts.symbol, akts.trade_act_name from stockmarketstatistics.ads_kdj_tradesignal_summary akts
                 where   akts.tradedate >= '${twoMonthsAgoFormattedDate}' and akts.tradedate <= '${currentFormattedDate}'
                     and tradesignal_power = 2) ads_trd on ads_trd.symbol = dbf.symbol and ads_trd.tradedate = dbf.tradedate
     where  dbf.tradedate >='${twoMonthsAgoFormattedDate}' and dbf.tradedate <= '${currentFormattedDate}' and dbf.symbol='000001'  order by dbf.symbol,  dbf.tradedate desc limit 1
  )
-    `
-
-
+    `;
 
     const sql1 = `
         
@@ -193,21 +204,21 @@ const currentDate = new Date();
                     and tradesignal_power = 2) ads_trd on ads_trd.symbol = dbf.symbol and ads_trd.tradedate = dbf.tradedate
     where  dbf.tradedate = 
        ${sql0}
-    `
+    `;
 
-    const sql2 =`and dbf.symbol = '${code}'`
+    const sql2 = `and dbf.symbol = '${code}'`;
 
     const sql3 = `and dbf.isst = 'N'
      order by 2 desc,1
     `;
 
-    let sql = ''
-    sql = sql1 +" "+( code?sql2:"") +" "+ sql3;
+    let sql = "";
+    sql = sql1 + " " + (code ? sql2 : "") + " " + sql3;
 
-// and dbf.close >= 10 and dbf.close <= 20
-//         dbf.total_mv as "总市值 （亿）", 
-// dbf.circ_mv as "流通市值（亿）", 
-//         round(dbf.total_mv - dbf.circ_mv,2) as "非流通市值（亿）"
+    // and dbf.close >= 10 and dbf.close <= 20
+    //         dbf.total_mv as "总市值 （亿）",
+    // dbf.circ_mv as "流通市值（亿）",
+    //         round(dbf.total_mv - dbf.circ_mv,2) as "非流通市值（亿）"
     const sqll = `
    select 
    akts.tradedate    as "交易日期", 
@@ -231,42 +242,48 @@ const currentDate = new Date();
    and akts.tradedate >= '${twoMonthsAgoFormattedDate}' and akts.tradedate <= '${currentFormattedDate}'
    and tradesignal_power = 2   order by akts.tradedate desc
  `;
-   return sql;
-
-}
+    return sql;
+};
 
 const get_tradesignal_kdj = (params?: any) => {
     // 获取当前日期
     const currentDate = new Date();
 
     // 当前时间点
-    const currentFormattedDate = currentDate.toISOString().split('T')[0];
+    const currentFormattedDate = currentDate.toISOString().split("T")[0];
 
     // 两个月前的时间点
     const twoMonthsAgoDate = subtractMonths(currentDate, 2);
-    const twoMonthsAgoFormattedDate = twoMonthsAgoDate.toISOString().split('T')[0];
+    const twoMonthsAgoFormattedDate = twoMonthsAgoDate
+        .toISOString()
+        .split("T")[0];
 
     // 输出时间点
-    console.log(`时间跨度: ${currentFormattedDate}` +' - '+`${twoMonthsAgoFormattedDate}`);
+    console.log(
+        `时间跨度: ${currentFormattedDate}` +
+            " - " +
+            `${twoMonthsAgoFormattedDate}`
+    );
     // console.log(`两个月前: ${twoMonthsAgoFormattedDate}`);
 
     // let result = getLastMonthFirstDayAndCurrentMonthLastDay();
     // console.log("上个月第一天:", result.lastMonthFirstDay);
     // console.log("上个月最后一天:", result.lastMonthLastDay);
     // console.log("当前月最后一天:", result.currentMonthLastDay);
-    let code = params?.stockcode || null//"601636";
-    let date = params?.date || null
+    let code = params?.stockcode || null; //"601636";
+    let date = params?.date || null;
     //   dbf.close as '当日收盘价',
 
-
-    let sql0=date?"'"+date+"'":`(select dbf.tradedate from stockmarket.ts_daily_befadjust dbf inner join stockmarket.stock_basic_ash sba on dbf.symbol = sba.symbol
+    let sql0 = date
+        ? "'" + date + "'"
+        : `(select dbf.tradedate from stockmarket.ts_daily_befadjust dbf inner join stockmarket.stock_basic_ash sba on dbf.symbol = sba.symbol
     inner join (select akts.tradedate, akts.symbol, akts.trade_act_name from stockmarketstatistics.ads_kdj_tradesignal_summary akts
                 where   akts.tradedate >= '${twoMonthsAgoFormattedDate}' and akts.tradedate <= '${currentFormattedDate}'
                     and tradesignal_power = 2) ads_trd on ads_trd.symbol = dbf.symbol and ads_trd.tradedate = dbf.tradedate
     where  dbf.tradedate >='${twoMonthsAgoFormattedDate}' and dbf.tradedate <= '${currentFormattedDate}' and dbf.symbol='000001'  order by dbf.symbol,  dbf.tradedate desc limit 1
  )
-    `
-const sql1 = `
+    `;
+    const sql1 = `
 
 select kdj.symbol    as "股票代码",
        kdj.tradedate   as "交易日期", 
@@ -307,8 +324,7 @@ select kdj.symbol    as "股票代码",
     GROUP by symbol, tradedate
   ) boll on kdj.symbol = boll.symbol and kdj.tradedate = boll.tradedate
 order by kdj.symbol
-`
-
+`;
 
     const sql22 = `
         
@@ -333,21 +349,21 @@ order by kdj.symbol
                     and tradesignal_power = 2) ads_trd on ads_trd.symbol = dbf.symbol and ads_trd.tradedate = dbf.tradedate
     where  dbf.tradedate = 
        ${sql0}
-    `
+    `;
 
-    const sql2 =`and dbf.symbol = '${code}'`
+    const sql2 = `and dbf.symbol = '${code}'`;
 
     const sql3 = `and dbf.isst = 'N'
      order by 2 desc,1
     `;
 
-    let sql = ''
-    sql = sql1// +" "+( code?sql2:"") +" "+ sql3;
+    let sql = "";
+    sql = sql1; // +" "+( code?sql2:"") +" "+ sql3;
 
-// and dbf.close >= 10 and dbf.close <= 20
-//         dbf.total_mv as "总市值 （亿）", 
-// dbf.circ_mv as "流通市值（亿）", 
-//         round(dbf.total_mv - dbf.circ_mv,2) as "非流通市值（亿）"
+    // and dbf.close >= 10 and dbf.close <= 20
+    //         dbf.total_mv as "总市值 （亿）",
+    // dbf.circ_mv as "流通市值（亿）",
+    //         round(dbf.total_mv - dbf.circ_mv,2) as "非流通市值（亿）"
     const sqll44 = `
    select 
    akts.tradedate    as "交易日期", 
@@ -371,20 +387,131 @@ order by kdj.symbol
    and akts.tradedate >= '${twoMonthsAgoFormattedDate}' and akts.tradedate <= '${currentFormattedDate}'
    and tradesignal_power = 2   order by akts.tradedate desc
  `;
-   return sql;
+    return sql;
+};
 
-}
-
-const get_tradesignal = (params?: any) => {
+const get_tradesignal_dashboard_etf = (params?: any) => {
     // 获取当前日期
-const currentDate = new Date();
+    const currentDate = new Date();
 
     // 当前时间点
-    const currentFormattedDate = currentDate.toISOString().split('T')[0];
+    const currentFormattedDate = currentDate.toISOString().split("T")[0];
 
     // 两个月前的时间点
     const twoMonthsAgoDate = subtractMonths(currentDate, 2);
-    const twoMonthsAgoFormattedDate = twoMonthsAgoDate.toISOString().split('T')[0];
+    const twoMonthsAgoFormattedDate = twoMonthsAgoDate
+        .toISOString()
+        .split("T")[0];
+
+    // 输出时间点
+    console.log(
+        `时间跨度: ${currentFormattedDate}` +
+            " - " +
+            `${twoMonthsAgoFormattedDate}`
+    );
+    // console.log(`两个月前: ${twoMonthsAgoFormattedDate}`);
+
+    // let result = getLastMonthFirstDayAndCurrentMonthLastDay();
+    // console.log("上个月第一天:", result.lastMonthFirstDay);
+    // console.log("上个月最后一天:", result.lastMonthLastDay);
+    // console.log("当前月最后一天:", result.currentMonthLastDay);
+    let code = params?.stockcode || null; //"601636";
+    let date = params?.date || null;
+    //   dbf.close as '当日收盘价',
+
+    let sql0 = date
+        ? "'" + date + "'"
+        : `(select dbf.tradedate from stockmarket.ts_daily_befadjust dbf inner join stockmarket.stock_basic_ash sba on dbf.symbol = sba.symbol
+    inner join (select akts.tradedate, akts.symbol, akts.trade_act_name from stockmarketstatistics.ads_kdj_tradesignal_summary akts
+                where   akts.tradedate >= '${twoMonthsAgoFormattedDate}' and akts.tradedate <= '${currentFormattedDate}'
+                    and tradesignal_power = 2) ads_trd on ads_trd.symbol = dbf.symbol and ads_trd.tradedate = dbf.tradedate
+    where  dbf.tradedate >='${twoMonthsAgoFormattedDate}' and dbf.tradedate <= '${currentFormattedDate}' and dbf.symbol='000001'  order by dbf.symbol,  dbf.tradedate desc limit 1
+ )
+    `;
+
+    const sql1 = `
+        
+    select
+tradedate as '交易日期', fundsymbol as '股票代码' , fundname_cn as '股票名称(中文)',  open as '当日开盘价', high as '当日最高价', low as '当日最低价', close as '当日收盘价', pre_close  as '前一日收盘价', price_change as '当日涨跌幅', volumn as '当日成交量', amount  as '当日成交额',  fundmarket  as '所属交易所'
+
+from etfmarket.fund_daily  dbf where tradedate=  ${sql0}`;
+
+    const sql2 = `and dbf.fundsymbol = '${code}'`;
+
+    const sql3 = `
+     order by 2 desc,1
+    `; //and dbf.isst = 'N'
+
+    let sql = "";
+    sql = sql1 + " " + (code ? sql2 : "") + " " + sql3;
+
+    return sql;
+};
+const get_tradesignal_dashboard_us = (params?: any) => {
+    // 获取当前日期
+    const currentDate = new Date();
+
+    // 当前时间点
+    const currentFormattedDate = currentDate.toISOString().split("T")[0];
+
+    // 两个月前的时间点
+    const twoMonthsAgoDate = subtractMonths(currentDate, 2);
+    const twoMonthsAgoFormattedDate = twoMonthsAgoDate
+        .toISOString()
+        .split("T")[0];
+
+    // 输出时间点
+    console.log(
+        `时间跨度: ${currentFormattedDate}` +
+            " - " +
+            `${twoMonthsAgoFormattedDate}`
+    );
+    // console.log(`两个月前: ${twoMonthsAgoFormattedDate}`);
+
+    // let result = getLastMonthFirstDayAndCurrentMonthLastDay();
+    // console.log("上个月第一天:", result.lastMonthFirstDay);
+    // console.log("上个月最后一天:", result.lastMonthLastDay);
+    // console.log("当前月最后一天:", result.currentMonthLastDay);
+    let code = params?.stockcode || null; //"601636";
+    let date = params?.date || null;
+    //   dbf.close as '当日收盘价',
+
+    let sql0 = date
+        ? "'" + date + "'"
+        : `(select dbf.tradedate from stockmarket.ts_daily_befadjust dbf inner join stockmarket.stock_basic_ash sba on dbf.symbol = sba.symbol
+    inner join (select akts.tradedate, akts.symbol, akts.trade_act_name from stockmarketstatistics.ads_kdj_tradesignal_summary akts
+                where   akts.tradedate >= '${twoMonthsAgoFormattedDate}' and akts.tradedate <= '${currentFormattedDate}'
+                    and tradesignal_power = 2) ads_trd on ads_trd.symbol = dbf.symbol and ads_trd.tradedate = dbf.tradedate
+    where  dbf.tradedate >='${twoMonthsAgoFormattedDate}' and dbf.tradedate <= '${currentFormattedDate}' and dbf.symbol='000001'  order by dbf.symbol,  dbf.tradedate desc limit 1
+ )
+    `;
+
+    const sql1 = `select  symbol as '股票代码', date as '交易日期', open  as '当日开盘价', high as '当日最高价', low as '当日最低价', close as '当日收盘价', adjusted_close  as '前一日收盘价' , volume  as '当日成交量' 
+from us_stockmarket.us_daily   dbf where date=  ${sql0}`;
+
+    const sql2 = `and dbf.symbol = '${code}'`;
+
+    const sql3 = `
+     order by 2 desc,1
+    `; //and dbf.isst = 'N'
+
+    let sql = "";
+    sql = sql1 + " " + (code ? sql2 : "") + " " + sql3;
+
+    return sql;
+};
+const get_tradesignal = (params?: any) => {
+    // 获取当前日期
+    const currentDate = new Date();
+
+    // 当前时间点
+    const currentFormattedDate = currentDate.toISOString().split("T")[0];
+
+    // 两个月前的时间点
+    const twoMonthsAgoDate = subtractMonths(currentDate, 2);
+    const twoMonthsAgoFormattedDate = twoMonthsAgoDate
+        .toISOString()
+        .split("T")[0];
 
     // 输出时间点
     console.log(`当前时间: ${currentFormattedDate}`);
@@ -419,10 +546,80 @@ const currentDate = new Date();
    and akts.tradedate >= '${twoMonthsAgoFormattedDate}' and akts.tradedate <= '${currentFormattedDate}'
    and tradesignal_power = 2   order by akts.tradedate desc
  `;
-   return sql;
+    return sql;
+};
 
-}
+const get_tradesignaletf = (params?: any) => {
+    // 获取当前日期
+    const currentDate = new Date();
 
+    // 当前时间点
+    const currentFormattedDate = currentDate.toISOString().split("T")[0];
+
+    // 两个月前的时间点
+    const twoMonthsAgoDate = subtractMonths(currentDate, 2);
+    const twoMonthsAgoFormattedDate = twoMonthsAgoDate
+        .toISOString()
+        .split("T")[0];
+
+    // 输出时间点
+    console.log(`当前时间: ${currentFormattedDate}`);
+    console.log(`两个月前: ${twoMonthsAgoFormattedDate}`);
+
+    // let result = getLastMonthFirstDayAndCurrentMonthLastDay();
+    // console.log("上个月第一天:", result.lastMonthFirstDay);
+    // console.log("上个月最后一天:", result.lastMonthLastDay);
+    // console.log("当前月最后一天:", result.currentMonthLastDay);
+    let code = params?.stockcode || "601636";
+
+    const sql = `
+
+        select
+tradedate as '交易日期', fundsymbol as '股票代码' , fundname_cn as '股票名称(中文)',  open as '当日开盘价', high as '当日最高价', low as '当日最低价', close as '当日收盘价', pre_close  as '前一日收盘价', price_change as '当日涨跌幅', volumn as '当日成交量', amount  as '当日成交额',  fundmarket  as '所属交易所'
+
+from etfmarket.fund_daily  akts 
+
+ where akts.fundsymbol = '${code}'
+   and akts.tradedate >= '${twoMonthsAgoFormattedDate}' and akts.tradedate <= '${currentFormattedDate}'
+   order by akts.tradedate desc
+ `;
+    return sql;
+};
+
+const get_tradesignalus = (params?: any) => {
+    // 获取当前日期
+    const currentDate = new Date();
+
+    // 当前时间点
+    const currentFormattedDate = currentDate.toISOString().split("T")[0];
+
+    // 两个月前的时间点
+    const twoMonthsAgoDate = subtractMonths(currentDate, 2);
+    const twoMonthsAgoFormattedDate = twoMonthsAgoDate
+        .toISOString()
+        .split("T")[0];
+
+    // 输出时间点
+    console.log(`当前时间: ${currentFormattedDate}`);
+    console.log(`两个月前: ${twoMonthsAgoFormattedDate}`);
+
+    // let result = getLastMonthFirstDayAndCurrentMonthLastDay();
+    // console.log("上个月第一天:", result.lastMonthFirstDay);
+    // console.log("上个月最后一天:", result.lastMonthLastDay);
+    // console.log("当前月最后一天:", result.currentMonthLastDay);
+    let code = params?.stockcode || "601636";
+
+    const sql = `
+
+        select  symbol as '股票代码', date as '交易日期', open  as '当日开盘价', high as '当日最高价', low as '当日最低价', close as '当日收盘价', adjusted_close  as '前一日收盘价' , volume  as '当日成交量' 
+        from us_stockmarket.us_daily  akts
+
+ where akts.symbol = '${code}'
+   and akts.date >= '${twoMonthsAgoFormattedDate}' and akts.date <= '${currentFormattedDate}'
+   order by akts.date desc
+ `;
+    return sql;
+};
 
 import { query } from "@/libs/db";
 
@@ -456,30 +653,43 @@ export async function GET(request: NextRequest) {
             sql = get_catalogue();
             break;
         case "countryname":
-            sql=get_countryname_cn();
+            sql = get_countryname_cn();
             break;
         case "cataloguelist":
-            sql=get_catalogue_list(params);
+            sql = get_catalogue_list(params);
             break;
 
-        case 'tradesignal':
-            sql=get_tradesignal(params);
+        case "tradesignal":
+            sql = get_tradesignal(params);
             break;
-        case 'tradesignaldashboard':
-            sql=get_tradesignal_dashboard(params);
-            break;
-        case 'tradesignalkdj':
-            sql=get_tradesignal_kdj(params);
+        case "tradesignaletf":
+            sql = get_tradesignaletf(params);
             break;
 
-            
+        case "tradesignaldashboardetf":
+            sql = get_tradesignal_dashboard_etf(params);
+            break;
+        case "tradesignalus":
+            sql = get_tradesignalus(params);
+            break;
+
+        case "tradesignaldashboardus":
+            sql = get_tradesignal_dashboard_us(params);
+            break;
+        case "tradesignaldashboard":
+            sql = get_tradesignal_dashboard(params);
+            break;
+        case "tradesignalkdj":
+            sql = get_tradesignal_kdj(params);
+            break;
+
         default:
             break;
     }
 
     try {
         console.log("[SQL]:", sql);
-       
+
         const results: any = await query({
             query: sql,
         });

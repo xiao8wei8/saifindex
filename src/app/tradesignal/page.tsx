@@ -907,6 +907,17 @@ const APP = () => {
     console.log("[columns]", columns);
     let filters: any = {};
     let isFirst = true;
+    let priceRangeOptionsArray: any = [
+        { value: "<4", label: "<4", title: "股价区间" },
+        { value: "4-8", label: "4-8", title: "股价区间" },
+        { value: "8-16", label: "8-16", title: "股价区间" },
+        { value: "16-32", label: "16-32", title: "股价区间" },
+        { value: "32-64", label: "32-64", title: "股价区间" },
+        { value: "64-128", label: "64-128", title: "股价区间" },
+        { value: "128-256", label: "128-256", title: "股价区间" },
+        { value: "256-512", label: "256-512", title: "股价区间" },
+        { value: ">512", label: ">512", title: "股价区间" },
+    ];
     const getValDashboard = async (stockcode: any,date?:any) => {
         handleLoadingChange(true);
         const data = await getDataByCode("tradesignaldashboard", {
@@ -1028,19 +1039,96 @@ const APP = () => {
         // console.log("[new_results]", new_results);
         first_dataSource_dashboard = new_results;
         setDataSourceDashboard(new_results);
-        let priceRangeOptionsArray: any = [
-            { value: "<4", label: "<4", title: "股价区间" },
-            { value: "4-8", label: "4-8", title: "股价区间" },
-            { value: "8-16", label: "8-16", title: "股价区间" },
-            { value: "16-32", label: "16-32", title: "股价区间" },
-            { value: "32-64", label: "32-64", title: "股价区间" },
-            { value: "64-128", label: "64-128", title: "股价区间" },
-            { value: "128-256", label: "128-256", title: "股价区间" },
-            { value: "256-512", label: "256-512", title: "股价区间" },
-            { value: ">512", label: ">512", title: "股价区间" },
-        ];
+       
         
 
+        // let _typeoptions: any = [
+        //     <Flex>
+        //         <Select
+        //             mode="multiple"
+        //             allowClear
+        //             showSearch
+        //             placeholder={"股价区间"}
+        //             maxTagCount="responsive"
+        //             filterOption={(input, option) =>
+        //                 ((option?.label ?? "") as string)
+        //                     .toLowerCase()
+        //                     .includes(input.toLowerCase())
+        //             }
+        //             style={{ width: 120 }}
+        //             onChange={onSelectChange}
+        //             defaultValue={changeOptions["股价区间"]||[]}
+        //             onDeselect={(value: any) => {
+        //                 onDeselect(value,"股价区间");
+        //             }}
+        //             options={priceRangeOptionsArray}
+        //             onClear={() => {
+        //                 onClear("股价区间");
+        //             }}
+        //         />
+        //     </Flex>,
+        // ];
+        // for (var item in filters) {
+        //     if (item == "交易日期"||item == "当日收盘价") {
+        //         continue;
+        //     }
+        //     // if( !checkedList.includes(item)){
+        //     //     continue; 
+        //     // }
+        //     let _item1 = filters[item];
+        //     let optionsArray: any = []; //{ "value": '', "label": '清除',"title": item}
+        //     for (var item2 in _item1) {
+        //         optionsArray.push({ value: item2, label: item2, title: item });
+        //     }
+        //     // console.log("[filters][optionsArray]", optionsArray);
+        //     (function (item) {
+        //         _typeoptions.push(
+        //             <Flex>
+        //                 <Select
+        //                     mode="multiple"
+        //                     allowClear
+        //                     showSearch
+        //                     placeholder={item}
+        //                     maxTagCount="responsive"
+        //                     filterOption={(input, option) =>
+        //                         ((option?.label ?? "") as string)
+        //                             .toLowerCase()
+        //                             .includes(input.toLowerCase())
+        //                     }
+        //                     style={{ width: 120 }}
+        //                     onChange={onSelectChange}
+        //                     onClear={() => {
+        //                         onClear(item);
+        //                     }}
+        //                     options={optionsArray}
+        //                     onDeselect={(value: any) => {
+        //                         onDeselect(value,item);
+        //                     }}
+        //                     defaultValue={changeOptions[item]||[]}
+        //                 />
+        //             </Flex>
+        //         );
+        //     })(item);
+        // }
+        const _typeoptions = adjustType()
+        setTypeoptions(_typeoptions);
+
+        setColumnsDashboard(newColumns);
+        // let _series: any[] = [];
+        // let _xAxis: any = [];
+        // let _name = "";
+        // results.map((item: any, index: number) => {
+        //     item["交易日期"] = dayjs(new Date(item["交易日期"])).format(
+        //         "YYYY-MM-DD"
+        //     );
+
+        // });
+        // xAxis
+        handleLoadingChange(false);
+
+    };
+    const adjustType = () => {
+        console.log("[adjustType]");
         let _typeoptions: any = [
             <Flex>
                 <Select
@@ -1071,9 +1159,10 @@ const APP = () => {
             if (item == "交易日期"||item == "当日收盘价") {
                 continue;
             }
-            // if( !checkedList.includes(item)){
-            //     continue; 
-            // }
+            if( !checkedList.includes(item)){
+                continue; 
+            }
+            
             let _item1 = filters[item];
             let optionsArray: any = []; //{ "value": '', "label": '清除',"title": item}
             for (var item2 in _item1) {
@@ -1109,23 +1198,8 @@ const APP = () => {
                 );
             })(item);
         }
-
-        setTypeoptions(_typeoptions);
-
-        setColumnsDashboard(newColumns);
-        // let _series: any[] = [];
-        // let _xAxis: any = [];
-        // let _name = "";
-        // results.map((item: any, index: number) => {
-        //     item["交易日期"] = dayjs(new Date(item["交易日期"])).format(
-        //         "YYYY-MM-DD"
-        //     );
-
-        // });
-        // xAxis
-        handleLoadingChange(false);
-
-    };
+        return _typeoptions;
+    }
     const getVal = async (stockcode: any) => {
         const data = await getDataByCode("tradesignal", {
             stockcode: (stockcode || "").trim(),
@@ -1475,7 +1549,9 @@ const APP = () => {
             ...item,
             hidden: !checkedList.includes(item.key),
           }));
-       
+        // const _typeoptions = adjustType()
+        // setTypeoptions(_typeoptions);
+  
         setColumnsDashboard(newColumns);
     },[checkedList])
     return (
