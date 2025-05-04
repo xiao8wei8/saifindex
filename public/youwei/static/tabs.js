@@ -753,7 +753,7 @@ var Tool = {
         //     that.makeHtml(resp.data);
         //     that.heartBeat();
         // })
-        $.get("/api/youwei?type=all", function(resp){
+        $.get("/rest2/youwei?type=all", function(resp){
           console.log("[api/youwei?type=all]", resp.data);
             that.makeHtml(resp.data.data);
             that.heartBeat();

@@ -1,102 +1,10 @@
 {
-    "ae554492b088c52f03cadb679119fc08": {
+    "854045a1745a8a148082a8dc13ce9eaf": {
         "tableResponse": {
             "success": true,
             "errorCode": null,
             "errorMessage": null,
             "data": [],
-            "traceId": null,
-            "errorDetail": null,
-            "solutionLink": null
-        },
-        "sqlResponse": {
-            "success": true,
-            "errorCode": null,
-            "errorMessage": null,
-            "errorDetail": null,
-            "solutionLink": null,
-            "data": {
-                "token": "/4VAgMRl+X6PfCvDeeCjzZromxGz/nOW+HVDL4sPz1Q=",
-                "chatId": 74709,
-                "questionId": 252514,
-                "answerId": null,
-                "dashboardSchema": null,
-                "excelSchemas": null,
-                "errorCode": null,
-                "errorMessage": null,
-                "executeResults": null
-            },
-            "traceId": null
-        },
-        "chatResponse": "id:202503240609120e25952ad59144d4\ndata:{\"role\":\"assistant\",\"content\":\"\"}\nretry:3000\n\nid:202503240609120e25952ad59144d4\ndata:{\"role\":\"assistant\",\"content\":\"\"}\nretry:3000\n\nid:202503240609120e25952ad59144d4\ndata:{\"role\":\"assistant\",\"content\":\"\\nSELECT\"}\nretry:3000\n\nid:202503240609120e25952ad59144d4\ndata:{\"role\":\"assistant\",\"content\":\" `\"}\nretry:3000\n\nid:202503240609120e25952ad59144d4\ndata:{\"role\":\"assistant\",\"content\":\"symbol\"}\nretry:3000\n\nid:202503240609120e25952ad59144d4\ndata:{\"role\":\"assistant\",\"content\":\"`\"}\nretry:3000\n\nid:202503240609120e25952ad59144d4\ndata:{\"role\":\"assistant\",\"content\":\" FROM\"}\nretry:3000\n\nid:202503240609120e25952ad59144d4\ndata:{\"role\":\"assistant\",\"content\":\" `\"}\nretry:3000\n\nid:202503240609120e25952ad59144d4\ndata:{\"role\":\"assistant\",\"content\":\"stock\"}\nretry:3000\n\nid:202503240609120e25952ad59144d4\ndata:{\"role\":\"assistant\",\"content\":\"market\"}\nretry:3000\n\nid:202503240609120e25952ad59144d4\ndata:{\"role\":\"assistant\",\"content\":\"`.`\"}\nretry:3000\n\nid:202503240609120e25952ad59144d4\ndata:{\"role\":\"assistant\",\"content\":\"ts\"}\nretry:3000\n\nid:202503240609120e25952ad59144d4\ndata:{\"role\":\"assistant\",\"content\":\"_stock\"}\nretry:3000\n\nid:202503240609120e25952ad59144d4\ndata:{\"role\":\"assistant\",\"content\":\"_company\"}\nretry:3000\n\nid:202503240609120e25952ad59144d4\ndata:{\"role\":\"assistant\",\"content\":\"`\"}\nretry:3000\n\nid:202503240609120e25952ad59144d4\ndata:{\"role\":\"assistant\",\"content\":\" WHERE\"}\nretry:3000\n\nid:202503240609120e25952ad59144d4\ndata:{\"role\":\"assistant\",\"content\":\" `\"}\nretry:3000\n\nid:202503240609120e25952ad59144d4\ndata:{\"role\":\"assistant\",\"content\":\"int\"}\nretry:3000\n\nid:202503240609120e25952ad59144d4\ndata:{\"role\":\"assistant\",\"content\":\"roduction\"}\nretry:3000\n\nid:202503240609120e25952ad59144d4\ndata:{\"role\":\"assistant\",\"content\":\"`\"}\nretry:3000\n\nid:202503240609120e25952ad59144d4\ndata:{\"role\":\"assistant\",\"content\":\" LIKE\"}\nretry:3000\n\nid:202503240609120e25952ad59144d4\ndata:{\"role\":\"assistant\",\"content\":\" '%\"}\nretry:3000\n\nid:202503240609120e25952ad59144d4\ndata:{\"role\":\"assistant\",\"content\":\"平安\"}\nretry:3000\n\nid:202503240609120e25952ad59144d4\ndata:{\"role\":\"assistant\",\"content\":\"银行\"}\nretry:3000\n\nid:202503240609120e25952ad59144d4\ndata:{\"role\":\"assistant\",\"content\":\"%\"}\nretry:3000\n\nid:202503240609120e25952ad59144d4\ndata:{\"role\":\"assistant\",\"content\":\"';\\n\"}\nretry:3000\n\nid:202503240609120e25952ad59144d4\ndata:{\"role\":\"assistant\",\"content\":\"\"}\nretry:3000\n\nid:[DONE]\ndata:[DONE]\nretry:3000\n\n",
-        "executeResponse": {
-            "success": true,
-            "errorCode": null,
-            "errorMessage": null,
-            "data": [
-                {
-                    "sql": "SELECT `symbol` FROM `stockmarket`.`ts_stock_company` WHERE `introduction` LIKE '%平安银行%'\n LIMIT 200",
-                    "originalSql": "SELECT `symbol` FROM `stockmarket`.`ts_stock_company` WHERE `introduction` LIKE '%平安银行%'",
-                    "description": "Execution successful",
-                    "message": null,
-                    "success": true,
-                    "updateCount": null,
-                    "headerList": [
-                        {
-                            "dataType": "CHAT2DB_ROW_NUMBER",
-                            "name": "Row Number",
-                            "primaryKey": null,
-                            "comment": null,
-                            "defaultValue": null,
-                            "autoIncrement": null,
-                            "nullable": null,
-                            "columnSize": null,
-                            "decimalDigits": null,
-                            "columnType": null
-                        },
-                        {
-                            "dataType": "STRING",
-                            "name": "symbol",
-                            "primaryKey": null,
-                            "comment": null,
-                            "defaultValue": null,
-                            "autoIncrement": 0,
-                            "nullable": null,
-                            "columnSize": null,
-                            "decimalDigits": null,
-                            "columnType": "CHAR"
-                        }
-                    ],
-                    "dataList": [
-                        [
-                            "1",
-                            "000001"
-                        ]
-                    ],
-                    "sqlType": "SELECT",
-                    "hasNextPage": false,
-                    "pageNo": 1,
-                    "pageSize": 200,
-                    "fuzzyTotal": "1",
-                    "duration": 144,
-                    "canEdit": true,
-                    "tableName": "`stockmarket`.`ts_stock_company`",
-                    "extra": null,
-                    "dataAccess": false,
-                    "scriptAccess": false,
-                    "noPermissionDetail": null,
-                    "refreshTargets": [
-                        {
-                            "dataSourceId": 46845,
-                            "databaseName": "",
-                            "schemaName": "",
-                            "tableName": null
-                        }
-                    ],
-                    "comment": null,
-                    "resultSetId": 1
-                }
-            ],
             "traceId": null,
             "errorDetail": null,
             "solutionLink": null
