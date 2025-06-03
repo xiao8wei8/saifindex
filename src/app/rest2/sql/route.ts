@@ -623,6 +623,299 @@ const get_tradesignalus = (params?: any) => {
 
 import { query } from "@/libs/db";
 
+const get_balancesheet = (params?: any) => {
+    let code = params?.stockcode || "000001";
+
+    const sql = `
+
+       SELECT 
+    -- tb.symbol           as "股票代码", 
+    --    tb.stockname        as "股票名称", 
+    --    tb.ann_date         as "公告日期",
+    --    tb.f_ann_date       as "实际公告日期",
+       tb.end_date        as "报告期",
+    --    tb.report_type      as "报表名称",
+       tb.comp_type      as "公司类型名称",
+       tb.report_end_type    as "报告结束类型名称",
+       tb.total_share     as "期末总股本",
+       tb.cap_rese       as "资本公积金",
+       tb.undistr_porfit     as "未分配利润",
+       tb.surplus_rese     as "盈余公积金",
+       tb.special_rese     as "专项储备",
+       tb.money_cap      as "货币资金",
+       tb.trad_asset     as "交易性金融资产",
+       tb.notes_receiv     as "应收票据",
+       tb.accounts_receiv    as "应收账款",
+       tb.oth_receiv     as "其他应收款",
+       tb.prepayment     as "预付款项",
+       tb.div_receiv     as "应收股利",
+       tb.int_receiv     as "应收利息",
+       tb.inventories     as "存货",
+       tb.amor_exp      as "待摊费用",
+       tb.nca_within_1y     as "一年内到期的非流动资产",
+       tb.sett_rsrv      as "结算备付金",
+       tb.loanto_oth_bank_fi   as "拆出资金",
+       tb.premium_receiv    as "应收保费",
+       tb.reinsur_receiv    as "应收分保账款",
+       tb.reinsur_res_receiv   as "应收分保合同准备金",
+       tb.pur_resale_fa     as "买入返售金融资产",
+       tb.oth_cur_assets    as "其他流动资产",
+       tb.total_cur_assets    as "流动资产合计",
+       tb.fa_avail_for_sale    as "可供出售金融资产",
+       tb.htm_invest     as "持有至到期投资产",
+       tb.lt_eqt_invest     as "长期股权投资",
+       tb.invest_real_estate   as "投资性房地产",
+       tb.time_deposits     as "定期存款",
+       tb.oth_assets     as "其他资产",
+       tb.lt_rec      as "长期应收款",
+       tb.fix_assets     as "固定资产",
+       tb.cip       as "在建工程",
+       tb.const_materials     as "工程物资",
+       tb.fixed_assets_disp    as "固定资产清理",
+       tb.produc_bio_assets    as "生产性生物资产",
+       tb.oil_and_gas_assets   as "油气资产",
+       tb.intan_assets     as "无形资产",
+       tb.r_and_d      as "研发支出",
+       tb.goodwill      as "商誉",
+       tb.lt_amor_exp     as "长期待摊费用",
+       tb.defer_tax_assets    as "递延所得税资产",
+       tb.decr_in_disbur    as "发放贷款及垫款",
+       tb.oth_nca      as "其他非流动资产",
+       tb.total_nca      as "非流动资产合计",
+       tb.cash_reser_cb     as "现金及存放中央银行款项",
+       tb.depos_in_oth_bfi    as "存放同业和其它金融机构款项",
+       tb.prec_metals     as "贵金属",
+       tb.deriv_assets     as "衍生金融资产",
+       tb.rr_reins_une_prem    as "应收分保未到期责任准备金",
+       tb.rr_reins_outstd_cla   as "应收分保未决赔款准备金",
+       tb.rr_reins_lins_liab   as "应收分保寿险责任准备金",
+       tb.rr_reins_lthins_liab   as "应收分保长期健康险责任准备金",
+       tb.refund_depos     as "存出保证金",
+       tb.ph_pledge_loans    as "保户质押贷款",
+       tb.refund_cap_depos    as "存出资本保证金",
+       tb.indep_acct_assets    as "独立账户资产",
+       tb.client_depos     as "其中:客户资金存款",
+       tb.client_prov     as "其中:客户备付金",
+       tb.transac_seat_fee    as "其中:交易席位费",
+       tb.invest_as_receiv    as "应收款项类投资",
+       tb.total_assets     as "资产总计",
+       tb.lt_borr      as "长期借款",
+       tb.st_borr      as "短期借款",
+       tb.cb_borr      as "向中央银行借款",
+       tb.depos_ib_deposits    as "吸收存款及同业存放",
+       tb.loan_oth_bank     as "拆入资金",
+       tb.trading_fl     as "交易性金融负债",
+       tb.notes_payable     as "应付票据",
+       tb.acct_payable     as "应付账款",
+       tb.adv_receipts     as "预收款项",
+       tb.sold_for_repur_fa    as "卖出回购金融资产款",
+       tb.comm_payable     as "应付手续费及佣金",
+       tb.payroll_payable    as "应付职工薪酬",
+       tb.taxes_payable     as "应交税费",
+       tb.int_payable     as "应付利息",
+       tb.div_payable     as "应付股利",
+       tb.oth_payable     as "其他应付款",
+       tb.acc_exp      as "预提费用",
+       tb.deferred_inc     as "递延收益",
+       tb.st_bonds_payable    as "应付短期债券",
+       tb.payable_to_reinsurer   as "应付分保账款",
+       tb.rsrv_insur_cont    as "保险合同准备金",
+       tb.acting_trading_sec   as "代理买卖证券款",
+       tb.acting_uw_sec     as "代理承销证券款",
+       tb.non_cur_liab_due_1y   as "一年内到期的非流动负债",
+       tb.oth_cur_liab     as "其他流动负债",
+       tb.total_cur_liab    as "流动负债合计",
+       tb.bond_payable     as "应付债券",
+       tb.lt_payable     as "长期应付款",
+       tb.specific_payables    as "专项应付款",
+       tb.estimated_liab    as "预计负债",
+       tb.defer_tax_liab    as "递延所得税负债",
+       tb.defer_inc_non_cur_liab  as "递延收益-非流动负债",
+       tb.oth_ncl      as "其他非流动负债",
+       tb.total_ncl      as "非流动负债合计",
+       tb.depos_oth_bfi     as "同业和其它金融机构存放款项",
+       tb.deriv_liab     as "衍生金融负债",
+       tb.depos       as "吸收存款",
+       tb.agency_bus_liab    as "代理业务负债",
+       tb.oth_liab      as "其他负债",
+       tb.prem_receiv_adva    as "预收保费",
+       tb.depos_received    as "存入保证金",
+       tb.ph_invest      as "保户储金及投资款",
+       tb.reser_une_prem    as "未到期责任准备金",
+       tb.reser_outstd_claims   as "未决赔款准备金",
+       tb.reser_lins_liab    as "寿险责任准备金",
+       tb.reser_lthins_liab    as "长期健康险责任准备金",
+       tb.indept_acc_liab    as "独立账户负债",
+       tb.pledge_borr     as "其中:质押借款",
+       tb.indem_payable     as "应付赔付款",
+       tb.policy_div_payable   as "应付保单红利",
+       tb.total_liab     as "负债合计",
+       tb.treasury_share    as "减:库存股",
+       tb.ordin_risk_reser    as "一般风险准备",
+       tb.forex_differ     as "外币报表折算差额",
+       tb.invest_loss_unconf   as "未确认的投资损失",
+       tb.minority_int     as "少数股东权益",
+       tb.total_hldr_eqy_exc_min_int as "股东权益合计(不含少数股东权益)",
+       tb.total_hldr_eqy_inc_min_int as "股东权益合计(含少数股东权益)",
+       tb.total_liab_hldr_eqy   as "负债及股东权益总计",
+       tb.lt_payroll_payable   as "长期应付职工薪酬",
+       tb.oth_comp_income    as "其他综合收益",
+       tb.oth_eqt_tools     as "其他权益工具",
+       tb.oth_eqt_tools_p_shr   as "其他权益工具(优先股)",
+       tb.lending_funds     as "融出资金",
+       tb.acc_receivable    as "应收款项",
+       tb.st_fin_payable    as "应付短期融资款",
+       tb.payables      as "应付款项",
+       tb.hfs_assets     as "持有待售的资产",
+       tb.hfs_sales      as "持有待售的负债",
+       tb.cost_fin_assets    as "以摊余成本计量的金融资产",
+       tb.fair_value_fin_assets   as "以公允价值计量且其变动计入其他综合收益的金融资产",
+       tb.cip_total      as "在建工程(合计)(元)",
+       tb.oth_pay_total     as "其他应付款(合计)(元)",
+       tb.long_pay_total    as "长期应付款(合计)(元)",
+       tb.debt_invest     as "债权投资(元)",
+       tb.oth_debt_invest    as "其他债权投资(元)",
+       tb.oth_eq_invest     as "其他权益工具投资(元)",
+       tb.oth_illiq_fin_assets   as "其他非流动金融资产(元)",
+       tb.oth_eq_ppbond     as "其他权益工具:永续债(元)",
+       tb.receiv_financing    as "应收款项融资",
+       tb.use_right_assets    as "使用权资产",
+       tb.lease_liab     as "租赁负债",
+       tb.contract_assets    as "合同资产",
+       tb.contract_liab     as "合同负债",
+       tb.accounts_receiv_bill   as "应收票据及应收账款",
+       tb.accounts_pay     as "应付票据及应付账款",
+       tb.oth_rcv_total     as "其他应收款(合计)（元）",
+       tb.fix_assets_total    as "固定资产(合计)(元)"     
+  FROM stockmarket.ts_balancesheet tb
+ WHERE tb.symbol = '${code}'
+   and tb.report_end_type_no = 4
+   and tb.update_flag = (
+           SELECT MAX(tmp.update_flag) 
+           FROM stockmarket.ts_balancesheet tmp
+            WHERE tb.symbol = '${code}'
+            AND tb.report_end_type_no = 4
+           AND tmp.symbol = tb.symbol AND tmp.ann_date = tb.ann_date) order by tb.ann_date desc
+ `;
+    return sql;
+    
+}
+
+const ts_cashflow = (params?: any) => {
+    let code = params?.stockcode || "000001";
+
+    const sql = `
+    SELECT 
+     --     tc.symbol           as "股票代码", 
+    --    tc.stockname        as "股票名称", 
+    --    tc.ann_date         as "公告日期",
+    --    tc.f_ann_date       as "实际公告日期",
+       tc.end_date        as "报告期",
+    --    tc.report_type      as "报表名称",
+       tc.comp_type      as "公司类型名称",
+       tc.report_end_type    as "报告结束类型名称",
+       tc.net_profit     as "净利润",
+       tc.finan_exp      as "财务费用",
+       tc.c_fr_sale_sg     as "销售商品、提供劳务收到的现金",
+       tc.recp_tax_rends    as "收到的税费返还",
+       tc.n_depos_incr_fi    as "客户存款和同业存放款项净增加额",
+       tc.n_incr_loans_cb    as "向中央银行借款净增加额",
+       tc.n_inc_borr_oth_fi    as "向其他金融机构拆入资金净增加额",
+       tc.prem_fr_orig_contr   as "收到原保险合同保费取得的现金",
+       tc.n_incr_insured_dep   as "保户储金净增加额",
+       tc.n_reinsur_prem    as "收到再保业务现金净额",
+       tc.n_incr_disp_tfa    as "处置交易性金融资产净增加额",
+       tc.ifc_cash_incr     as "收取利息和手续费净增加额",
+       tc.n_incr_disp_faas    as "处置可供出售金融资产净增加额",
+       tc.n_incr_loans_oth_bank   as "拆入资金净增加额",
+       tc.n_cap_incr_repur    as "回购业务资金净增加额",
+       tc.c_fr_oth_operate_a   as "收到其他与经营活动有关的现金",
+       tc.c_inf_fr_operate_a   as "经营活动现金流入小计",
+       tc.c_paid_goods_s    as "购买商品、接受劳务支付的现金",
+       tc.c_paid_to_for_empl   as "支付给职工以及为职工支付的现金",
+       tc.c_paid_for_taxes    as "支付的各项税费",
+       tc.n_incr_clt_loan_adv   as "客户贷款及垫款净增加额",
+       tc.n_incr_dep_cbob    as "存放央行和同业款项净增加额",
+       tc.c_pay_claims_orig_inco  as "支付原保险合同赔付款项的现金", 
+       tc.pay_handling_chrg    as "支付手续费的现金",
+       tc.pay_comm_insur_plcy   as "支付保单红利的现金",
+       tc.oth_cash_pay_oper_act   as "支付其他与经营活动有关的现金",
+       tc.st_cash_out_act    as "经营活动现金流出小计",
+       tc.n_cashflow_act    as "经营活动产生的现金流量净额",
+       tc.oth_recp_ral_inv_act   as "收到其他与投资活动有关的现金",
+       tc.c_disp_withdrwl_invest  as "收回投资收到的现金",
+       tc.c_recp_return_invest   as "取得投资收益收到的现金",
+       tc.n_recp_disp_fiolta   as "处置固定资产、无形资产和其他长期资产收回的现金净额",
+       tc.n_recp_disp_sobu    as "处置子公司及其他营业单位收到的现金净额",
+       tc.stot_inflows_inv_act   as "投资活动现金流入小计",
+       tc.c_pay_acq_const_fiolta  as "购建固定资产、无形资产和其他长期资产支付的现金",
+       tc.c_paid_invest     as "投资支付的现金",
+       tc.n_disp_subs_oth_biz   as "取得子公司及其他营业单位支付的现金净额",
+       tc.oth_pay_ral_inv_act   as "支付其他与投资活动有关的现金",
+       tc.n_incr_pledge_loan   as "质押贷款净增加额",
+       tc.stot_out_inv_act    as "投资活动现金流出小计",
+       tc.n_cashflow_inv_act   as "投资活动产生的现金流量净额",
+       tc.c_recp_borrow     as "取得借款收到的现金",
+       tc.proc_issue_bonds    as "发行债券收到的现金",
+       tc.oth_cash_recp_ral_fnc_act  as "收到其他与筹资活动有关的现金",
+       tc.stot_cash_in_fnc_act   as "筹资活动现金流入小计",
+       tc.free_cashflow     as "企业自由现金流量",
+       tc.c_prepay_amt_borr    as "偿还债务支付的现金",
+       tc.c_pay_dist_dpcp_int_exp  as "分配股利、利润或偿付利息支付的现金",
+       tc.incl_dvd_profit_paid_sc_ms as "其中:子公司支付给少数股东的股利、利润", 
+       tc.oth_cashpay_ral_fnc_act  as "支付其他与筹资活动有关的现金", 
+       tc.stot_cashout_fnc_act   as "筹资活动现金流出小计",
+       tc.n_cash_flows_fnc_act   as "筹资活动产生的现金流量净额",
+       tc.eff_fx_flu_cash    as "汇率变动对现金的影响",
+       tc.n_incr_cash_cash_equ   as "现金及现金等价物净增加额",
+       tc.c_cash_equ_beg_period   as "期初现金及现金等价物余额",
+       tc.c_cash_equ_end_period   as "期末现金及现金等价物余额",
+       tc.c_recp_cap_contrib   as "吸收投资收到的现金",
+       tc.incl_cash_rec_saims   as "其中:子公司吸收少数股东投资收到的现金",
+       tc.uncon_invest_loss    as "未确认投资损失",
+       tc.prov_depr_assets    as "加:资产减值准备",
+       tc.depr_fa_coga_dpba    as "固定资产折旧、油气资产折耗、生产性生物资产折旧",
+       tc.amort_intang_assets   as "无形资产摊销",
+       tc.lt_amort_deferred_exp   as "长期待摊费用摊销",
+       tc.decr_deferred_exp    as "待摊费用减少",
+       tc.incr_acc_exp     as "预提费用增加",
+       tc.loss_disp_fiolta    as "处置固定、无形资产和其他长期资产的损失",
+       tc.loss_scr_fa     as "固定资产报废损失",
+       tc.loss_fv_chg     as "公允价值变动损失",
+       tc.invest_loss     as "投资损失",
+       tc.decr_def_inc_tax_assets  as "递延所得税资产减少",
+       tc.incr_def_inc_tax_liab   as "递延所得税负债增加",
+       tc.decr_inventories    as "存货的减少",
+       tc.decr_oper_payable    as "经营性应收项目的减少",
+       tc.incr_oper_payable    as "经营性应付项目的增加",
+       tc.others      as "其他",
+       tc.im_net_cashflow_oper_act  as "经营活动产生的现金流量净额(间接法)",
+       tc.conv_debt_into_cap   as "债务转为资本",
+       tc.conv_copbonds_due_within_1y as "一年内到期的可转换公司债券",
+       tc.fa_fnc_leases     as "融资租入固定资产",
+       tc.im_n_incr_cash_equ   as "现金及现金等价物净增加额(间接法)",
+       tc.net_dism_capital_add   as "拆出资金净增加额",
+       tc.net_cash_rece_sec    as "代理买卖证券收到的现金净额(元)",
+       tc.credit_impa_loss    as "信用减值损失",
+       tc.use_right_asset_dep   as "使用权资产折旧",
+       tc.oth_loss_asset    as "其他资产减值损失",
+       tc.end_bal_cash     as "现金的期末余额",
+       tc.beg_bal_cash     as "减:现金的期初余额",
+       tc.end_bal_cash_equ    as "加:现金等价物的期末余额",
+       tc.beg_bal_cash_equ     as "减:现金等价物的期初余额"
+  FROM stockmarket.ts_cashflow tc
+ WHERE tc.symbol = '${code}'
+   and tc.report_end_type_no = 4
+   and tc.update_flag = (
+           SELECT MAX(tmp.update_flag) 
+           FROM stockmarket.ts_cashflow tmp
+            WHERE tmp.symbol = '${code}'
+            AND tmp.report_end_type_no = 4
+       and tmp.symbol = tc.symbol AND tmp.ann_date = tc.ann_date) order by tc.ann_date desc
+    `;
+    return sql;
+
+}
 // export async function GET(
 //     request: Request,
 //     {
@@ -638,6 +931,12 @@ export async function GET(request: NextRequest) {
 
     let sql = "";
     switch (type) {
+        case "balancesheet":
+            sql = get_balancesheet(params);
+            break;
+        case "cashflow":
+            sql = ts_cashflow(params);
+            break;
         case "weight": //获取权重
             const indexcode = params.indexcode;
             sql = get_weight(indexcode);
@@ -733,3 +1032,5 @@ export async function GET(request: NextRequest) {
     //   return NextResponse.json({data: { email, pwd: en_pwd }, msg: '注册成功'})
     // }
 }
+
+
