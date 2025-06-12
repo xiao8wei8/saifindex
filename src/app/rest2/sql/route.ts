@@ -800,6 +800,118 @@ const get_balancesheet = (params?: any) => {
     return sql;
     
 }
+const get_income = (params?: any) => {
+    let code = params?.stockcode || "000001";
+
+    const sql = `
+    SELECT 
+--  ti.symbol      as "股票代码", 
+--  ti.stockname     as "股票名称", 
+--  ti.ann_date      as "公告日期", 
+--  ti.f_ann_date     as "实际公告日期",
+    ti.end_date      as "报告期",
+--  ti.report_type     as "报表名称",
+    ti.comp_type     as "公司类型名称",
+    ti.report_end_type    as "报告结束类型名称",
+    ti.basic_eps     as "净利润",
+    ti.diluted_eps     as "财务费用",
+    ti.total_revenue    as "营业总收入",
+    ti.revenue      as "营业收入",
+    ti.int_income     as "利息收入",
+    ti.prem_earned     as "已赚保费",
+    ti.comm_income     as "手续费及佣金收入",
+    ti.n_commis_income    as "手续费及佣金净收入",
+    ti.n_oth_income     as "其他经营净收益",
+    ti.n_oth_b_income    as "加:其他业务净收益",
+    ti.prem_income     as "保险业务收入",
+    ti.out_prem      as "减:分出保费",
+    ti.une_prem_reser    as "提取未到期责任准备金",
+    ti.reins_income     as "其中:分保费收入",
+    ti.n_sec_tb_income    as "代理买卖证券业务净收入",
+    ti.n_sec_uw_income    as "证券承销业务净收入",
+    ti.oth_b_income     as "其他业务收入",
+    ti.fv_value_chg_gain   as "加:公允价值变动净收益",
+    ti.invest_income    as "投资净收益",
+    ti.ass_invest_income   as "其中: 对联营企业和合营企业的投资收益",
+    ti.forex_gain     as "加:汇兑净收益",
+    ti.total_cogs     as "营业总成本",
+    ti.oper_cost     as "减:营业成本",
+    ti.int_exp      as "减:利息支出",
+    ti.comm_exp      as "减:手续费及佣金支出",
+    ti.biz_tax_surchg    as "减:营业税金及附加",
+    ti.sell_exp     as "减:销售费用",
+    ti.admin_exp     as "减:管理费用",
+    ti.fin_exp     as "减:财务费用",
+    ti.assets_impair_loss  as "减:资产减值损失",
+    ti.prem_refund    as "退保金",
+    ti.compens_payout   as "赔付总支出",
+    ti.reser_insur_liab   as "提取保险责任准备金",
+    ti.div_payt     as "保户红利支出",
+    ti.reins_exp     as "分保费用",
+    ti.oper_exp     as "营业支出",
+    ti.compens_payout_refu  as "减:摊回赔付支出",
+    ti.insur_reser_refu   as "减:摊回保险责任准备金",
+    ti.reins_cost_refund   as "减:摊回分保费用",
+    ti.other_bus_cost   as "其他业务成本",
+    ti.operate_profit   as "营业利润",
+    ti.non_oper_income   as "加:营业外收入",
+    ti.non_oper_exp    as "减:营业外支出",
+    ti.nca_disploss    as "其中:减:非流动资产处置净损失",
+    ti.total_profit    as "利润总额",
+    ti.income_tax    as "所得税费用",
+    ti.n_income     as "净利润(含少数股东损益)",
+    ti.n_income_attr_p   as "净利润(不含少数股东损益)",
+    ti.minority_gain    as "少数股东损益",
+    ti.oth_compr_income   as "其他综合收益",
+    ti.t_compr_income   as "综合收益总额",
+    ti.compr_inc_attr_p   as "归属于母公司(或股东)的综合收益总额",
+    ti.compr_inc_attr_m_s  as "归属于少数股东的综合收益总额",
+    ti.ebit      as "息税前利润",
+    ti.ebitda     as "息税折旧摊销前利润",
+    ti.insurance_exp    as "保险业务支出",
+    ti.undist_profit    as "年初未分配利润",
+    ti.distable_profit   as "可分配利润",
+    ti.rd_exp     as "研发费用",
+    ti.fin_exp_int_exp   as "财务费用:利息费用",
+    ti.fin_exp_int_inc   as "财务费用:利息收入",
+    ti.transfer_surplus_rese  as "盈余公积转入",
+    ti.transfer_housing_imprest as "住房周转金转入",
+    ti.transfer_oth    as "其他转入",
+    ti.adj_lossgain    as "调整以前年度损益",
+    ti.withdra_legal_surplus  as "提取法定盈余公积",
+    ti.withdra_legal_pubfund  as "提取法定公益金",
+    ti.withdra_biz_devfund  as "提取企业发展基金",
+    ti.withdra_rese_fund   as "提取储备基金",
+    ti.withdra_oth_ersu   as "提取任意盈余公积金",
+    ti.workers_welfare   as "职工奖金福利",
+    ti.distr_profit_shrhder  as "可供股东分配的利润",
+    ti.prfshare_payable_dvd  as "应付优先股股利",
+    ti.comshare_payable_dvd  as "应付普通股股利",
+    ti.capit_comstock_div  as "转作股本的普通股股利",
+    ti.net_after_nr_lp_correct as "扣除非经常性损益后的净利润（更正前）",
+    ti.credit_impa_loss   as "信用减值损失",
+    ti.net_expo_hedging_benefits as "净敞口套期收益",
+    ti.oth_impair_loss_assets as "其他资产减值损失", 
+    ti.total_opcost    as "营业总成本（二）",
+    ti.amodcost_fin_assets  as "以摊余成本计量的金融资产终止确认收益",
+    ti.oth_income    as "其他收益",
+    ti.asset_disp_income   as "资产处置收益",
+    ti.continued_net_profit  as "持续经营净利润",
+    ti.end_net_profit   as "终止经营净利润"
+  FROM stockmarket.ts_income ti
+ WHERE ti.symbol = '${code}'
+   and ti.report_end_type_no = 4
+   and ti.update_flag = (
+           SELECT MAX(tmp.update_flag) 
+         FROM stockmarket.ts_income tmp
+       WHERE tmp.symbol = '${code}'
+         and tmp.report_end_type_no = 4
+       and tmp.symbol = ti.symbol AND tmp.ann_date = ti.ann_date) order by ti.ann_date desc
+ `;
+    return sql;
+    
+}
+
 
 const ts_cashflow = (params?: any) => {
     let code = params?.stockcode || "000001";
@@ -931,6 +1043,9 @@ export async function GET(request: NextRequest) {
 
     let sql = "";
     switch (type) {
+        case "income":
+            sql = get_income(params);
+            break;
         case "balancesheet":
             sql = get_balancesheet(params);
             break;

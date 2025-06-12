@@ -736,6 +736,11 @@ const APP = () => {
     const [balancesheet_columns, setBalancesheetw_columns] = useState([]);
     
 
+    const [income_dataSource, setIncome_dataSource] = useState([]);
+    const [income_columns, setIncome_columns] = useState([]);
+    
+
+
    
 
     const [dataSource_dashboard, setDataSourceDashboard] = useState([]);
@@ -1839,6 +1844,67 @@ const APP = () => {
     };
 
 
+    const get_income = async (stockcode: any) => {
+        const data = await getDataByCode("income", {
+            stockcode: (stockcode || "").trim()
+        });
+       
+        let results = data.data.data.results;
+        console.log("[get_income]", results);
+        let new_results: any = [];
+        let _data_columns:any = [
+            {
+                title: "类别",
+                dataIndex: "类别",
+                key: "类别",
+                width: getWidth("类别", 340),
+                fixed: 'left',
+            },
+        ]
+        //每个报告期对应的数据
+        let _tempObj:any = {}
+        //获取所有的key
+        let _keys:any = [];
+        results.map((item: any, index: number) => {
+            // item.交易日期 = dayjs(new Date(item.交易日期)).format('YYYY-MM-DD');
+            if(_keys.length==0){
+                _keys = Object.keys(item);
+            }
+            _data_columns.push({
+                title:  item['报告期'],
+                dataIndex: item['报告期'],
+                key: item['报告期'],
+                width: getWidth(item['报告期'], 20),
+            })
+            _tempObj[item['报告期']]=item
+
+        })
+        let _data_source:any = [];
+        _keys.map((item: any, index: number) => {
+            if(item!='报告期'){
+                let _obj:any = {  key:item,'类别':item}
+                for(var item2 in _tempObj){
+                    
+                    _obj[item2]=_tempObj[item2][item]
+                }
+               
+               
+                _data_source.push(_obj)
+            }
+        })
+        console.log("[get_income]_tempObj", _tempObj);
+        console.log("[get_income]columns", _data_columns);
+        console.log("[get_income]_data_source", _data_source);
+        setIncome_dataSource(_data_source)
+        setIncome_columns(_data_columns)
+
+       
+        
+
+
+        return results; 
+       
+    };
     useEffect(() => {
         const fn = async () => {
             console.log("[fn]");
@@ -1910,6 +1976,7 @@ const APP = () => {
         await getVal(symbol);
         await get_cashflow(symbol);
         await get_balancesheet(symbol)
+        await get_income(symbol)
         setIsShowStock(!isShowStock);
     };
 
@@ -2117,6 +2184,29 @@ const APP = () => {
                     />
           </>,
         },
+        {
+            key: '4',
+            label: '损益表',
+            children: <>
+            <Table
+                          className={styles.customTable}
+                          dataSource={income_dataSource}
+                          columns={income_columns}
+                          bordered
+                          pagination={{
+                              defaultPageSize: 50,
+                              defaultCurrent: 1,
+                              total: income_dataSource.length,
+                          }}
+                          // scroll={columns.length > 3 ? { x: 1500 } : {}}
+                          // pagination={{ pageSize: 50 }}
+  
+                          // defaultCurrent={50} total={500}
+  
+                          scroll={{ y: 120 * 7 }}
+                      />
+            </>,
+          },
       ];
 
     return (
