@@ -688,7 +688,7 @@ const HealthForm = () => {
     <div style={{ padding: isMobile ? 12 : 24, maxWidth: 1200, margin: '0 auto' }}>
       <div style={{ textAlign: 'center', marginBottom: 24 }}>
         <h1 style={{ color: '#1890ff', fontWeight: 500 }}>个人健康信息登记表</h1>
-        <p style={{ color: '#666' }}>请完整填写您的健康信息，以便我们为您提供更好的医疗服务</p>
+        <p style={{ color: '#666' }}>请完整填写您的健康信息，以获得更好的医疗服务</p>
       </div>
       
       <Form
