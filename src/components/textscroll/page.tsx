@@ -11,6 +11,17 @@ import Image from 'next/image'
  * https://codesandbox.io/s/react-wenzipaomadeng-pro-onv5v
  * 使用 window.requestAnimationFrame 来实现，性能更好
  */
+
+const  filters = 
+[
+  '/zhongou/login',
+  '/zhongou/user',
+  '/zhongou/input'
+
+]
+
+
+
 export default function App() {
   if(typeof window == "undefined") {
     return null
@@ -21,7 +32,13 @@ export default function App() {
     if(!curWeixin) {
       setIsShow(false)
     }else{
-      setIsShow(true)
+      console.log("URL",location.pathname)
+      if(filters.includes(location.pathname)){
+        setIsShow(false)
+      }else{
+        setIsShow(true)
+      }
+   
     }
   },[curWeixin])
     const [content, setContent] = useState([""]);
@@ -52,10 +69,14 @@ export default function App() {
     },[])
   return (
    
-    <div className="header-index-container">
+    <div>
+
+{isShow?
+   <div>
+     <div className="header-index-container">
     <div className="header-index">
       <div className="header-index-items">
-      {isShow?<TextScroll content= {content}/>:null}  
+    <TextScroll content={content} duration={0}/>
       </div>
      
     </div>
@@ -85,6 +106,8 @@ export default function App() {
       alt="Picture of the author"
     />
     </div></div>
-    
+   </div>
+    :null}  
+    </div>
   );
 }

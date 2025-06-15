@@ -1,0 +1,68 @@
+/* 自定义样式增强响应式效果 */
+.form-section-card {
+    margin-bottom: 24px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.09);
+  }
+  
+  /* 移动端优化 */
+  @media (max-width: 767px) {
+    .ant-card-head {
+      padding: 0 12px;
+    }
+    
+    .ant-card-body {
+      padding: 16px 12px;
+    }
+    
+    .ant-form-item-label > label {
+      font-size: 14px;
+    }
+    
+    .ant-collapse > .ant-collapse-item > .ant-collapse-header {
+      padding: 12px 16px;
+      font-weight: 500;
+    }
+    
+    .ant-collapse-content > .ant-collapse-content-box {
+      padding: 16px;
+    }
+  }
+  
+  /* 桌面端优化 */
+  @media (min-width: 768px) {
+    .ant-tabs-left > .ant-tabs-content-holder {
+      border-left: 1px solid #f0f0f0;
+      padding-left: 24px;
+    }
+    
+    .ant-tabs-left > .ant-tabs-nav .ant-tabs-tab {
+      margin-bottom: 8px;
+      padding: 12px 24px;
+      transition: all 0.3s;
+    }
+    
+    .ant-tabs-left > .ant-tabs-nav .ant-tabs-tab-active {
+      background-color: #e6f7ff;
+      border-right: 3px solid #1890ff;
+    }
+  }
+  
+  /* 通用样式优化 */
+  .ant-divider {
+    margin: 24px 0;
+  }
+  
+  .ant-slider {
+    margin: 8px 6px 14px;
+  }
+  
+  .ant-upload-list {
+    margin-top: 8px;
+  }
+  
+  .ant-checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }

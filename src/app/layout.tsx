@@ -16,6 +16,7 @@ import config from "@/libs/config";
 import { GetStaticPropsContext, GetServerSidePropsContext } from 'next';
 // import { use, useEffect, useState } from "react";
 const geturl = config.url;
+console.log("[geturl]",geturl)
 const getInitialProps = async () => {
     // const res = await fetch('https://api.github.com/repos/vercel/next.js')
     // const json = await res.json()
@@ -88,6 +89,7 @@ const RootLayout = async ({ children }: any) => {
     const initialItems:any =[]
 
     console.log("[initialItems]",initialItems)
+  
     return (
         <html lang="en">
             <body>
