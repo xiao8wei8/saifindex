@@ -1,0 +1,128 @@
+.login-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+    position: relative;
+  }
+  
+  .login-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    background: linear-gradient(45deg, #1976d2, #64b5f6);
+    border-bottom-left-radius: 30% 40%;
+    border-bottom-right-radius: 70% 30%;
+    z-index: 0;
+  }
+  
+  .login-card {
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    background: white;
+    width: 100%;
+    max-width: 450px;
+    z-index: 1;
+    padding: 30px;
+    border: none;
+  }
+  
+  .login-header {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  
+  .logo-text {
+    color: #1976d2;
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+  
+  .login-button {
+    height: 48px;
+    font-size: 16px;
+    font-weight: 500;
+    background: linear-gradient(45deg, #1976d2, #64b5f6);
+    border: none;
+    transition: all 0.3s;
+  }
+  
+  .login-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(25, 118, 210, 0.3);
+  }
+  
+  .login-footer {
+    text-align: center;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #f0f0f0;
+    font-size: 15px;
+  }
+  
+  .copyright {
+    position: absolute;
+    bottom: 20px;
+    text-align: center;
+    width: 100%;
+    z-index: 1;
+  }
+  
+  /* 响应式设计 */
+  @media (max-width: 768px) {
+    .login-card {
+      padding: 24px;
+      max-width: 400px;
+    }
+    
+    .login-header {
+      margin-bottom: 24px;
+    }
+    
+    .login-background {
+      height: 40%;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .login-card {
+      padding: 20px;
+      max-width: 340px;
+    }
+    
+    .login-header .ant-typography {
+      font-size: 20px;
+    }
+    
+    .login-background {
+      border-bottom-left-radius: 20% 30%;
+      border-bottom-right-radius: 60% 20%;
+    }
+    
+    .copyright {
+      font-size: 12px;
+    }
+  }
+  
+  /* 动画效果 */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  .login-card {
+    animation: fadeIn 0.6s ease-out;
+  }
+  
+  /* 输入框聚焦效果 */
+  .ant-input-affix-wrapper:focus,
+  .ant-input-affix-wrapper-focused {
+    box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.2) !important;
+    border-color: #1976d2 !important;
+  }

@@ -1,159 +1,613 @@
 "use client";
 
-import type { ProColumns } from '@ant-design/pro-components';
-import {
-  EditableProTable,
-  ProCard,
-  ProFormField,
-} from '@ant-design/pro-components';
-import { Button } from 'antd';
-import React, { useState } from 'react';
 
-type DataSourceType = {
-  id: React.Key;
-  title?: string;
-  decs?: string;
-  state?: string;
-  created_at?: number;
-  children?: DataSourceType[];
-};
 
-const defaultData: DataSourceType[] = new Array(20).fill(1).map((_, index) => {
-  return {
-    id: (Date.now() + index).toString(),
-    title: `活动名称${index}`,
-    decs: '这个活动真好玩',
-    state: 'open',
-    created_at: 1590486176000,
+
+import React, { useState, useEffect } from 'react';
+import { 
+  Table, 
+  Button, 
+  Modal, 
+  Form, 
+  Input, 
+  Card, 
+  Row, 
+  Col, 
+  Tag, 
+  Popconfirm, 
+  message,
+  Typography,
+  Avatar,
+  Divider,
+  Select,
+  Drawer,
+  Space,
+  Descriptions
+} from 'antd';
+import { 
+  PlusOutlined, 
+  EditOutlined, 
+  DeleteOutlined, 
+  SearchOutlined,
+  UserOutlined,
+  LockOutlined,
+  PhoneOutlined,
+  TeamOutlined,
+  MenuOutlined,
+  CloseOutlined
+} from '@ant-design/icons';
+import './index.css';
+
+const { Title, Text } = Typography;
+const { Option } = Select;
+
+// 定义用户数据类型
+interface User {
+  id: number;
+  username: string;
+  password: string;
+  phone: string;
+  role: '管理员' | '编辑' | '查看者';
+  status: 'active' | 'inactive';
+  createdAt: string;
+}
+
+// 定义表单数据类型
+interface FormValues {
+  username: string;
+  password: string;
+  phone: string;
+  role: '管理员' | '编辑' | '查看者';
+  status: string; // '1' 或 '0'
+}
+
+// 模拟用户数据
+const initialUsers: User[] = [
+  {
+    id: 1,
+    username: 'admin',
+    password: '********',
+    phone: '13800138000',
+    role: '管理员',
+    status: 'active',
+    createdAt: '2023-01-15'
+  },
+  {
+    id: 2,
+    username: 'editor1',
+    password: '********',
+    phone: '13900139000',
+    role: '编辑',
+    status: 'active',
+    createdAt: '2023-02-20'
+  },
+  {
+    id: 3,
+    username: 'viewer1',
+    password: '********',
+    phone: '13700137000',
+    role: '查看者',
+    status: 'inactive',
+    createdAt: '2023-03-10'
+  },
+  {
+    id: 4,
+    username: 'manager',
+    password: '********',
+    phone: '13600136000',
+    role: '管理员',
+    status: 'active',
+    createdAt: '2023-04-05'
+  },
+  {
+    id: 5,
+    username: 'editor2',
+    password: '********',
+    phone: '13500135000',
+    role: '编辑',
+    status: 'inactive',
+    createdAt: '2023-05-12'
+  },
+  {
+    id: 6,
+    username: 'viewer2',
+    password: '********',
+    phone: '13400134000',
+    role: '查看者',
+    status: 'active',
+    createdAt: '2023-06-18'
+  },
+];
+
+const UserManagement: React.FC = () => {
+  const [users, setUsers] = useState<User[]>([]);
+  const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+  const [isDrawerVisible, setIsDrawerVisible] = useState<boolean>(false);
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [form] = Form.useForm<FormValues>();
+  const [isMobile, setIsMobile] = useState<boolean>(window.innerWidth < 768);
+
+  // 监听窗口大小变化
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // 初始化数据
+  useEffect(() => {
+    setLoading(true);
+    // 模拟API请求
+    setTimeout(() => {
+      setUsers(initialUsers);
+      setFilteredUsers(initialUsers);
+      setLoading(false);
+    }, 800);
+  }, []);
+
+  // 处理搜索
+  useEffect(() => {
+    if (searchTerm) {
+      const filtered = users.filter(user => 
+        user.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.phone.includes(searchTerm)
+      );
+      setFilteredUsers(filtered);
+    } else {
+      setFilteredUsers(users);
+    }
+  }, [searchTerm, users]);
+
+  // 显示添加用户模态框
+  const showAddModal = () => {
+    setCurrentUser(null);
+    form.resetFields();
+    setIsModalVisible(true);
   };
-});
 
-const  APP = () => {
-  const [editableKeys, setEditableRowKeys] = useState<React.Key[]>(() =>
-    defaultData.map((item) => item.id),
-  );
-  const [dataSource, setDataSource] = useState<readonly DataSourceType[]>(
-    () => defaultData,
-  );
+  // 显示编辑用户模态框
+  const showEditModal = (user: User) => {
+    setCurrentUser(user);
+    form.setFieldsValue({
+      username: user.username,
+      password: user.password,
+      phone: user.phone,
+      role: user.role,
+      status: user.status === 'active' ? '1' : '0'
+    });
+    setIsModalVisible(true);
+  };
 
-  const columns: ProColumns<DataSourceType>[] = [
+  // 显示用户详情抽屉
+  const showUserDetail = (user: User) => {
+    setCurrentUser(user);
+    setIsDrawerVisible(true);
+  };
+
+  // 处理表单提交
+  const handleSubmit = () => {
+    form.validateFields().then((values: FormValues) => {
+      setLoading(true);
+      
+      // 模拟API请求
+      setTimeout(() => {
+        if (currentUser) {
+          // 更新用户
+          const updatedUsers:any = users.map(user => 
+            user.id === currentUser.id ? 
+            { 
+              ...user, 
+              username: values.username,
+              password: values.password,
+              phone: values.phone,
+              role: values.role,
+              status: values.status === '1' ? 'active' : 'inactive' 
+            } : 
+            user
+          );
+          setUsers(updatedUsers);
+          message.success('用户信息更新成功');
+        } else {
+          // 添加新用户
+          const newUser: User = {
+            id: users.length + 1,
+            username: values.username,
+            password: values.password,
+            phone: values.phone,
+            role: values.role,
+            status: values.status === '1' ? 'active' : 'inactive',
+            createdAt: new Date().toISOString().split('T')[0]
+          };
+          setUsers([...users, newUser]);
+          message.success('用户添加成功');
+        }
+        
+        setLoading(false);
+        setIsModalVisible(false);
+      }, 600);
+    });
+  };
+
+  // 删除用户
+  const handleDelete = (id: number) => {
+    setLoading(true);
+    // 模拟API请求
+    setTimeout(() => {
+      const updatedUsers = users.filter(user => user.id !== id);
+      setUsers(updatedUsers);
+      setLoading(false);
+      message.success('用户删除成功');
+      setIsDrawerVisible(false);
+    }, 600);
+  };
+
+  // 状态标签渲染
+  const renderStatusTag = (status: 'active' | 'inactive') => {
+    return status === 'active' ? 
+      <Tag color="green">已激活</Tag> : 
+      <Tag color="red">未激活</Tag>;
+  };
+
+  // 角色标签渲染
+  const renderRoleTag = (role: '管理员' | '编辑' | '查看者') => {
+    let color;
+    switch (role) {
+      case '管理员':
+        color = 'gold';
+        break;
+      case '编辑':
+        color = 'blue';
+        break;
+      case '查看者':
+        color = 'geekblue';
+        break;
+      default:
+        color = 'default';
+    }
+    return <Tag color={color}>{role}</Tag>;
+  };
+
+  // 表格列定义 - 移动端优化
+  const columns = [
     {
-      title: '姓名',
-      dataIndex: 'title',
-      width: '30%',
-      formItemProps: {
-        rules: [
-          {
-            required: true,
-            whitespace: true,
-            message: '此项是必填项',
-          },
-          {
-            message: '必须包含数字',
-            pattern: /[0-9]/,
-          },
-          {
-            max: 16,
-            whitespace: true,
-            message: '最长为 16 位',
-          },
-          {
-            min: 6,
-            whitespace: true,
-            message: '最小为 6 位',
-          },
-        ],
-      },
+      title: '用户名',
+      dataIndex: 'username',
+      key: 'username',
+      render: (text: string, record: User) => (
+        <div 
+          style={{ display: 'flex', alignItems: 'center' }}
+          onClick={() => showUserDetail(record)}
+        >
+          <Avatar 
+            style={{ backgroundColor: '#1890ff', marginRight: 8 }} 
+            icon={<UserOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />} 
+          />
+          <div>
+            <div style={{ fontWeight: 500 }}>{text}</div>
+            {isMobile && (
+              <Text type="secondary" style={{ fontSize: 12 }}>{record.phone}</Text>
+            )}
+          </div>
+        </div>
+      ),
     },
     {
-      title: '密码',
-      key: 'state',
-      dataIndex: 'state',
-      valueType: 'select',
-      valueEnum: {
-        all: { text: '全部', status: 'Default' },
-        open: {
-          text: '未解决',
-          status: 'Error',
-        },
-        closed: {
-          text: '已解决',
-          status: 'Success',
-        },
-      },
+      title: '手机号',
+      dataIndex: 'phone',
+      key: 'phone',
+      render: (phone: string) => <Text>{phone}</Text>,
+      responsive: ['sm'] as any,
     },
     {
-      title: '说明',
-      dataIndex: 'decs',
+      title: '角色',
+      dataIndex: 'role',
+      key: 'role',
+      render: (role: '管理员' | '编辑' | '查看者') => renderRoleTag(role),
+      responsive: ['md'] as any,
+    },
+    {
+      title: '状态',
+      dataIndex: 'status',
+      key: 'status',
+      render: (status: 'active' | 'inactive') => renderStatusTag(status),
+      responsive: ['sm'] as any,
     },
     {
       title: '操作',
-      valueType: 'option',
-      width: 250,
-      render: () => {
-        return null;
-      },
+      key: 'action',
+      render: (_: any, record: User) => (
+        <Space>
+          <Button 
+            icon={<EditOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />} 
+            onClick={(e) => {
+              e.stopPropagation();
+              showEditModal(record);
+            }}
+            size="small"
+          />
+          <Popconfirm
+            title="确定要删除此用户吗?"
+            onConfirm={(e) => {
+              e?.stopPropagation();
+              handleDelete(record.id);
+            }}
+            onCancel={(e) => e?.stopPropagation()}
+            okText="确定"
+            cancelText="取消"
+          >
+            <Button 
+              icon={<DeleteOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />} 
+              danger 
+              size="small"
+              onClick={(e) => e.stopPropagation()}
+            />
+          </Popconfirm>
+        </Space>
+      ),
     },
   ];
 
   return (
-    <>
-      <EditableProTable<DataSourceType>
-        headerTitle="可编辑表格"
-        columns={columns}
-        rowKey="id"
-        scroll={{
-          x: 960,
-        }}
-        value={dataSource}
-        onChange={setDataSource}
-        recordCreatorProps={{
-          newRecordType: 'dataSource',
-          record: () => ({
-            id: Date.now(),
-          }),
-        }}
-        toolBarRender={() => {
-          return [
-            <Button
-              type="primary"
-              key="save"
-              onClick={() => {
-                // dataSource 就是当前数据，可以调用 api 将其保存
-                console.log(dataSource);
-              }}
-            >
-              保存数据
-            </Button>,
-          ];
-        }}
-        editable={{
-          type: 'multiple',
-          editableKeys,
-          actionRender: (row, config, defaultDoms) => {
-            return [defaultDoms.delete];
-          },
-          onValuesChange: (record, recordList) => {
-            setDataSource(recordList);
-          },
-          onChange: setEditableRowKeys,
-        }}
-      />
-      <ProCard title="表格数据" headerBordered collapsible defaultCollapsed>
-        <ProFormField
-          ignoreFormItem
-          fieldProps={{
-            style: {
-              width: '100%',
-            },
-          }}
-          mode="read"
-          valueType="jsonCode"
-          text={JSON.stringify(dataSource)}
-        />
-      </ProCard>
-    </>
+    <div className="user-management-container">
+      {/* 移动端顶部导航 */}
+      {isMobile && (
+        <div className="mobile-header">
+          <div className="logo">
+            <TeamOutlined style={{ color: '#1890ff', fontSize: 20, marginRight: 8 }} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />
+            <span>用户管理</span>
+          </div>
+          <Button 
+            icon={isDrawerVisible ? <CloseOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} /> : <MenuOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />}
+            type="text"
+            onClick={() => setIsDrawerVisible(!isDrawerVisible)}
+          />
+        </div>
+      )}
+
+      <div className="content-wrapper">
+        {/* 桌面端标题 */}
+        {!isMobile && (
+          <Title level={4} style={{ marginBottom: 24, color: '#1890ff' }}>
+            <TeamOutlined style={{ marginRight: 12 }} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />
+            用户管理系统
+          </Title>
+        )}
+        
+        <Card 
+          bordered={!isMobile} 
+          className="user-card"
+        >
+          <Row justify="space-between" style={{ marginBottom: 24 }}>
+            <Col xs={24} sm={16} md={12} lg={8}>
+              <Input
+                placeholder="搜索用户名或手机号..."
+                prefix={<SearchOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />}
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                allowClear
+                size={isMobile ? 'middle' : 'large'}
+                className="search-input"
+              />
+            </Col>
+            <Col xs={24} sm={8} style={{ textAlign: isMobile ? 'center' : 'right', marginTop: isMobile ? 16 : 0 }}>
+              <Button 
+                type="primary" 
+                icon={<PlusOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />} 
+                onClick={showAddModal}
+                size={isMobile ? 'middle' : 'large'}
+                className="add-button"
+              >
+                {isMobile ? '添加用户' : '添加新用户'}
+              </Button>
+            </Col>
+          </Row>
+          
+          <Table 
+            columns={columns} 
+            dataSource={filteredUsers} 
+            rowKey="id"
+            loading={loading}
+            pagination={{ 
+              pageSize: isMobile ? 5 : 6,
+              simple: isMobile,
+              showSizeChanger: false,
+              showTotal: (total) => `共 ${total} 位用户`,
+              position: ['bottomCenter'] as any
+            }}
+            scroll={{ x: true }}
+            bordered={!isMobile}
+            onRow={(record) => ({
+              onClick: () => isMobile && showUserDetail(record)
+            })}
+            className="user-table"
+          />
+        </Card>
+        
+        {/* 添加/编辑用户模态框 */}
+        <Modal
+          title={currentUser ? "编辑用户" : "添加用户"}
+          open={isModalVisible}
+          onOk={handleSubmit}
+          onCancel={() => setIsModalVisible(false)}
+          confirmLoading={loading}
+          width={isMobile ? '90%' : 600}
+          bodyStyle={{ padding: isMobile ? '16px' : '24px 16px' }}
+          className="user-modal"
+        >
+          <Form
+            form={form}
+            layout="vertical"
+            initialValues={{ status: '1', role: '查看者' }}
+          >
+            <Row gutter={16}>
+              <Col span={24}>
+                <Form.Item
+                  name="username"
+                  label="用户名"
+                  rules={[
+                    { required: true, message: '请输入用户名' },
+                    { min: 4, message: '用户名至少4位字符' }
+                  ]}
+                >
+                  <Input 
+                    prefix={<UserOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />} 
+                    placeholder="请输入用户名" 
+                    size={isMobile ? 'middle' : 'large'}
+                  />
+                </Form.Item>
+              </Col>
+            </Row>
+            
+            <Row gutter={16}>
+              <Col span={24}>
+                <Form.Item
+                  name="phone"
+                  label="手机号码"
+                  rules={[
+                    { required: true, message: '请输入手机号码' },
+                    { pattern: /^1[3-9]\d{9}$/, message: '手机号码格式不正确' }
+                  ]}
+                >
+                  <Input 
+                    prefix={<PhoneOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />} 
+                    placeholder="请输入手机号码" 
+                    size={isMobile ? 'middle' : 'large'}
+                  />
+                </Form.Item>
+              </Col>
+            </Row>
+            
+            <Row gutter={16}>
+              <Col span={24}>
+                <Form.Item
+                  name="password"
+                  label="密码"
+                  rules={[
+                    { required: true, message: '请输入密码' },
+                    { min: 6, message: '密码至少6位字符' }
+                  ]}
+                >
+                  <Input.Password 
+                    prefix={<LockOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />} 
+                    placeholder="请输入密码" 
+                    size={isMobile ? 'middle' : 'large'}
+                  />
+                </Form.Item>
+              </Col>
+            </Row>
+            
+            <Row gutter={16}>
+              <Col span={24}>
+                <Form.Item
+                  name="role"
+                  label="角色"
+                  rules={[{ required: true, message: '请选择角色' }]}
+                >
+                  <Select 
+                    placeholder="请选择角色" 
+                    size={isMobile ? 'middle' : 'large'}
+                  >
+                    <Option value="管理员">管理员</Option>
+                    <Option value="编辑">编辑</Option>
+                    <Option value="查看者">查看者</Option>
+                  </Select>
+                </Form.Item>
+              </Col>
+            </Row>
+            
+            <Row gutter={16}>
+              <Col span={24}>
+                <Form.Item
+                  name="status"
+                  label="状态"
+                  rules={[{ required: true, message: '请选择状态' }]}
+                >
+                  <Select 
+                    placeholder="请选择状态" 
+                    size={isMobile ? 'middle' : 'large'}
+                  >
+                    <Option value="1">已激活</Option>
+                    <Option value="0">未激活</Option>
+                  </Select>
+                </Form.Item>
+              </Col>
+            </Row>
+          </Form>
+        </Modal>
+        
+        {/* 移动端用户详情抽屉 */}
+        <Drawer
+          title="用户详情"
+          placement="right"
+          onClose={() => setIsDrawerVisible(false)}
+          open={isDrawerVisible}
+          width={isMobile ? '100%' : 400}
+          className="user-drawer"
+          extra={
+            <Space>
+              <Button 
+                icon={<EditOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />} 
+                onClick={() => {
+                  setIsDrawerVisible(false);
+                  showEditModal(currentUser!);
+                }}
+              />
+              <Popconfirm
+                title="确定要删除此用户吗?"
+                onConfirm={() => handleDelete(currentUser!.id)}
+                okText="确定"
+                cancelText="取消"
+              >
+                <Button 
+                  icon={<DeleteOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />} 
+                  danger 
+                />
+              </Popconfirm>
+            </Space>
+          }
+        >
+          {currentUser && (
+            <Descriptions column={1} bordered>
+              <Descriptions.Item label="用户名">
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <Avatar 
+                    style={{ backgroundColor: '#1890ff', marginRight: 8 }} 
+                    icon={<UserOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />} 
+                  />
+                  <span>{currentUser.username}</span>
+                </div>
+              </Descriptions.Item>
+              <Descriptions.Item label="手机号">{currentUser.phone}</Descriptions.Item>
+              <Descriptions.Item label="角色">
+                {renderRoleTag(currentUser.role)}
+              </Descriptions.Item>
+              <Descriptions.Item label="状态">
+                {renderStatusTag(currentUser.status)}
+              </Descriptions.Item>
+              <Descriptions.Item label="创建时间">
+                {currentUser.createdAt}
+              </Descriptions.Item>
+            </Descriptions>
+          )}
+        </Drawer>
+      </div>
+      
+      {!isMobile && (
+        <>
+          <Divider style={{ margin: '40px 0 24px' }} />
+          <div style={{ textAlign: 'center', marginTop: 24 }}>
+            <Text type="secondary">用户管理系统 © 2023 版权所有 | 移动端优化版</Text>
+          </div>
+        </>
+      )}
+    </div>
   );
 };
 
-export default APP;
+export default UserManagement;
