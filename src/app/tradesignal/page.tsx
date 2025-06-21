@@ -31,12 +31,15 @@ import symbols from "./symbol";
 import { createStyles } from "antd-style";
 import { set } from "react-hook-form";
 import { text } from "stream/consumers";
-import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
+import { CheckOutlined, CloseOutlined, ExportOutlined } from "@ant-design/icons";
 import { Select } from "antd";
 // import { use, useEffect, useState } from "react";
 import * as ExcelJs from 'exceljs';
 import { generateHeaders, saveWorkbook } from "@/libs/utils";
 const geturl = config.url;
+
+let currenSymbolCode:any = null
+let currenSymbolCodeZH:any = null
 
 const boxStyle: React.CSSProperties = {
     width: "100%",
@@ -1971,8 +1974,12 @@ const APP = () => {
         await getValDashboard(datats[0]);
         // await getVal(datats[0]);
     };
+  
     const onRowClick = async (record: any) => {
         const symbol = record["股票代码"];
+        currenSymbolCode = record["股票代码"]
+        currenSymbolCodeZH = record["股票名称(中文)"]
+        console.log("[onRowClick]",currenSymbolCode)
         await getVal(symbol);
         await get_cashflow(symbol);
         await get_balancesheet(symbol)
@@ -2103,9 +2110,37 @@ const APP = () => {
         saveWorkbook(workbook, 'saifchat.xlsx');
       }
 
+      let   tabsActiveKey:any = "个股详情"
+      let tabsActiveKeyMap:any ={
+        '个股详情':{columns:columns,dataSource:dataSource},
+        '现金流量表':{columns:cashflow_columns,dataSource:cashflow_dataSource},
+        '资产负债表':{columns:balancesheet_columns,dataSource:balancesheet_dataSource},
+        '损益表':{columns:income_columns,dataSource:income_dataSource}
+      }
+
+      function onExportNextExcel() {
+        console.log("[onExportNextExcel]",tabsActiveKey,currenSymbolCode,currenSymbolCodeZH)
+        let currData = tabsActiveKeyMap[tabsActiveKey]
+
+       
+        // 创建工作簿
+        const workbook = new (ExcelJs as any).Workbook();
+        // 添加sheet
+        const worksheet = workbook.addWorksheet('saifchat sheet');
+        // 设置 sheet 的默认行高
+        worksheet.properties.defaultRowHeight = 20;
+        // 设置列
+        worksheet.columns = generateHeaders(currData.columns);
+        // 添加行
+        worksheet.addRows(currData.dataSource);
+        // 导出excel
+        saveWorkbook(workbook, tabsActiveKey+"-"+currenSymbolCode+"-"+currenSymbolCodeZH+'.xlsx');
+      }
+      
+     
       const items:any = [
         {
-          key: '1',
+          key: '个股详情',
           label: '个股详情',
           children: <>
          
@@ -2138,7 +2173,7 @@ const APP = () => {
           </>,
         },
         {
-          key: '2',
+          key: '现金流量表',
           label: '现金流量表',
           children: <>
           
@@ -2162,7 +2197,7 @@ const APP = () => {
           </>,
         },
         {
-          key: '3',
+          key: '资产负债表',
           label: '资产负债表',
           children: <>
           <Table
@@ -2185,7 +2220,7 @@ const APP = () => {
           </>,
         },
         {
-            key: '4',
+            key: '损益表',
             label: '损益表',
             children: <>
             <Table
@@ -2302,21 +2337,35 @@ const APP = () => {
                 <div  style={{ display: !isShowStock?'none':'block'}}>
                 <div>
                         <div className="right">
+                        <Flex gap="small" wrap>
                             <Button
-                                type="primary"
-                                icon={
-                                    <CloseOutlined
-                                        onPointerEnterCapture={undefined}
-                                        onPointerLeaveCapture={undefined}
-                                    />
+                                    type="primary"
+                                    icon={
+                                        <CloseOutlined
+                                            onPointerEnterCapture={undefined}
+                                            onPointerLeaveCapture={undefined}
+                                        />
+                                    }
+                                    onClick={onClose}
+                                >
+                                    Close
+                                </Button>
+                                <Button type={'primary'} onClick={onExportNextExcel}
+                                   icon={
+                                    <ExportOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />
                                 }
-                                onClick={onClose}
-                            >
-                                Close
-                            </Button>
+                             
+                                
+                                >导出excel</Button>
+                        </Flex>
+                          
                         </div>
                     </div>
-                <Tabs defaultActiveKey="1" items={items}  />
+                <Tabs defaultActiveKey="个股详情" items={items} onTabClick={(key)=>{
+                    console.log("[onTabClick]",key)
+                    tabsActiveKey = key
+                  
+                }} />
                 
                     
 
