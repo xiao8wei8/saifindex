@@ -9,6 +9,7 @@ import HighchartsReact from "highcharts-react-official";
 import Highcharts from "highcharts";
 // @ts-ignore
 import config from "@/libs/config";
+import qwen from "@/libs/qwen";
 import {
     AutoComplete,
     AutoCompleteProps,
@@ -40,6 +41,10 @@ const geturl = config.url;
 
 let currenSymbolCode:any = null
 let currenSymbolCodeZH:any = null
+
+let   tabsActiveKey:any = "个股详情"
+let tabsActiveKeyMap:any ={}
+
 
 const boxStyle: React.CSSProperties = {
     width: "100%",
@@ -744,6 +749,9 @@ const APP = () => {
     
 
 
+    const [aiMessage, setAiMessage] = useState('');
+
+
    
 
     const [dataSource_dashboard, setDataSourceDashboard] = useState([]);
@@ -1396,6 +1404,83 @@ const APP = () => {
         // xAxis
     };
 
+
+    const getAI = async (message:any) => {
+
+        
+        let currData = tabsActiveKeyMap[tabsActiveKey]
+
+        
+    
+        // 设置列
+    let columns = generateHeaders(currData.columns);
+        // 添加行
+        let rows = currData.dataSource;
+        // 导出excel
+        // saveWorkbook(workbook, tabsActiveKey+"-"+currenSymbolCode+"-"+currenSymbolCodeZH+'.xlsx');
+        console.log("[/getAI/]",columns)
+
+
+        let defaultData = `表头为：`+JSON.stringify(columns)+` ;主题内容为：`+JSON.stringify(rows);
+        let template = `
+            ### 📈 股票分析指令模板
+            **请基于以下数据生成极简投资建议：**
+
+            ${defaultData}
+
+            ---
+            ### 🎯 核心要求
+            1. **趋势定位**（必选）：
+            - 识别短期（3-5日）/中期（1-3月）关键方向  
+            - 标注核心支撑/压力位（精确价位）
+            - 示例：\`📉3日连跌-6% | 支撑¥13.0\`
+
+            2. **关键指标**（必选）：
+            - 溢价率：\`<15%=🟢 | 15-25%=🟡 | >25%=🔴\`
+            - 风险指数：\`<100%=🟢 | ≥100%=🔴\`
+            - 量能标记：换手率突增/萎缩（带幅度）
+
+            3. **信号解码**（必选）：
+            - 当前交易信号状态（如"sell-hold"）
+            - 最近买卖信号日期/价位
+            - 转折触发条件（如"溢价率<15%+单日换手<5%"）
+
+            4. **操作策略**（二选一）：
+            - 持仓方案：\`止损位__ | 加仓位__ | 减仓位__\`
+            - 持币方案：\`介入条件__ | 观望条件__\`
+
+            5. **终极结论**（必选）：
+            - 20字内趋势定性 + 关键行动词  
+            - 示例：\`中期升势未破，守支撑等企稳\`
+            `
+
+
+        const response = await fetch('/rest2/qwen', {
+            method: 'POST',
+            body:  JSON.stringify({ messages: [            {role: "user", content:template }
+                ] }),
+            });
+        const data = await response.json();
+        const text = data.output?.text
+        
+        setAiMessage(text)
+
+        console.log("[getAI]",text)
+        return;
+        // const data = await getDataByCode("cashflow", {
+        //     stockcode: (stockcode || "").trim()
+        // });
+    
+        // let results = data.data.data.results;
+        // console.log("[get_cashflow]", results);
+        // setCashflow_dataSource(_data_source)
+        // setCashflow_columns(_data_columns)
+
+
+        // return { data: qwenResponse };
+
+    };
+
     const get_cashflow = async (stockcode: any) => {
         const data = await getDataByCode("cashflow", {
             stockcode: (stockcode || "").trim()
@@ -1976,6 +2061,7 @@ const APP = () => {
     };
   
     const onRowClick = async (record: any) => {
+        showLoader()
         const symbol = record["股票代码"];
         currenSymbolCode = record["股票代码"]
         currenSymbolCodeZH = record["股票名称(中文)"]
@@ -1984,7 +2070,9 @@ const APP = () => {
         await get_cashflow(symbol);
         await get_balancesheet(symbol)
         await get_income(symbol)
+        await getAI(symbol)
         setIsShowStock(!isShowStock);
+        hideLoader()
     };
 
     const onChange = (data: string) => {
@@ -2110,8 +2198,8 @@ const APP = () => {
         saveWorkbook(workbook, 'saifchat.xlsx');
       }
 
-      let   tabsActiveKey:any = "个股详情"
-      let tabsActiveKeyMap:any ={
+      tabsActiveKey = "个股详情"
+      tabsActiveKeyMap ={
         '个股详情':{columns:columns,dataSource:dataSource},
         '现金流量表':{columns:cashflow_columns,dataSource:cashflow_dataSource},
         '资产负债表':{columns:balancesheet_columns,dataSource:balancesheet_dataSource},
@@ -2163,12 +2251,14 @@ const APP = () => {
                     />
 
                     <div>
-                       <HighchartsReact
+                       {/* <HighchartsReact
                             highcharts={Highcharts}
                             options={options2}
                             // constructorType={"bar"}
-                        /> 
+                        />  */}
                         {/* <KlinechartsAPP  options={options2}/>  */}
+                        <div><strong>AI分析如下：</strong></div>
+                        <Markdown>{aiMessage}</Markdown>
                     </div>
           </>,
         },
@@ -2246,6 +2336,7 @@ const APP = () => {
 
     return (
         <LayoutContainer currentpathname="/tradesignal">
+             <Spin spinning={spinning}  fullscreen />
             {/* {!isShowStock ? ( */}
                 <div style={{ display: !isShowStock?'block':'none'}}>
                     <Flex gap="middle" align="start" vertical>
@@ -2409,11 +2500,13 @@ const getDataByCode = async (type: string, params: Object) => {
     return { data: json };
 };
 
+
 export default APP;
 
 
 
 import { init, dispose } from 'klinecharts'
+import Markdown from "react-markdown";
 const KlinechartsAPP= (options:any) => {
     
   useEffect(() => {
