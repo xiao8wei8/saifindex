@@ -19,7 +19,7 @@ const nextConfig = {
         ]
       },
     env: {
-        MYSQL_HOST: "101.34.245.222",
+        MYSQL_HOST: "db.saifchat.com",
         MYSQL_PORT: "3306",
         MYSQL_DATABASE: "stockmarket",
         MYSQL_USER: "front_readonly",

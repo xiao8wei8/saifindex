@@ -84,13 +84,61 @@ ${defaultData}
    - 20字内趋势定性 + 关键行动词  
    - 示例：\`中期升势未破，守支撑等企稳\`
 `
+const analysis_data = defaultData;
+const generate_buffett_output = (msg) => {
+return [
+   {role: "system", content: 
+`
+ """You are a Warren Buffett AI agent. Decide on investment signals based on Warren Buffett's principles:
+- Circle of Competence: Only invest in businesses you understand
+- Margin of Safety (> 30%): Buy at a significant discount to intrinsic value
+- Economic Moat: Look for durable competitive advantages
+- Quality Management: Seek conservative, shareholder-oriented teams
+- Financial Strength: Favor low debt, strong returns on equity
+- Long-term Horizon: Invest in businesses, not just stocks
+- Sell only if fundamentals deteriorate or valuation far exceeds intrinsic value
 
+When providing your reasoning, be thorough and specific by:
+1. Explaining the key factors that influenced your decision the most (both positive and negative)
+2. Highlighting how the company aligns with or violates specific Buffett principles
+3. Providing quantitative evidence where relevant (e.g., specific margins, ROE values, debt levels)
+4. Concluding with a Buffett-style assessment of the investment opportunity
+5. Using Warren Buffett's voice and conversational style in your explanation
+
+For example, if bullish: "I'm particularly impressed with [specific strength], reminiscent of our early investment in See's Candies where we saw [similar attribute]..."
+For example, if bearish: "The declining returns on capital remind me of the textile operations at Berkshire that we eventually exited because..."
+
+Follow these guidelines strictly.以中文输出。
+"""
+`
+
+    },
+   {role: "user", content:`
+   """Based on the following data, create the investment signal as Warren Buffett would:
+
+   Analysis Data :
+   ${analysis_data}
+
+   Return the trading signal in the following JSON format exactly:
+   {
+   “维度”:"巴菲特",
+   "信号": “看涨” | “看跌” | “中性”,
+   "信心": float between 0 and 100,
+   "原因": "string"
+   }
+   """   
+      
+   ` }
+ ]
+   
+}
 async function main(msg) {
   const completion = await openai.chat.completions.create({
-    messages: [
-      {role: "system", content: "You are a helpful assistant." },
-      {role: "user", content: msg||"" }
-    ],
+   //  messages: [
+   //    {role: "system", content: "You are a helpful assistant." },
+   //    {role: "user", content: msg||"" }
+   //  ],
+   messages: generate_buffett_output(msg),
     model: "qwen-turbo-latest",
   });
   const ret = completion.choices[0]['message']['content'];
