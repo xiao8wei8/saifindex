@@ -61,63 +61,106 @@ interface FormValues {
   status: string; // '1' 或 '0'
 }
 
-// 模拟用户数据
-const initialUsers: User[] = [
-  {
-    id: 1,
-    username: 'admin',
-    password: '********',
-    phone: '13800138000',
-    role: '管理员',
-    status: 'active',
-    createdAt: '2023-01-15'
-  },
-  {
-    id: 2,
-    username: 'editor1',
-    password: '********',
-    phone: '13900139000',
-    role: '编辑',
-    status: 'active',
-    createdAt: '2023-02-20'
-  },
-  {
-    id: 3,
-    username: 'viewer1',
-    password: '********',
-    phone: '13700137000',
-    role: '查看者',
-    status: 'inactive',
-    createdAt: '2023-03-10'
-  },
-  {
-    id: 4,
-    username: 'manager',
-    password: '********',
-    phone: '13600136000',
-    role: '管理员',
-    status: 'active',
-    createdAt: '2023-04-05'
-  },
-  {
-    id: 5,
-    username: 'editor2',
-    password: '********',
-    phone: '13500135000',
-    role: '编辑',
-    status: 'inactive',
-    createdAt: '2023-05-12'
-  },
-  {
-    id: 6,
-    username: 'viewer2',
-    password: '********',
-    phone: '13400134000',
-    role: '查看者',
-    status: 'active',
-    createdAt: '2023-06-18'
-  },
-];
+// API 请求函数
+  const fetchUsers = async (): Promise<User[]> => {
+    try {
+      const response = await fetch('/rest2/zhongou', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      const data = await response.json();
+      if (data.success) {
+        return data.data.map((user: any) => ({
+          ...user,
+          // 确保createdAt字段存在
+          createdAt: user.createdAt || user.created_at || ''
+        }));
+      } else {
+        message.error('获取用户列表失败: ' + data.error);
+        return [];
+      }
+    } catch (error: any) {
+      message.error('网络错误: ' + error.message);
+      return [];
+    }
+  };
+
+  const addUser = async (userData: Omit<User, 'id'>): Promise<boolean> => {
+    try {
+      const response = await fetch('/rest2/zhongou', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...userData,
+          created_at: userData.createdAt
+        }),
+      });
+      const data = await response.json();
+      if (data.success) {
+        message.success('用户添加成功');
+        return true;
+      } else {
+        message.error('添加用户失败: ' + data.error);
+        return false;
+      }
+    } catch (error: any) {
+      message.error('网络错误: ' + error.message);
+      return false;
+    }
+  };
+
+  const updateUser = async (userId: number, userData: Partial<User>): Promise<boolean> => {
+    try {
+      const response = await fetch('/rest2/zhongou', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id: userId,
+          ...userData,
+          created_at: userData.createdAt
+        }),
+      });
+      const data = await response.json();
+      if (data.success) {
+        message.success('用户信息更新成功');
+        return true;
+      } else {
+        message.error('更新用户失败: ' + data.error);
+        return false;
+      }
+    } catch (error: any) {
+      message.error('网络错误: ' + error.message);
+      return false;
+    }
+  };
+
+const deleteUser = async (userId: number): Promise<boolean> => {
+  try {
+    const response = await fetch(`/rest2/zhongou?id=${userId}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    const data = await response.json();
+    if (data.success) {
+      message.success('用户删除成功');
+      return true;
+    } else {
+      message.error('删除用户失败: ' + data.error);
+      return false;
+    }
+  } catch (error: any) {
+    message.error('网络错误: ' + error.message);
+    return false;
+  }
+};
 
 const UserManagement: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -142,13 +185,15 @@ const UserManagement: React.FC = () => {
 
   // 初始化数据
   useEffect(() => {
-    setLoading(true);
-    // 模拟API请求
-    setTimeout(() => {
-      setUsers(initialUsers);
-      setFilteredUsers(initialUsers);
+    const loadUsers = async () => {
+      setLoading(true);
+      const userList = await fetchUsers();
+      setUsers(userList);
+      setFilteredUsers(userList);
       setLoading(false);
-    }, 800);
+    };
+    
+    loadUsers();
   }, []);
 
   // 处理搜索
@@ -192,59 +237,64 @@ const UserManagement: React.FC = () => {
 
   // 处理表单提交
   const handleSubmit = () => {
-    form.validateFields().then((values: FormValues) => {
+    form.validateFields().then(async (values: FormValues) => {
       setLoading(true);
       
-      // 模拟API请求
-      setTimeout(() => {
-        if (currentUser) {
-          // 更新用户
-          const updatedUsers:any = users.map(user => 
-            user.id === currentUser.id ? 
-            { 
-              ...user, 
-              username: values.username,
-              password: values.password,
-              phone: values.phone,
-              role: values.role,
-              status: values.status === '1' ? 'active' : 'inactive' 
-            } : 
-            user
-          );
-          setUsers(updatedUsers);
-          message.success('用户信息更新成功');
-        } else {
-          // 添加新用户
-          const newUser: User = {
-            id: users.length + 1,
-            username: values.username,
-            password: values.password,
-            phone: values.phone,
-            role: values.role,
-            status: values.status === '1' ? 'active' : 'inactive',
-            createdAt: new Date().toISOString().split('T')[0]
-          };
-          setUsers([...users, newUser]);
-          message.success('用户添加成功');
+      if (currentUser) {
+        // 更新用户
+        const userData: Partial<User> = {
+          username: values.username,
+          phone: values.phone,
+          role: values.role,
+          status: values.status === '1' ? 'active' : 'inactive'
+        };
+        
+        // 只有当密码字段有值时才更新密码
+        if (values.password) {
+          userData.password = values.password;
         }
         
-        setLoading(false);
-        setIsModalVisible(false);
-      }, 600);
+        const success = await updateUser(currentUser.id, userData);
+        if (success) {
+          const userList = await fetchUsers();
+          setUsers(userList);
+          setFilteredUsers(userList);
+        }
+      } else {
+        // 添加新用户
+        const newUser: Omit<User, 'id'> = {
+          username: values.username,
+          password: values.password,
+          phone: values.phone,
+          role: values.role,
+          status: values.status === '1' ? 'active' : 'inactive',
+          createdAt: new Date().toISOString().split('T')[0]
+        };
+        
+        const success = await addUser(newUser);
+        if (success) {
+          const userList = await fetchUsers();
+          setUsers(userList);
+          setFilteredUsers(userList);
+        }
+      }
+      
+      setLoading(false);
+      setIsModalVisible(false);
     });
   };
 
   // 删除用户
-  const handleDelete = (id: number) => {
+  const handleDelete = async (id: number) => {
     setLoading(true);
-    // 模拟API请求
-    setTimeout(() => {
-      const updatedUsers = users.filter(user => user.id !== id);
-      setUsers(updatedUsers);
-      setLoading(false);
-      message.success('用户删除成功');
-      setIsDrawerVisible(false);
-    }, 600);
+    const success = await deleteUser(id);
+    if (success) {
+      const userList = await fetchUsers();
+      setUsers(userList);
+      setFilteredUsers(userList);
+    }
+    setLoading(false);
+    setIsDrawerVisible(false);
   };
 
   // 状态标签渲染

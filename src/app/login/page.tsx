@@ -85,6 +85,7 @@ export default () => {
           >
             <Tabs.TabPane key={'account'} tab={'账号密码登录'} />
             <Tabs.TabPane key={'token'} tab={'Token登录'}  />
+            <Tabs.TabPane key={'register'} tab={'注册'}  />
           </Tabs>
           {loginType === 'token' && (
             <>
@@ -96,7 +97,7 @@ export default () => {
                 }}
                 initialValue={''}
                 // disabled
-                placeholder={'token：获取的token'}
+                placeholder={'token：关注公众号“数金工程俱乐部筹”，获取的token'}
                 rules={[
                   // {
                   //   required: true,
@@ -215,10 +216,10 @@ export default () => {
                   }
                 ]}
               />
-              {/* <ProFormText.Password
+              <ProFormText.Password
                 style={{ display: 'none' }}
                 name="password"
-                disabled
+                // disabled
                 fieldProps={{
                   size: 'large',
                   prefix: <LockOutlined className={'prefixIcon'} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />,
@@ -258,11 +259,11 @@ export default () => {
                 placeholder={'密码: saifchat'}
                 rules={[
                   {
-                    required: false,
+                    required: true,
                     message: '请输入密码！',
                   },
                 ]}
-              /> */}
+              />
             </>
           )}
           {loginType === 'phone' && (
