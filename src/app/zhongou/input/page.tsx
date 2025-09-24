@@ -653,7 +653,7 @@ const HealthForm = () => {
       formData.append('timestamp', Date.now().toString());
       
       // 发送请求到文件上传API
-      const response = await axios.post('https://www.saifchat.com/zhongouupload', formData, {
+      const response = await axios.post('https://www.saifchat.com/zhongouapi/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
