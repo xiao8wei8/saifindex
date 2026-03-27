@@ -1,0 +1,2672 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>银行出账联动系统</title>
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f0f5ff 0%, #e6f0ff 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(90deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 20px;
+            padding: 25px;
+        }
+        
+        @media (max-width: 1100px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .section {
+            background: #f8faff;
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid #e1e8ff;
+            height: fit-content;
+        }
+        
+        .section h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e1e8ff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: #3498db;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #2980b9;
+        }
+        
+        .btn-success {
+            background: #2ecc71;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #27ae60;
+        }
+        
+        .btn-warning {
+            background: #f39c12;
+            color: white;
+        }
+        
+        .btn-warning:hover {
+            background: #e67e22;
+        }
+        
+        .btn-danger {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+        
+        .upload-area {
+            border: 2px dashed #3498db;
+            border-radius: 10px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: white;
+        }
+        
+        .upload-area:hover {
+            background: #f0f5ff;
+            border-color: #2980b9;
+        }
+        
+        .upload-area i {
+            font-size: 48px;
+            color: #3498db;
+            margin-bottom: 15px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e1e8ff;
+        }
+        
+        th {
+            background: #3498db;
+            color: white;
+            font-weight: 600;
+        }
+        
+        tr:hover {
+            background: #f0f5ff;
+        }
+        
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-approved {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-rejected {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .status-processing {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 800px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e1e8ff;
+        }
+        
+        .modal-header h3 {
+            color: #2c3e50;
+            font-size: 24px;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #7f8c8d;
+        }
+        
+        .close-btn:hover {
+            color: #e74c3c;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            background: #e1e8ff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #2c3e50;
+            transition: all 0.3s;
+        }
+        
+        .tab.active {
+            background: #3498db;
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .rule-item {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            border: 1px solid #e1e8ff;
+        }
+        
+        .rule-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .rule-item-title {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .rule-conditions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+        
+        .rule-condition {
+            background: #f0f5ff;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            color: #3498db;
+        }
+        
+        .lawyer-card {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            border: 1px solid #e1e8ff;
+        }
+        
+        .lawyer-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .lawyer-name {
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 16px;
+        }
+        
+        .lawyer-ratio {
+            color: #3498db;
+            font-weight: 600;
+        }
+        
+        .summary-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid #e1e8ff;
+        }
+        
+        .summary-card-title {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #e1e8ff;
+        }
+        
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+        
+        .summary-label {
+            color: #7f8c8d;
+        }
+        
+        .summary-value {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .summary-value.highlight {
+            color: #e74c3c;
+            font-size: 18px;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            z-index: 2000;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        .notification.success {
+            background: #2ecc71;
+        }
+        
+        .notification.warning {
+            background: #f39c12;
+        }
+        
+        .notification.error {
+            background: #e74c3c;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #e1e8ff;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3498db, #2ecc71);
+            transition: width 0.3s;
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💰 银行出账联动系统</h1>
+            <p>智能银行流水导入 · 自动筛选规则 · 比例配置 · 银行代发</p>
+        </div>
+        
+        <div class="main-content">
+            <div class="left-panel">
+                <div class="section">
+                    <h2>📁 银行流水导入</h2>
+                    <div class="upload-area" id="uploadArea">
+                        <i>📤</i>
+                        <p>点击或拖拽上传银行流水文件</p>
+                        <p style="font-size: 12px; color: #7f8c8d; margin-top: 5px;">支持格式：Excel、CSV、TXT</p>
+                    </div>
+                    <input type="file" id="fileInput" accept=".xlsx,.xls,.csv,.txt" style="display: none;">
+                    
+                    <div style="margin-top: 15px;">
+                        <button class="btn btn-primary" onclick="downloadBankTemplate()" style="width: 100%;">
+                            <i>📥</i> 下载银行流水模版
+                        </button>
+                    </div>
+                    
+                    <div style="margin-top: 20px;">
+                        <h4 style="margin-bottom: 10px; color: #2c3e50;">导入历史</h4>
+                        <div id="importHistory">
+                            <p style="color: #7f8c8d; font-size: 14px;">暂无导入记录</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section" style="margin-top: 20px;">
+                    <h2>⚙️ 筛选规则配置</h2>
+                    <button class="btn btn-primary" onclick="openRuleModal()" style="width: 100%;">
+                        <i>➕</i> 添加筛选规则
+                    </button>
+                    
+                    <div id="rulesList" style="margin-top: 15px;">
+                        <p style="color: #7f8c8d; font-size: 14px;">暂无筛选规则</p>
+                    </div>
+                </div>
+                
+                <div class="section" style="margin-top: 20px;">
+                    <h2>👨‍⚖️ 律师比例配置</h2>
+                    <button class="btn btn-success" onclick="openLawyerModal()" style="width: 100%;">
+                        <i>➕</i> 添加律师
+                    </button>
+                    
+                    <div style="margin-top: 15px;">
+                        <div class="upload-area" id="lawyerUploadArea" style="padding: 20px;">
+                            <i>📤</i>
+                            <p>点击或拖拽上传律师资料文件</p>
+                            <p style="font-size: 12px; color: #7f8c8d; margin-top: 5px;">支持格式：Excel、CSV、TXT</p>
+                        </div>
+                        <input type="file" id="lawyerFileInput" accept=".xlsx,.xls,.csv,.txt" style="display: none;">
+                    </div>
+                    
+                    <div style="margin-top: 15px;">
+                        <button class="btn btn-primary" onclick="downloadLawyerTemplate()" style="width: 100%;">
+                            <i>📥</i> 下载律师资料模版
+                        </button>
+                    </div>
+                    
+                    <div id="lawyersList" style="margin-top: 15px;">
+                        <p style="color: #7f8c8d; font-size: 14px;">暂无律师配置</p>
+                    </div>
+                </div>
+                
+                <div class="section" style="margin-top: 20px;">
+                    <h2>🔧 系统管理</h2>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        <button class="btn btn-primary" onclick="exportAllData()" style="width: 100%;">
+                            <i>💾</i> 备份所有数据
+                        </button>
+                        
+                        <div class="upload-area" id="backupUploadArea" style="padding: 15px;">
+                            <i>📥</i>
+                            <p style="font-size: 13px;">点击恢复备份数据</p>
+                        </div>
+                        <input type="file" id="backupFileInput" accept=".json" style="display: none;">
+                        
+                        <button class="btn btn-warning" onclick="openLogModal()" style="width: 100%;">
+                            <i>📋</i> 查看操作日志
+                        </button>
+                        
+                        <button class="btn btn-danger" onclick="clearAllData()" style="width: 100%;">
+                            <i>🗑️</i> 清空所有数据
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-panel">
+                <div class="section">
+                    <h2>📊 出账处理中心</h2>
+                    
+                    <div class="tabs">
+                        <button class="tab active" onclick="switchTab('pending')">待处理</button>
+                        <button class="tab" onclick="switchTab('approved')">已批准</button>
+                        <button class="tab" onclick="switchTab('processing')">处理中</button>
+                        <button class="tab" onclick="switchTab('completed')">已完成</button>
+                    </div>
+                    
+                    <div class="tab-content active" id="pendingTab">
+                        <div class="summary-card">
+                            <div class="summary-card-title">
+                                <i>📈</i> 今日出账汇总
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-label">待处理流水数</span>
+                                <span class="summary-value" id="pendingCount">0</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-label">总金额</span>
+                                <span class="summary-value" id="pendingTotal">¥0.00</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-label">预计出账金额</span>
+                                <span class="summary-value highlight" id="estimatedPayout">¥0.00</span>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                            <button class="btn btn-success" onclick="autoApproveAll()">
+                                <i>✅</i> 一键批准
+                            </button>
+                            <button class="btn btn-primary" onclick="openBatchRatioModal()">
+                                <i>⚙️</i> 一键设置比例
+                            </button>
+                            <button class="btn btn-primary" onclick="batchProcess()">
+                                <i>🔄</i> 批量处理
+                            </button>
+                            <button class="btn btn-warning" onclick="exportData()">
+                                <i>📥</i> 导出数据
+                            </button>
+                        </div>
+                        
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th><input type="checkbox" id="selectAll" onchange="toggleSelectAll()"></th>
+                                        <th>流水号</th>
+                                        <th>账户</th>
+                                        <th>金额</th>
+                                        <th>律师</th>
+                                        <th>比例</th>
+                                        <th>出账金额</th>
+                                        <th>状态</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="pendingTableBody">
+                                    <tr>
+                                        <td colspan="9" style="text-align: center; color: #7f8c8d;">暂无待处理数据</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-content" id="approvedTab">
+                        <div class="summary-card">
+                            <div class="summary-card-title">
+                                <i>✅</i> 已批准待发
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-label">已批准流水数</span>
+                                <span class="summary-value" id="approvedCount">0</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-label">总出账金额</span>
+                                <span class="summary-value highlight" id="approvedTotal">¥0.00</span>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap;">
+                            <button class="btn btn-primary" onclick="bankTransfer()">
+                                <i>🏦</i> 银行代发
+                            </button>
+                            <button class="btn btn-warning" onclick="exportApproved()">
+                                <i>📥</i> 导出代发数据
+                            </button>
+                            <button class="btn btn-success" onclick="exportBankTransferFile()">
+                                <i>📄</i> 生成代发文件
+                            </button>
+                        </div>
+                        
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>流水号</th>
+                                        <th>账户</th>
+                                        <th>金额</th>
+                                        <th>律师</th>
+                                        <th>出账金额</th>
+                                        <th>状态</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="approvedTableBody">
+                                    <tr>
+                                        <td colspan="7" style="text-align: center; color: #7f8c8d;">暂无已批准数据</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-content" id="processingTab">
+                        <div class="summary-card">
+                            <div class="summary-card-title">
+                                <i>⏳</i> 处理中
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="processingProgress" style="width: 0%"></div>
+                            </div>
+                            <p style="text-align: center; margin-top: 10px; color: #7f8c8d;">
+                                处理进度：<span id="processingPercentage">0%</span>
+                            </p>
+                        </div>
+                        
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>流水号</th>
+                                        <th>账户</th>
+                                        <th>金额</th>
+                                        <th>律师</th>
+                                        <th>出账金额</th>
+                                        <th>状态</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="processingTableBody">
+                                    <tr>
+                                        <td colspan="6" style="text-align: center; color: #7f8c8d;">暂无处理中数据</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-content" id="completedTab">
+                        <div class="summary-card">
+                            <div class="summary-card-title">
+                                <i>🎉</i> 完成统计
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-label">今日完成笔数</span>
+                                <span class="summary-value" id="completedCount">0</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-label">今日出账总额</span>
+                                <span class="summary-value highlight" id="completedTotal">¥0.00</span>
+                            </div>
+                        </div>
+                        
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>流水号</th>
+                                        <th>账户</th>
+                                        <th>金额</th>
+                                        <th>律师</th>
+                                        <th>出账金额</th>
+                                        <th>完成时间</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="completedTableBody">
+                                    <tr>
+                                        <td colspan="6" style="text-align: center; color: #7f8c8d;">暂无完成数据</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal" id="ruleModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>添加筛选规则</h3>
+                <button class="close-btn" onclick="closeRuleModal()">×</button>
+            </div>
+            
+            <div class="form-group">
+                <label>规则名称</label>
+                <input type="text" id="ruleName" placeholder="例如：大额交易筛选">
+            </div>
+            
+            <div class="form-group">
+                <label>筛选条件</label>
+                <select id="ruleCondition" onchange="updateRuleValueInput()">
+                    <option value="amount_greater">💰 金额大于</option>
+                    <option value="amount_less">💰 金额小于</option>
+                    <option value="account_contains">🏦 账户包含</option>
+                    <option value="description_contains">📝 摘要包含</option>
+                    <option value="date_equal">📅 日期等于</option>
+                    <option value="date_after">📅 日期晚于</option>
+                    <option value="date_before">📅 日期早于</option>
+                    <option value="date_range">📅 日期范围</option>
+                    <option value="today">📅 今日</option>
+                    <option value="this_week">📅 本周</option>
+                    <option value="this_month">📅 本月</option>
+                </select>
+            </div>
+            
+            <div class="form-group" id="singleValueGroup">
+                <label>条件值</label>
+                <input type="text" id="ruleValue" placeholder="输入条件值">
+            </div>
+            
+            <div class="form-group hidden" id="dateSingleGroup">
+                <label>选择日期</label>
+                <input type="date" id="ruleSingleDate" placeholder="选择日期">
+            </div>
+            
+            <div class="form-group hidden" id="dateRangeGroup">
+                <label>开始日期</label>
+                <input type="date" id="ruleStartDate" placeholder="选择开始日期">
+            </div>
+            
+            <div class="form-group hidden" id="dateRangeGroup2">
+                <label>结束日期</label>
+                <input type="date" id="ruleEndDate" placeholder="选择结束日期">
+            </div>
+            
+            <div class="form-group hidden" id="quickDateGroup">
+                <label>快捷时间</label>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <button class="btn btn-primary" onclick="setQuickDate('today')" style="padding: 8px 15px; font-size: 13px;">📅 今日</button>
+                    <button class="btn btn-primary" onclick="setQuickDate('yesterday')" style="padding: 8px 15px; font-size: 13px;">📅 昨天</button>
+                    <button class="btn btn-primary" onclick="setQuickDate('this_week')" style="padding: 8px 15px; font-size: 13px;">📅 本周</button>
+                    <button class="btn btn-primary" onclick="setQuickDate('last_week')" style="padding: 8px 15px; font-size: 13px;">📅 上周</button>
+                    <button class="btn btn-primary" onclick="setQuickDate('this_month')" style="padding: 8px 15px; font-size: 13px;">📅 本月</button>
+                    <button class="btn btn-primary" onclick="setQuickDate('last_month')" style="padding: 8px 15px; font-size: 13px;">📅 上月</button>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>关联律师</label>
+                <select id="ruleLawyer">
+                    <option value="">请选择律师</option>
+                </select>
+            </div>
+            
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button class="btn btn-success" onclick="saveRule()">保存规则</button>
+                <button class="btn btn-danger" onclick="closeRuleModal()">取消</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal" id="lawyerModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>添加律师配置</h3>
+                <button class="close-btn" onclick="closeLawyerModal()">×</button>
+            </div>
+            
+            <div class="form-group">
+                <label>律师姓名</label>
+                <input type="text" id="lawyerName" placeholder="输入律师姓名">
+            </div>
+            
+            <div class="form-group">
+                <label>出账比例（%）</label>
+                <input type="number" id="lawyerRatio" placeholder="输入比例，例如：70" min="0" max="100">
+            </div>
+            
+            <div class="form-group">
+                <label>收款账户</label>
+                <input type="text" id="lawyerAccount" placeholder="输入银行账号">
+            </div>
+            
+            <div class="form-group">
+                <label>开户行</label>
+                <input type="text" id="lawyerBank" placeholder="输入开户行名称">
+            </div>
+            
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button class="btn btn-success" onclick="saveLawyer()">保存律师</button>
+                <button class="btn btn-danger" onclick="closeLawyerModal()">取消</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal" id="batchRatioModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>⚙️ 一键设置出账比例</h3>
+                <button class="close-btn" onclick="closeBatchRatioModal()">×</button>
+            </div>
+            
+            <div class="form-group">
+                <label>统一出账比例（%）</label>
+                <input type="number" id="uniformRatio" placeholder="输入统一比例，例如：70" min="0" max="100" value="70" onchange="updateRatioPreview()">
+                <p style="font-size: 12px; color: #7f8c8d; margin-top: 5px;">所有选中的交易将使用相同的出账比例</p>
+            </div>
+            
+            <div class="summary-card" style="margin-top: 20px;">
+                <div class="summary-card-title">
+                    <i>📊</i> 设置预览
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">选中交易数</span>
+                    <span class="summary-value" id="selectedTransactionCount">0</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">原总金额</span>
+                    <span class="summary-value" id="originalTotalAmount">¥0.00</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">新出账总额</span>
+                    <span class="summary-value highlight" id="newPayoutTotal">¥0.00</span>
+                </div>
+            </div>
+            
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button class="btn btn-success" onclick="applyBatchRatio()">应用设置</button>
+                <button class="btn btn-danger" onclick="closeBatchRatioModal()">取消</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal" id="logModal">
+        <div class="modal-content" style="max-width: 900px;">
+            <div class="modal-header">
+                <h3>📋 操作日志</h3>
+                <button class="close-btn" onclick="closeLogModal()">×</button>
+            </div>
+            
+            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                <button class="btn btn-primary" onclick="exportOperationLogs()">
+                    <i>📥</i> 导出日志
+                </button>
+                <button class="btn btn-danger" onclick="clearLogsConfirm()">
+                    <i>🗑️</i> 清空日志
+                </button>
+            </div>
+            
+            <div class="table-container" style="max-height: 400px; overflow-y: auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>时间</th>
+                            <th>操作</th>
+                            <th>详情</th>
+                        </tr>
+                    </thead>
+                    <tbody id="logTableBody">
+                        <tr>
+                            <td colspan="3" style="text-align: center; color: #7f8c8d;">暂无操作日志</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==================== 全局状态管理 ====================
+        let bankTransactions = [];
+        let screeningRules = [];
+        let lawyerConfigs = [];
+        let selectedTransactions = [];
+        let operationLogs = [];
+
+        // ==================== 系统初始化 ====================
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeSystem();
+            setupFileUpload();
+            loadMockData();
+        });
+
+        function initializeSystem() {
+            bankTransactions = JSON.parse(localStorage.getItem('bankTransactions')) || [];
+            screeningRules = JSON.parse(localStorage.getItem('screeningRules')) || [];
+            lawyerConfigs = JSON.parse(localStorage.getItem('lawyerConfigs')) || [];
+            operationLogs = JSON.parse(localStorage.getItem('operationLogs')) || [];
+            
+            renderRulesList();
+            renderLawyersList();
+            renderPendingTable();
+            updateSummary();
+            logOperation('系统初始化', '系统启动成功');
+        }
+
+        // ==================== 文件上传设置 ====================
+        function setupFileUpload() {
+            const uploadArea = document.getElementById('uploadArea');
+            const fileInput = document.getElementById('fileInput');
+
+            uploadArea.addEventListener('click', () => fileInput.click());
+            
+            uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadArea.style.background = '#f0f5ff';
+                uploadArea.style.borderColor = '#2980b9';
+            });
+
+            uploadArea.addEventListener('dragleave', () => {
+                uploadArea.style.background = 'white';
+                uploadArea.style.borderColor = '#3498db';
+            });
+
+            uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadArea.style.background = 'white';
+                uploadArea.style.borderColor = '#3498db';
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    handleFileUpload(files[0]);
+                }
+            });
+
+            fileInput.addEventListener('change', (e) => {
+                if (e.target.files.length > 0) {
+                    handleFileUpload(e.target.files[0]);
+                }
+            });
+            
+            const lawyerUploadArea = document.getElementById('lawyerUploadArea');
+            const lawyerFileInput = document.getElementById('lawyerFileInput');
+
+            lawyerUploadArea.addEventListener('click', () => lawyerFileInput.click());
+            
+            lawyerUploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                lawyerUploadArea.style.background = '#f0f5ff';
+                lawyerUploadArea.style.borderColor = '#2980b9';
+            });
+
+            lawyerUploadArea.addEventListener('dragleave', () => {
+                lawyerUploadArea.style.background = 'white';
+                lawyerUploadArea.style.borderColor = '#3498db';
+            });
+
+            lawyerUploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                lawyerUploadArea.style.background = 'white';
+                lawyerUploadArea.style.borderColor = '#3498db';
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    handleLawyerFileUpload(files[0]);
+                }
+            });
+
+            lawyerFileInput.addEventListener('change', (e) => {
+                if (e.target.files.length > 0) {
+                    handleLawyerFileUpload(e.target.files[0]);
+                }
+            });
+            
+            // 备份文件上传
+            const backupUploadArea = document.getElementById('backupUploadArea');
+            const backupFileInput = document.getElementById('backupFileInput');
+            
+            backupUploadArea.addEventListener('click', () => backupFileInput.click());
+            
+            backupUploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                backupUploadArea.style.background = '#f0f5ff';
+                backupUploadArea.style.borderColor = '#2980b9';
+            });
+            
+            backupUploadArea.addEventListener('dragleave', () => {
+                backupUploadArea.style.background = 'white';
+                backupUploadArea.style.borderColor = '#3498db';
+            });
+            
+            backupUploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                backupUploadArea.style.background = 'white';
+                backupUploadArea.style.borderColor = '#3498db';
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    importAllData(files[0]);
+                }
+            });
+            
+            backupFileInput.addEventListener('change', (e) => {
+                if (e.target.files.length > 0) {
+                    importAllData(e.target.files[0]);
+                }
+            });
+        }
+
+        // ==================== 真实的文件处理 ====================
+        async function handleFileUpload(file) {
+            const fileName = file.name;
+            const fileExtension = fileName.split('.').pop().toLowerCase();
+            
+            showNotification(`正在解析文件: ${fileName}...`, 'warning');
+            
+            try {
+                let transactions = [];
+                
+                if (fileExtension === 'xlsx' || fileExtension === 'xls') {
+                    transactions = await parseExcelFile(file);
+                } else if (fileExtension === 'csv' || fileExtension === 'txt') {
+                    const content = await readFileAsText(file);
+                    transactions = parseCSVFile(content, fileName);
+                } else {
+                    showNotification('不支持的文件格式，请上传Excel或CSV文件', 'error');
+                    return;
+                }
+                
+                if (transactions.length > 0) {
+                    // 数据验证
+                    const validTransactions = validateBankTransactions(transactions);
+                    const invalidCount = transactions.length - validTransactions.length;
+                    
+                    if (validTransactions.length > 0) {
+                        bankTransactions = [...bankTransactions, ...validTransactions];
+                        localStorage.setItem('bankTransactions', JSON.stringify(bankTransactions));
+                        
+                        applyScreeningRules();
+                        renderPendingTable();
+                        updateSummary();
+                        updateImportHistory(fileName, validTransactions.length);
+                        
+                        logOperation('导入银行流水', `文件: ${fileName}, 成功: ${validTransactions.length}条, 失败: ${invalidCount}条`);
+                        
+                        if (invalidCount > 0) {
+                            showNotification(`导入完成：成功 ${validTransactions.length} 条，失败 ${invalidCount} 条`, 'warning');
+                        } else {
+                            showNotification(`成功导入 ${validTransactions.length} 条银行流水`, 'success');
+                        }
+                    } else {
+                        showNotification('文件中没有有效的交易数据', 'error');
+                    }
+                } else {
+                    showNotification('文件解析失败，请检查文件格式是否符合模版', 'error');
+                }
+            } catch (error) {
+                console.error('文件解析错误:', error);
+                showNotification('文件解析失败: ' + error.message, 'error');
+                logOperation('导入失败', `文件: ${fileName}, 错误: ${error.message}`);
+            }
+        }
+
+        async function handleLawyerFileUpload(file) {
+            const fileName = file.name;
+            const fileExtension = fileName.split('.').pop().toLowerCase();
+            
+            showNotification(`正在解析律师文件: ${fileName}...`, 'warning');
+            
+            try {
+                let lawyers = [];
+                
+                if (fileExtension === 'xlsx' || fileExtension === 'xls') {
+                    lawyers = await parseLawyerExcelFile(file);
+                } else if (fileExtension === 'csv' || fileExtension === 'txt') {
+                    const content = await readFileAsText(file);
+                    lawyers = parseLawyerCSVFile(content, fileName);
+                } else {
+                    showNotification('不支持的文件格式', 'error');
+                    return;
+                }
+                
+                if (lawyers.length > 0) {
+                    const validLawyers = validateLawyerData(lawyers);
+                    const invalidCount = lawyers.length - validLawyers.length;
+                    
+                    if (validLawyers.length > 0) {
+                        lawyerConfigs = [...lawyerConfigs, ...validLawyers];
+                        localStorage.setItem('lawyerConfigs', JSON.stringify(lawyerConfigs));
+                        
+                        renderLawyersList();
+                        renderRulesList();
+                        
+                        logOperation('导入律师资料', `文件: ${fileName}, 成功: ${validLawyers.length}位, 失败: ${invalidCount}位`);
+                        
+                        if (invalidCount > 0) {
+                            showNotification(`导入完成：成功 ${validLawyers.length} 位，失败 ${invalidCount} 位`, 'warning');
+                        } else {
+                            showNotification(`成功导入 ${validLawyers.length} 位律师资料`, 'success');
+                        }
+                    } else {
+                        showNotification('文件中没有有效的律师数据', 'error');
+                    }
+                } else {
+                    showNotification('文件解析失败，请检查文件格式', 'error');
+                }
+            } catch (error) {
+                console.error('律师文件解析错误:', error);
+                showNotification('文件解析失败: ' + error.message, 'error');
+                logOperation('导入律师失败', `文件: ${fileName}, 错误: ${error.message}`);
+            }
+        }
+
+        // ==================== 文件读取工具函数 ====================
+        function readFileAsText(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = (e) => resolve(e.target.result);
+                reader.onerror = (e) => reject(new Error('文件读取失败'));
+                reader.readAsText(file);
+            });
+        }
+
+        function readFileAsArrayBuffer(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = (e) => resolve(e.target.result);
+                reader.onerror = (e) => reject(new Error('文件读取失败'));
+                reader.readAsArrayBuffer(file);
+            });
+        }
+
+        // ==================== Excel文件解析（真实实现）====================
+        async function parseExcelFile(file) {
+            const data = await readFileAsArrayBuffer(file);
+            const workbook = XLSX.read(data, { type: 'array' });
+            const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+            const jsonData = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
+            
+            return parseBankDataFromArray(jsonData);
+        }
+
+        async function parseLawyerExcelFile(file) {
+            const data = await readFileAsArrayBuffer(file);
+            const workbook = XLSX.read(data, { type: 'array' });
+            const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+            const jsonData = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
+            
+            return parseLawyerDataFromArray(jsonData);
+        }
+
+        // ==================== CSV文件解析（真实实现）====================
+        function parseCSVFile(content, fileName) {
+            const lines = content.split('\n').filter(line => line.trim() !== '');
+            const data = lines.map(line => parseCSVLine(line));
+            return parseBankDataFromArray(data);
+        }
+
+        function parseLawyerCSVFile(content, fileName) {
+            const lines = content.split('\n').filter(line => line.trim() !== '');
+            const data = lines.map(line => parseCSVLine(line));
+            return parseLawyerDataFromArray(data);
+        }
+
+        // 解析CSV行（处理引号内的逗号）
+        function parseCSVLine(line) {
+            const result = [];
+            let current = '';
+            let inQuotes = false;
+            
+            for (let i = 0; i < line.length; i++) {
+                const char = line[i];
+                
+                if (char === '"') {
+                    inQuotes = !inQuotes;
+                } else if (char === ',' && !inQuotes) {
+                    result.push(current.trim());
+                    current = '';
+                } else {
+                    current += char;
+                }
+            }
+            result.push(current.trim());
+            return result;
+        }
+
+        // ==================== 数据解析（从数组）====================
+        function parseBankDataFromArray(data) {
+            const transactions = [];
+            if (data.length < 2) return transactions;
+            
+            // 检测表头
+            const headers = data[0].map(h => String(h).trim());
+            const headerMap = detectBankHeaders(headers);
+            
+            // 解析数据行
+            for (let i = 1; i < data.length; i++) {
+                const row = data[i];
+                if (row.length < 3) continue;
+                
+                const transaction = {
+                    id: 'TXN' + Date.now() + '_' + i,
+                    transactionNo: getCellValue(row, headerMap.transactionNo) || 'TXN' + Date.now() + '_' + i,
+                    account: getCellValue(row, headerMap.account) || '',
+                    amount: parseAmount(getCellValue(row, headerMap.amount)),
+                    description: getCellValue(row, headerMap.description) || '',
+                    date: parseDate(getCellValue(row, headerMap.date)),
+                    status: 'pending',
+                    lawyerId: '',
+                    payoutRatio: 0,
+                    payoutAmount: 0,
+                    createdAt: new Date().toISOString(),
+                    importedAt: new Date().toLocaleString()
+                };
+                
+                if (transaction.amount > 0) {
+                    transactions.push(transaction);
+                }
+            }
+            
+            return transactions;
+        }
+
+        function parseLawyerDataFromArray(data) {
+            const lawyers = [];
+            if (data.length < 2) return lawyers;
+            
+            const headers = data[0].map(h => String(h).trim());
+            const headerMap = detectLawyerHeaders(headers);
+            
+            for (let i = 1; i < data.length; i++) {
+                const row = data[i];
+                if (row.length < 4) continue;
+                
+                const lawyer = {
+                    id: 'LAWYER' + Date.now() + '_' + i,
+                    name: getCellValue(row, headerMap.name) || '',
+                    ratio: parseFloat(getCellValue(row, headerMap.ratio)) || 0,
+                    account: getCellValue(row, headerMap.account) || '',
+                    bank: getCellValue(row, headerMap.bank) || '',
+                    phone: getCellValue(row, headerMap.phone) || '',
+                    idCard: getCellValue(row, headerMap.idCard) || '',
+                    createdAt: new Date().toISOString()
+                };
+                
+                if (lawyer.name && lawyer.ratio > 0 && lawyer.account) {
+                    lawyers.push(lawyer);
+                }
+            }
+            
+            return lawyers;
+        }
+
+        // ==================== 表头检测 ====================
+        function detectBankHeaders(headers) {
+            const map = {};
+            headers.forEach((header, index) => {
+                const h = String(header).toLowerCase();
+                if (h.includes('流水') || h.includes('编号') || h.includes('no')) {
+                    map.transactionNo = index;
+                } else if (h.includes('账户') || h.includes('账号') || h.includes('卡号') || h.includes('account')) {
+                    map.account = index;
+                } else if (h.includes('金额') || h.includes('amount') || h.includes('money')) {
+                    map.amount = index;
+                } else if (h.includes('摘要') || h.includes('说明') || h.includes('desc') || h.includes('备注')) {
+                    map.description = index;
+                } else if (h.includes('日期') || h.includes('时间') || h.includes('date') || h.includes('time')) {
+                    map.date = index;
+                }
+            });
+            return map;
+        }
+
+        function detectLawyerHeaders(headers) {
+            const map = {};
+            headers.forEach((header, index) => {
+                const h = String(header).toLowerCase();
+                if (h.includes('姓名') || h.includes('名字') || h.includes('name')) {
+                    map.name = index;
+                } else if (h.includes('比例') || h.includes('ratio') || h.includes('percent')) {
+                    map.ratio = index;
+                } else if (h.includes('账户') || h.includes('账号') || h.includes('account')) {
+                    map.account = index;
+                } else if (h.includes('银行') || h.includes('开户行') || h.includes('bank')) {
+                    map.bank = index;
+                } else if (h.includes('电话') || h.includes('手机') || h.includes('phone') || h.includes('tel')) {
+                    map.phone = index;
+                } else if (h.includes('身份证') || h.includes('id') || h.includes('证件')) {
+                    map.idCard = index;
+                }
+            });
+            return map;
+        }
+
+        function getCellValue(row, index) {
+            if (index === undefined || index < 0 || index >= row.length) return '';
+            return String(row[index] || '').trim();
+        }
+
+        // ==================== 数据解析工具函数 ====================
+        function parseAmount(value) {
+            if (!value) return 0;
+            const cleaned = String(value).replace(/[￥,$,¥,\s]/g, '');
+            const amount = parseFloat(cleaned);
+            return isNaN(amount) ? 0 : amount;
+        }
+
+        function parseDate(value) {
+            if (!value) return new Date().toISOString().split('T')[0];
+            
+            const dateStr = String(value).trim();
+            
+            // 尝试解析各种日期格式
+            const datePatterns = [
+                /(\d{4})-(\d{1,2})-(\d{1,2})/,
+                /(\d{4})\/(\d{1,2})\/(\d{1,2})/,
+                /(\d{4})(\d{2})(\d{2})/,
+                /(\d{1,2})\/(\d{1,2})\/(\d{4})/
+            ];
+            
+            for (const pattern of datePatterns) {
+                const match = dateStr.match(pattern);
+                if (match) {
+                    let year, month, day;
+                    if (pattern.source.includes('\\d{4})\\/')) {
+                        year = match[1];
+                        month = match[2].padStart(2, '0');
+                        day = match[3].padStart(2, '0');
+                    } else if (pattern.source.includes('\\d{4})(\\d{2})')) {
+                        year = match[1];
+                        month = match[2];
+                        day = match[3];
+                    } else if (pattern.source.startsWith('(\\d{1,2})')) {
+                        month = match[1].padStart(2, '0');
+                        day = match[2].padStart(2, '0');
+                        year = match[3];
+                    } else {
+                        year = match[1];
+                        month = match[2].padStart(2, '0');
+                        day = match[3].padStart(2, '0');
+                    }
+                    return `${year}-${month}-${day}`;
+                }
+            }
+            
+            // 尝试直接解析
+            const date = new Date(dateStr);
+            if (!isNaN(date.getTime())) {
+                return date.toISOString().split('T')[0];
+            }
+            
+            return new Date().toISOString().split('T')[0];
+        }
+
+        // ==================== 数据验证 ====================
+        function validateBankTransactions(transactions) {
+            return transactions.filter(t => {
+                // 验证金额
+                if (!t.amount || t.amount <= 0) return false;
+                // 验证账户
+                if (!t.account || t.account.length < 6) return false;
+                // 验证日期
+                if (!t.date || !/^\d{4}-\d{2}-\d{2}$/.test(t.date)) return false;
+                return true;
+            });
+        }
+
+        function validateLawyerData(lawyers) {
+            return lawyers.filter(l => {
+                if (!l.name || l.name.length < 2) return false;
+                if (!l.ratio || l.ratio <= 0 || l.ratio > 100) return false;
+                if (!l.account || l.account.length < 10) return false;
+                if (!l.bank || l.bank.length < 2) return false;
+                return true;
+            });
+        }
+
+        function applyScreeningRules() {
+            bankTransactions.forEach(transaction => {
+                if (transaction.status !== 'pending') return;
+                
+                screeningRules.forEach(rule => {
+                    if (matchRule(transaction, rule)) {
+                        transaction.lawyerId = rule.lawyerId;
+                        const lawyer = lawyerConfigs.find(l => l.id === rule.lawyerId);
+                        if (lawyer) {
+                            transaction.payoutRatio = lawyer.ratio;
+                            transaction.payoutAmount = transaction.amount * (lawyer.ratio / 100);
+                        }
+                    }
+                });
+            });
+            
+            localStorage.setItem('bankTransactions', JSON.stringify(bankTransactions));
+        }
+
+        function matchRule(transaction, rule) {
+            switch (rule.condition) {
+                case 'amount_greater':
+                    return transaction.amount > parseFloat(rule.value);
+                case 'amount_less':
+                    return transaction.amount < parseFloat(rule.value);
+                case 'account_contains':
+                    return transaction.account.includes(rule.value);
+                case 'description_contains':
+                    return transaction.description.includes(rule.value);
+                case 'date_equal':
+                    return transaction.date === rule.value;
+                case 'date_after':
+                    return new Date(transaction.date) > new Date(rule.value);
+                case 'date_before':
+                    return new Date(transaction.date) < new Date(rule.value);
+                case 'date_range':
+                    const [start, end] = rule.value.split('|');
+                    const transDate = new Date(transaction.date);
+                    return transDate >= new Date(start) && transDate <= new Date(end);
+                case 'today':
+                    const today = new Date().toISOString().split('T')[0];
+                    return transaction.date === today;
+                case 'this_week':
+                    return isThisWeek(transaction.date);
+                case 'this_month':
+                    return isThisMonth(transaction.date);
+                default:
+                    return false;
+            }
+        }
+
+        function isThisWeek(dateStr) {
+            const date = new Date(dateStr);
+            const today = new Date();
+            const startOfWeek = new Date(today);
+            startOfWeek.setDate(today.getDate() - today.getDay());
+            startOfWeek.setHours(0, 0, 0, 0);
+            
+            const endOfWeek = new Date(startOfWeek);
+            endOfWeek.setDate(startOfWeek.getDate() + 6);
+            endOfWeek.setHours(23, 59, 59, 999);
+            
+            return date >= startOfWeek && date <= endOfWeek;
+        }
+
+        function isThisMonth(dateStr) {
+            const date = new Date(dateStr);
+            const today = new Date();
+            return date.getMonth() === today.getMonth() && date.getFullYear() === today.getFullYear();
+        }
+
+        function renderRulesList() {
+            const rulesList = document.getElementById('rulesList');
+            
+            if (screeningRules.length === 0) {
+                rulesList.innerHTML = '<p style="color: #7f8c8d; font-size: 14px;">暂无筛选规则</p>';
+                return;
+            }
+            
+            rulesList.innerHTML = screeningRules.map(rule => {
+                let conditionText = getConditionText(rule.condition);
+                let valueText = rule.value;
+                
+                if (rule.condition === 'date_range' && rule.startDate && rule.endDate) {
+                    valueText = `${rule.startDate} 至 ${rule.endDate}`;
+                } else if (rule.condition === 'today' || rule.condition === 'this_week' || rule.condition === 'this_month') {
+                    valueText = '';
+                }
+                
+                return `
+                <div class="rule-item">
+                    <div class="rule-item-header">
+                        <span class="rule-item-title">${rule.name}</span>
+                        <button class="btn btn-danger" style="padding: 5px 10px; font-size: 12px;" onclick="deleteRule('${rule.id}')">删除</button>
+                    </div>
+                    <div class="rule-conditions">
+                        <span class="rule-condition">${conditionText}${valueText ? ': ' + valueText : ''}</span>
+                    </div>
+                </div>
+            `;
+            }).join('');
+        }
+
+        function getConditionText(condition) {
+            const conditions = {
+                'amount_greater': '金额大于',
+                'amount_less': '金额小于',
+                'account_contains': '账户包含',
+                'description_contains': '摘要包含',
+                'date_equal': '日期等于',
+                'date_after': '日期晚于',
+                'date_before': '日期早于',
+                'date_range': '日期范围',
+                'today': '今日',
+                'this_week': '本周',
+                'this_month': '本月'
+            };
+            return conditions[condition] || condition;
+        }
+
+        function renderLawyersList() {
+            const lawyersList = document.getElementById('lawyersList');
+            const ruleLawyerSelect = document.getElementById('ruleLawyer');
+            
+            if (lawyerConfigs.length === 0) {
+                lawyersList.innerHTML = '<p style="color: #7f8c8d; font-size: 14px;">暂无律师配置</p>';
+                ruleLawyerSelect.innerHTML = '<option value="">请选择律师</option>';
+                return;
+            }
+            
+            lawyersList.innerHTML = lawyerConfigs.map(lawyer => `
+                <div class="lawyer-card">
+                    <div class="lawyer-card-header">
+                        <span class="lawyer-name">${lawyer.name}</span>
+                        <button class="btn btn-danger" style="padding: 5px 10px; font-size: 12px;" onclick="deleteLawyer('${lawyer.id}')">删除</button>
+                    </div>
+                    <div class="lawyer-ratio">出账比例: ${lawyer.ratio}%</div>
+                    <div style="font-size: 12px; color: #7f8c8d; margin-top: 5px;">
+                        账户: ${lawyer.account}<br>
+                        开户行: ${lawyer.bank}<br>
+                        ${lawyer.phone ? '电话: ' + lawyer.phone + '<br>' : ''}
+                        ${lawyer.idCard ? '身份证: ' + lawyer.idCard : ''}
+                    </div>
+                </div>
+            `).join('');
+            
+            ruleLawyerSelect.innerHTML = lawyerConfigs.map(lawyer => 
+                `<option value="${lawyer.id}">${lawyer.name}</option>`
+            ).join('');
+        }
+
+        function renderPendingTable() {
+            const pendingTransactions = bankTransactions.filter(t => t.status === 'pending');
+            const tbody = document.getElementById('pendingTableBody');
+            
+            if (pendingTransactions.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="9" style="text-align: center; color: #7f8c8d;">暂无待处理数据</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = pendingTransactions.map(transaction => {
+                const lawyer = lawyerConfigs.find(l => l.id === transaction.lawyerId);
+                return `
+                    <tr>
+                        <td><input type="checkbox" class="transaction-checkbox" value="${transaction.id}" onchange="updateSelectedTransactions()"></td>
+                        <td>${transaction.transactionNo}</td>
+                        <td>${transaction.account}</td>
+                        <td>¥${transaction.amount.toFixed(2)}</td>
+                        <td>${lawyer ? lawyer.name : '-'}</td>
+                        <td>${transaction.payoutRatio}%</td>
+                        <td>¥${transaction.payoutAmount.toFixed(2)}</td>
+                        <td><span class="status-badge status-pending">待处理</span></td>
+                        <td>
+                            <button class="btn btn-success" style="padding: 5px 10px; font-size: 12px;" onclick="approveTransaction('${transaction.id}')">批准</button>
+                            <button class="btn btn-danger" style="padding: 5px 10px; font-size: 12px;" onclick="rejectTransaction('${transaction.id}')">拒绝</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function updateSummary() {
+            const pendingTransactions = bankTransactions.filter(t => t.status === 'pending');
+            const approvedTransactions = bankTransactions.filter(t => t.status === 'approved');
+            const processingTransactions = bankTransactions.filter(t => t.status === 'processing');
+            const completedTransactions = bankTransactions.filter(t => t.status === 'completed');
+            
+            document.getElementById('pendingCount').textContent = pendingTransactions.length;
+            document.getElementById('pendingTotal').textContent = '¥' + pendingTransactions.reduce((sum, t) => sum + t.amount, 0).toFixed(2);
+            document.getElementById('estimatedPayout').textContent = '¥' + pendingTransactions.reduce((sum, t) => sum + t.payoutAmount, 0).toFixed(2);
+            
+            document.getElementById('approvedCount').textContent = approvedTransactions.length;
+            document.getElementById('approvedTotal').textContent = '¥' + approvedTransactions.reduce((sum, t) => sum + t.payoutAmount, 0).toFixed(2);
+            
+            document.getElementById('completedCount').textContent = completedTransactions.length;
+            document.getElementById('completedTotal').textContent = '¥' + completedTransactions.reduce((sum, t) => sum + t.payoutAmount, 0).toFixed(2);
+            
+            renderApprovedTable();
+            renderProcessingTable();
+            renderCompletedTable();
+        }
+
+        function renderApprovedTable() {
+            const approvedTransactions = bankTransactions.filter(t => t.status === 'approved');
+            const tbody = document.getElementById('approvedTableBody');
+            
+            if (approvedTransactions.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #7f8c8d;">暂无已批准数据</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = approvedTransactions.map(transaction => {
+                const lawyer = lawyerConfigs.find(l => l.id === transaction.lawyerId);
+                return `
+                    <tr>
+                        <td>${transaction.transactionNo}</td>
+                        <td>${transaction.account}</td>
+                        <td>¥${transaction.amount.toFixed(2)}</td>
+                        <td>${lawyer ? lawyer.name : '-'}</td>
+                        <td>¥${transaction.payoutAmount.toFixed(2)}</td>
+                        <td><span class="status-badge status-approved">已批准</span></td>
+                        <td>
+                            <button class="btn btn-danger" style="padding: 5px 10px; font-size: 12px;" onclick="cancelApproval('${transaction.id}')">取消</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function renderProcessingTable() {
+            const processingTransactions = bankTransactions.filter(t => t.status === 'processing');
+            const tbody = document.getElementById('processingTableBody');
+            
+            if (processingTransactions.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #7f8c8d;">暂无处理中数据</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = processingTransactions.map(transaction => {
+                const lawyer = lawyerConfigs.find(l => l.id === transaction.lawyerId);
+                return `
+                    <tr>
+                        <td>${transaction.transactionNo}</td>
+                        <td>${transaction.account}</td>
+                        <td>¥${transaction.amount.toFixed(2)}</td>
+                        <td>${lawyer ? lawyer.name : '-'}</td>
+                        <td>¥${transaction.payoutAmount.toFixed(2)}</td>
+                        <td><span class="status-badge status-processing">处理中</span></td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function renderCompletedTable() {
+            const completedTransactions = bankTransactions.filter(t => t.status === 'completed');
+            const tbody = document.getElementById('completedTableBody');
+            
+            if (completedTransactions.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #7f8c8d;">暂无完成数据</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = completedTransactions.map(transaction => {
+                const lawyer = lawyerConfigs.find(l => l.id === transaction.lawyerId);
+                return `
+                    <tr>
+                        <td>${transaction.transactionNo}</td>
+                        <td>${transaction.account}</td>
+                        <td>¥${transaction.amount.toFixed(2)}</td>
+                        <td>${lawyer ? lawyer.name : '-'}</td>
+                        <td>¥${transaction.payoutAmount.toFixed(2)}</td>
+                        <td>${transaction.completedAt || '-'}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(tabName + 'Tab').classList.add('active');
+        }
+
+        function openRuleModal() {
+            document.getElementById('ruleModal').classList.add('active');
+        }
+
+        function closeRuleModal() {
+            document.getElementById('ruleModal').classList.remove('active');
+            document.getElementById('ruleName').value = '';
+            document.getElementById('ruleValue').value = '';
+            document.getElementById('ruleSingleDate').value = '';
+            document.getElementById('ruleStartDate').value = '';
+            document.getElementById('ruleEndDate').value = '';
+            updateRuleValueInput();
+        }
+
+        function updateRuleValueInput() {
+            const condition = document.getElementById('ruleCondition').value;
+            const singleValueGroup = document.getElementById('singleValueGroup');
+            const dateSingleGroup = document.getElementById('dateSingleGroup');
+            const dateRangeGroup = document.getElementById('dateRangeGroup');
+            const dateRangeGroup2 = document.getElementById('dateRangeGroup2');
+            const quickDateGroup = document.getElementById('quickDateGroup');
+            
+            if (condition === 'date_range') {
+                singleValueGroup.classList.add('hidden');
+                dateSingleGroup.classList.add('hidden');
+                dateRangeGroup.classList.remove('hidden');
+                dateRangeGroup2.classList.remove('hidden');
+                quickDateGroup.classList.add('hidden');
+            } else if (condition === 'date_equal' || condition === 'date_after' || condition === 'date_before') {
+                singleValueGroup.classList.add('hidden');
+                dateSingleGroup.classList.remove('hidden');
+                dateRangeGroup.classList.add('hidden');
+                dateRangeGroup2.classList.add('hidden');
+                quickDateGroup.classList.add('hidden');
+            } else if (condition === 'today' || condition === 'this_week' || condition === 'this_month') {
+                singleValueGroup.classList.add('hidden');
+                dateSingleGroup.classList.add('hidden');
+                dateRangeGroup.classList.add('hidden');
+                dateRangeGroup2.classList.add('hidden');
+                quickDateGroup.classList.remove('hidden');
+            } else {
+                singleValueGroup.classList.remove('hidden');
+                dateSingleGroup.classList.add('hidden');
+                dateRangeGroup.classList.add('hidden');
+                dateRangeGroup2.classList.add('hidden');
+                quickDateGroup.classList.add('hidden');
+            }
+        }
+
+        function setQuickDate(type) {
+            const today = new Date();
+            let startDate, endDate;
+            
+            switch(type) {
+                case 'today':
+                    startDate = today;
+                    endDate = today;
+                    break;
+                case 'yesterday':
+                    const yesterday = new Date(today);
+                    yesterday.setDate(yesterday.getDate() - 1);
+                    startDate = yesterday;
+                    endDate = yesterday;
+                    break;
+                case 'this_week':
+                    const startOfWeek = new Date(today);
+                    startOfWeek.setDate(today.getDate() - today.getDay());
+                    startDate = startOfWeek;
+                    endDate = today;
+                    break;
+                case 'last_week':
+                    const lastWeekEnd = new Date(today);
+                    lastWeekEnd.setDate(today.getDate() - today.getDay() - 1);
+                    const lastWeekStart = new Date(lastWeekEnd);
+                    lastWeekStart.setDate(lastWeekEnd.getDate() - 6);
+                    startDate = lastWeekStart;
+                    endDate = lastWeekEnd;
+                    break;
+                case 'this_month':
+                    const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+                    startDate = startOfMonth;
+                    endDate = today;
+                    break;
+                case 'last_month':
+                    const lastMonthEnd = new Date(today.getFullYear(), today.getMonth(), 0);
+                    const lastMonthStart = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+                    startDate = lastMonthStart;
+                    endDate = lastMonthEnd;
+                    break;
+            }
+            
+            document.getElementById('ruleStartDate').value = formatDate(startDate);
+            document.getElementById('ruleEndDate').value = formatDate(endDate);
+            
+            showNotification(`已选择：${getQuickDateText(type)}`, 'success');
+        }
+
+        function formatDate(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        function getQuickDateText(type) {
+            const texts = {
+                'today': '今日',
+                'yesterday': '昨天',
+                'this_week': '本周',
+                'last_week': '上周',
+                'this_month': '本月',
+                'last_month': '上月'
+            };
+            return texts[type] || type;
+        }
+
+        function saveRule() {
+            const name = document.getElementById('ruleName').value;
+            const condition = document.getElementById('ruleCondition').value;
+            const lawyerId = document.getElementById('ruleLawyer').value;
+            
+            let value;
+            let startDate;
+            let endDate;
+            
+            if (condition === 'date_range') {
+                startDate = document.getElementById('ruleStartDate').value;
+                endDate = document.getElementById('ruleEndDate').value;
+                
+                if (!name || !startDate || !endDate || !lawyerId) {
+                    showNotification('请填写完整信息', 'warning');
+                    return;
+                }
+                
+                value = `${startDate}|${endDate}`;
+            } else if (condition === 'date_equal' || condition === 'date_after' || condition === 'date_before') {
+                value = document.getElementById('ruleSingleDate').value;
+                
+                if (!name || !value || !lawyerId) {
+                    showNotification('请选择日期', 'warning');
+                    return;
+                }
+            } else if (condition === 'today' || condition === 'this_week' || condition === 'this_month') {
+                startDate = document.getElementById('ruleStartDate').value;
+                endDate = document.getElementById('ruleEndDate').value;
+                
+                if (!name || !startDate || !endDate || !lawyerId) {
+                    showNotification('请选择快捷时间', 'warning');
+                    return;
+                }
+                
+                value = `${startDate}|${endDate}`;
+            } else {
+                value = document.getElementById('ruleValue').value;
+                
+                if (!name || !value || !lawyerId) {
+                    showNotification('请填写完整信息', 'warning');
+                    return;
+                }
+            }
+            
+            const rule = {
+                id: 'rule' + Date.now(),
+                name,
+                condition,
+                value,
+                startDate,
+                endDate,
+                lawyerId,
+                createdAt: new Date().toISOString()
+            };
+            
+            screeningRules.push(rule);
+            localStorage.setItem('screeningRules', JSON.stringify(screeningRules));
+            
+            renderRulesList();
+            applyScreeningRules();
+            renderPendingTable();
+            updateSummary();
+            
+            closeRuleModal();
+            showNotification('筛选规则已保存', 'success');
+        }
+
+        function deleteRule(ruleId) {
+            screeningRules = screeningRules.filter(r => r.id !== ruleId);
+            localStorage.setItem('screeningRules', JSON.stringify(screeningRules));
+            
+            renderRulesList();
+            showNotification('筛选规则已删除', 'success');
+        }
+
+        function openLawyerModal() {
+            document.getElementById('lawyerModal').classList.add('active');
+        }
+
+        function closeLawyerModal() {
+            document.getElementById('lawyerModal').classList.remove('active');
+            document.getElementById('lawyerName').value = '';
+            document.getElementById('lawyerRatio').value = '';
+            document.getElementById('lawyerAccount').value = '';
+            document.getElementById('lawyerBank').value = '';
+        }
+
+        function openBatchRatioModal() {
+            const checkboxes = document.querySelectorAll('.transaction-checkbox:checked');
+            const selectedCount = checkboxes.length;
+            
+            if (selectedCount === 0) {
+                showNotification('请先选择要设置比例的交易', 'warning');
+                return;
+            }
+            
+            document.getElementById('batchRatioModal').classList.add('active');
+            updateRatioPreview();
+        }
+
+        function closeBatchRatioModal() {
+            document.getElementById('batchRatioModal').classList.remove('active');
+            document.getElementById('uniformRatio').value = '70';
+        }
+
+        // ==================== 操作日志弹窗 ====================
+        function openLogModal() {
+            document.getElementById('logModal').classList.add('active');
+            renderLogTable();
+        }
+
+        function closeLogModal() {
+            document.getElementById('logModal').classList.remove('active');
+        }
+
+        function renderLogTable() {
+            const tbody = document.getElementById('logTableBody');
+            const logs = getOperationLogs(100);
+            
+            if (logs.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; color: #7f8c8d;">暂无操作日志</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = logs.map(log => `
+                <tr>
+                    <td style="font-size: 12px; white-space: nowrap;">${log.time}</td>
+                    <td style="font-size: 12px;"><span class="status-badge status-processing">${log.operation}</span></td>
+                    <td style="font-size: 12px;">${log.details}</td>
+                </tr>
+            `).join('');
+        }
+
+        function clearLogsConfirm() {
+            if (confirm('确定要清空所有操作日志吗？')) {
+                clearOperationLogs();
+                renderLogTable();
+                showNotification('操作日志已清空', 'success');
+            }
+        }
+
+        function updateRatioPreview() {
+            const checkboxes = document.querySelectorAll('.transaction-checkbox:checked');
+            const selectedTransactions = Array.from(checkboxes).map(cb => {
+                return bankTransactions.find(t => t.id === cb.value);
+            }).filter(t => t);
+            
+            document.getElementById('selectedTransactionCount').textContent = selectedTransactions.length;
+            
+            const originalTotal = selectedTransactions.reduce((sum, t) => sum + t.amount, 0);
+            document.getElementById('originalTotalAmount').textContent = '¥' + originalTotal.toFixed(2);
+            
+            const uniformRatio = parseFloat(document.getElementById('uniformRatio').value) || 70;
+            const newPayoutTotal = originalTotal * (uniformRatio / 100);
+            
+            document.getElementById('newPayoutTotal').textContent = '¥' + newPayoutTotal.toFixed(2);
+        }
+
+        function applyBatchRatio() {
+            const checkboxes = document.querySelectorAll('.transaction-checkbox:checked');
+            
+            if (checkboxes.length === 0) {
+                showNotification('请先选择要设置比例的交易', 'warning');
+                return;
+            }
+            
+            const uniformRatio = parseFloat(document.getElementById('uniformRatio').value);
+            
+            if (!uniformRatio || uniformRatio <= 0 || uniformRatio > 100) {
+                showNotification('请输入有效的比例（0-100）', 'warning');
+                return;
+            }
+            
+            const selectedTransactions = Array.from(checkboxes).map(cb => {
+                const transaction = bankTransactions.find(t => t.id === cb.value);
+                if (transaction) {
+                    transaction.payoutRatio = uniformRatio;
+                    transaction.payoutAmount = transaction.amount * (uniformRatio / 100);
+                }
+                return transaction;
+            }).filter(t => t);
+            
+            localStorage.setItem('bankTransactions', JSON.stringify(bankTransactions));
+            renderPendingTable();
+            updateSummary();
+            closeBatchRatioModal();
+            
+            showNotification(`已为 ${selectedTransactions.length} 笔交易设置统一比例 ${uniformRatio}%`, 'success');
+        }
+
+        function saveLawyer() {
+            const name = document.getElementById('lawyerName').value;
+            const ratio = parseFloat(document.getElementById('lawyerRatio').value);
+            const account = document.getElementById('lawyerAccount').value;
+            const bank = document.getElementById('lawyerBank').value;
+            
+            if (!name || !ratio || !account || !bank) {
+                showNotification('请填写完整信息', 'warning');
+                return;
+            }
+            
+            const lawyer = {
+                id: 'lawyer' + Date.now(),
+                name,
+                ratio,
+                account,
+                bank,
+                createdAt: new Date().toISOString()
+            };
+            
+            lawyerConfigs.push(lawyer);
+            localStorage.setItem('lawyerConfigs', JSON.stringify(lawyerConfigs));
+            
+            renderLawyersList();
+            closeLawyerModal();
+            showNotification('律师配置已保存', 'success');
+        }
+
+        function deleteLawyer(lawyerId) {
+            lawyerConfigs = lawyerConfigs.filter(l => l.id !== lawyerId);
+            localStorage.setItem('lawyerConfigs', JSON.stringify(lawyerConfigs));
+            
+            renderLawyersList();
+            showNotification('律师配置已删除', 'success');
+        }
+
+        function approveTransaction(transactionId) {
+            const transaction = bankTransactions.find(t => t.id === transactionId);
+            if (transaction) {
+                transaction.status = 'approved';
+                localStorage.setItem('bankTransactions', JSON.stringify(bankTransactions));
+                
+                renderPendingTable();
+                updateSummary();
+                showNotification('交易已批准', 'success');
+            }
+        }
+
+        function rejectTransaction(transactionId) {
+            const transaction = bankTransactions.find(t => t.id === transactionId);
+            if (transaction) {
+                transaction.status = 'rejected';
+                localStorage.setItem('bankTransactions', JSON.stringify(bankTransactions));
+                
+                renderPendingTable();
+                updateSummary();
+                showNotification('交易已拒绝', 'warning');
+            }
+        }
+
+        function cancelApproval(transactionId) {
+            const transaction = bankTransactions.find(t => t.id === transactionId);
+            if (transaction) {
+                transaction.status = 'pending';
+                localStorage.setItem('bankTransactions', JSON.stringify(bankTransactions));
+                
+                renderPendingTable();
+                renderApprovedTable();
+                updateSummary();
+                showNotification('已取消批准', 'warning');
+            }
+        }
+
+        function autoApproveAll() {
+            const pendingTransactions = bankTransactions.filter(t => t.status === 'pending' && t.lawyerId);
+            
+            if (pendingTransactions.length === 0) {
+                showNotification('没有可自动批准的交易', 'warning');
+                return;
+            }
+            
+            pendingTransactions.forEach(t => t.status = 'approved');
+            localStorage.setItem('bankTransactions', JSON.stringify(bankTransactions));
+            
+            renderPendingTable();
+            updateSummary();
+            showNotification(`已自动批准 ${pendingTransactions.length} 笔交易`, 'success');
+        }
+
+        function batchProcess() {
+            const checkboxes = document.querySelectorAll('.transaction-checkbox:checked');
+            
+            if (checkboxes.length === 0) {
+                showNotification('请选择要处理的交易', 'warning');
+                return;
+            }
+            
+            checkboxes.forEach(checkbox => {
+                const transaction = bankTransactions.find(t => t.id === checkbox.value);
+                if (transaction && transaction.lawyerId) {
+                    transaction.status = 'approved';
+                }
+            });
+            
+            localStorage.setItem('bankTransactions', JSON.stringify(bankTransactions));
+            
+            renderPendingTable();
+            updateSummary();
+            showNotification(`已批量处理 ${checkboxes.length} 笔交易`, 'success');
+        }
+
+        function toggleSelectAll() {
+            const selectAll = document.getElementById('selectAll');
+            const checkboxes = document.querySelectorAll('.transaction-checkbox');
+            
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = selectAll.checked;
+            });
+            
+            updateSelectedTransactions();
+        }
+
+        function updateSelectedTransactions() {
+            const checkboxes = document.querySelectorAll('.transaction-checkbox:checked');
+            selectedTransactions = Array.from(checkboxes).map(cb => cb.value);
+        }
+
+        function bankTransfer() {
+            const approvedTransactions = bankTransactions.filter(t => t.status === 'approved');
+            
+            if (approvedTransactions.length === 0) {
+                showNotification('没有待代发的交易', 'warning');
+                return;
+            }
+            
+            approvedTransactions.forEach(t => t.status = 'processing');
+            localStorage.setItem('bankTransactions', JSON.stringify(bankTransactions));
+            
+            updateSummary();
+            
+            let progress = 0;
+            const progressBar = document.getElementById('processingProgress');
+            const progressText = document.getElementById('processingPercentage');
+            
+            const interval = setInterval(() => {
+                progress += 10;
+                progressBar.style.width = progress + '%';
+                progressText.textContent = progress + '%';
+                
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    
+                    approvedTransactions.forEach(t => {
+                        t.status = 'completed';
+                        t.completedAt = new Date().toLocaleString();
+                    });
+                    
+                    localStorage.setItem('bankTransactions', JSON.stringify(bankTransactions));
+                    updateSummary();
+                    
+                    showNotification(`成功完成 ${approvedTransactions.length} 笔银行代发`, 'success');
+                }
+            }, 200);
+        }
+
+        // ==================== 数据导出功能（真实实现）====================
+        function exportData() {
+            const pendingTransactions = bankTransactions.filter(t => t.status === 'pending');
+            
+            if (pendingTransactions.length === 0) {
+                showNotification('没有待导出的数据', 'warning');
+                return;
+            }
+            
+            // 询问导出格式
+            const exportFormat = confirm('点击"确定"导出Excel格式，点击"取消"导出CSV格式') ? 'excel' : 'csv';
+            
+            if (exportFormat === 'excel') {
+                exportToExcel(pendingTransactions, '待处理交易');
+            } else {
+                const csv = convertToCSV(pendingTransactions);
+                downloadCSV(csv, '待处理交易.csv');
+            }
+            
+            logOperation('导出数据', `导出待处理交易 ${pendingTransactions.length} 条`);
+            showNotification('数据导出成功', 'success');
+        }
+
+        function exportApproved() {
+            const approvedTransactions = bankTransactions.filter(t => t.status === 'approved');
+            
+            if (approvedTransactions.length === 0) {
+                showNotification('没有待导出的数据', 'warning');
+                return;
+            }
+            
+            // 询问导出格式
+            const exportFormat = confirm('点击"确定"导出Excel格式，点击"取消"导出CSV格式') ? 'excel' : 'csv';
+            
+            if (exportFormat === 'excel') {
+                exportToExcel(approvedTransactions, '银行代发文件');
+            } else {
+                const csv = convertToCSV(approvedTransactions);
+                downloadCSV(csv, '银行代发文件.csv');
+            }
+            
+            logOperation('导出代发文件', `导出已批准交易 ${approvedTransactions.length} 条`);
+            showNotification('代发文件导出成功', 'success');
+        }
+
+        // 导出为Excel（真实实现）
+        function exportToExcel(transactions, filename) {
+            const headers = ['流水号', '账户', '金额', '摘要', '日期', '律师', '比例', '出账金额', '状态'];
+            
+            const data = transactions.map(t => {
+                const lawyer = lawyerConfigs.find(l => l.id === t.lawyerId);
+                return {
+                    '流水号': t.transactionNo,
+                    '账户': t.account,
+                    '金额': t.amount,
+                    '摘要': t.description || '',
+                    '日期': t.date,
+                    '律师': lawyer ? lawyer.name : '',
+                    '比例': t.payoutRatio + '%',
+                    '出账金额': t.payoutAmount,
+                    '状态': getStatusText(t.status)
+                };
+            });
+            
+            // 创建工作簿
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.json_to_sheet(data, { header: headers });
+            
+            // 设置列宽
+            ws['!cols'] = [
+                { wch: 20 }, { wch: 25 }, { wch: 12 }, { wch: 20 },
+                { wch: 12 }, { wch: 10 }, { wch: 8 }, { wch: 12 }, { wch: 10 }
+            ];
+            
+            XLSX.utils.book_append_sheet(wb, ws, '交易数据');
+            XLSX.writeFile(wb, `${filename}.xlsx`);
+        }
+
+        function getStatusText(status) {
+            const statusMap = {
+                'pending': '待处理',
+                'approved': '已批准',
+                'processing': '处理中',
+                'completed': '已完成',
+                'rejected': '已拒绝'
+            };
+            return statusMap[status] || status;
+        }
+
+        function convertToCSV(transactions) {
+            const headers = ['流水号', '账户', '金额', '摘要', '日期', '律师', '比例', '出账金额', '状态'];
+            const rows = transactions.map(t => {
+                const lawyer = lawyerConfigs.find(l => l.id === t.lawyerId);
+                return [
+                    t.transactionNo,
+                    t.account,
+                    t.amount.toFixed(2),
+                    t.description || '',
+                    t.date,
+                    lawyer ? lawyer.name : '',
+                    t.payoutRatio + '%',
+                    t.payoutAmount.toFixed(2),
+                    getStatusText(t.status)
+                ];
+            });
+            
+            // 添加BOM以支持中文
+            const BOM = '\uFEFF';
+            return BOM + [headers, ...rows].map(row => row.join(',')).join('\n');
+        }
+
+        function downloadCSV(csv, filename) {
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = filename;
+            link.click();
+        }
+
+        function updateImportHistory(fileName, count) {
+            const importHistory = document.getElementById('importHistory');
+            const historyItem = document.createElement('div');
+            historyItem.style.cssText = 'padding: 10px; background: white; border-radius: 6px; margin-bottom: 8px; font-size: 12px;';
+            historyItem.innerHTML = `
+                <div style="font-weight: 600; color: #2c3e50;">${fileName}</div>
+                <div style="color: #7f8c8d;">${new Date().toLocaleString()} - ${count} 条记录</div>
+            `;
+            
+            if (importHistory.querySelector('p')) {
+                importHistory.innerHTML = '';
+            }
+            
+            importHistory.insertBefore(historyItem, importHistory.firstChild);
+        }
+
+        function downloadBankTemplate() {
+            const template = `流水号,账户,金额,摘要,日期
+TXN20260324001,6222021234567890001,15000.00,案件咨询费,2026-03-24
+TXN20260324002,6222021234567890002,5000.00,合同审查费,2026-03-24
+TXN20260324003,6222021234567890003,25000.00,诉讼代理费,2026-03-24`;
+            
+            const blob = new Blob([template], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = '银行流水上传模版.csv';
+            link.click();
+            
+            showNotification('银行流水模版已下载', 'success');
+        }
+
+        function downloadLawyerTemplate() {
+            const template = `律师姓名,出账比例,收款账户,开户行,联系电话,身份证号
+张律师,70,6222021234567890123,工商银行,13800138000,110101198001011234
+李律师,80,6222021234567890124,建设银行,13900139000,110101198502025678`;
+            
+            const blob = new Blob([template], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = '律师资料上传模版.csv';
+            link.click();
+            
+            showNotification('律师资料模版已下载', 'success');
+        }
+
+        // ==================== 银行代发文件生成（真实实现）====================
+        function generateBankTransferFile() {
+            const approvedTransactions = bankTransactions.filter(t => t.status === 'approved');
+            
+            if (approvedTransactions.length === 0) {
+                showNotification('没有待代发的交易', 'warning');
+                return null;
+            }
+            
+            // 生成银行代发文件格式（支持多种银行格式）
+            const bankFormat = 'generic'; // 可以扩展为支持特定银行格式
+            
+            if (bankFormat === 'generic') {
+                return generateGenericTransferFile(approvedTransactions);
+            }
+            
+            return null;
+        }
+
+        function generateGenericTransferFile(transactions) {
+            // 通用代发文件格式
+            const headers = ['序号', '收款人姓名', '收款账号', '开户行', '金额', '用途', '备注'];
+            const rows = transactions.map((t, index) => {
+                const lawyer = lawyerConfigs.find(l => l.id === t.lawyerId);
+                return [
+                    index + 1,
+                    lawyer ? lawyer.name : '未知',
+                    lawyer ? lawyer.account : '',
+                    lawyer ? lawyer.bank : '',
+                    t.payoutAmount.toFixed(2),
+                    '律师费',
+                    t.transactionNo
+                ];
+            });
+            
+            // 添加汇总信息
+            const totalAmount = transactions.reduce((sum, t) => sum + t.payoutAmount, 0);
+            const totalRow = ['', '', '', '合计:', totalAmount.toFixed(2), '', ''];
+            
+            const BOM = '\uFEFF';
+            return BOM + [headers, ...rows, totalRow].map(row => row.join(',')).join('\n');
+        }
+
+        // 导出银行代发文件
+        function exportBankTransferFile() {
+            const fileContent = generateBankTransferFile();
+            if (fileContent) {
+                const dateStr = new Date().toISOString().split('T')[0].replace(/-/g, '');
+                downloadCSV(fileContent, `银行代发文件_${dateStr}.csv`);
+                logOperation('生成代发文件', `生成银行代发文件，包含 ${bankTransactions.filter(t => t.status === 'approved').length} 笔交易`);
+                showNotification('银行代发文件已生成', 'success');
+            }
+        }
+
+        // ==================== 操作日志功能（真实实现）====================
+        function logOperation(operation, details) {
+            const log = {
+                id: 'LOG' + Date.now(),
+                timestamp: new Date().toISOString(),
+                time: new Date().toLocaleString(),
+                operation: operation,
+                details: details,
+                user: '当前用户' // 可以扩展为用户登录系统
+            };
+            
+            operationLogs.unshift(log); // 新日志在前
+            
+            // 限制日志数量，保留最近1000条
+            if (operationLogs.length > 1000) {
+                operationLogs = operationLogs.slice(0, 1000);
+            }
+            
+            localStorage.setItem('operationLogs', JSON.stringify(operationLogs));
+        }
+
+        function getOperationLogs(limit = 50) {
+            return operationLogs.slice(0, limit);
+        }
+
+        function clearOperationLogs() {
+            operationLogs = [];
+            localStorage.removeItem('operationLogs');
+            logOperation('清除日志', '操作日志已清空');
+        }
+
+        function exportOperationLogs() {
+            if (operationLogs.length === 0) {
+                showNotification('没有操作日志可导出', 'warning');
+                return;
+            }
+            
+            const headers = ['时间', '操作', '详情', '用户'];
+            const rows = operationLogs.map(log => [
+                log.time,
+                log.operation,
+                log.details,
+                log.user
+            ]);
+            
+            const BOM = '\uFEFF';
+            const csv = BOM + [headers, ...rows].map(row => row.join(',')).join('\n');
+            
+            const dateStr = new Date().toISOString().split('T')[0];
+            downloadCSV(csv, `操作日志_${dateStr}.csv`);
+            
+            showNotification('操作日志导出成功', 'success');
+        }
+
+        // ==================== 数据备份与恢复 ====================
+        function exportAllData() {
+            const backupData = {
+                version: '1.0',
+                exportTime: new Date().toISOString(),
+                bankTransactions: bankTransactions,
+                screeningRules: screeningRules,
+                lawyerConfigs: lawyerConfigs,
+                operationLogs: operationLogs
+            };
+            
+            const dataStr = JSON.stringify(backupData, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `系统数据备份_${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            
+            logOperation('数据备份', '导出完整系统数据');
+            showNotification('数据备份成功', 'success');
+        }
+
+        async function importAllData(file) {
+            try {
+                const content = await readFileAsText(file);
+                const backupData = JSON.parse(content);
+                
+                // 验证数据格式
+                if (!backupData.version || !backupData.bankTransactions) {
+                    throw new Error('无效的备份文件格式');
+                }
+                
+                // 确认恢复
+                if (!confirm(`确定要恢复备份数据吗？这将覆盖当前所有数据！\n备份时间: ${backupData.exportTime}`)) {
+                    return;
+                }
+                
+                // 恢复数据
+                bankTransactions = backupData.bankTransactions || [];
+                screeningRules = backupData.screeningRules || [];
+                lawyerConfigs = backupData.lawyerConfigs || [];
+                operationLogs = backupData.operationLogs || [];
+                
+                // 保存到本地存储
+                localStorage.setItem('bankTransactions', JSON.stringify(bankTransactions));
+                localStorage.setItem('screeningRules', JSON.stringify(screeningRules));
+                localStorage.setItem('lawyerConfigs', JSON.stringify(lawyerConfigs));
+                localStorage.setItem('operationLogs', JSON.stringify(operationLogs));
+                
+                // 刷新界面
+                renderRulesList();
+                renderLawyersList();
+                renderPendingTable();
+                updateSummary();
+                
+                logOperation('数据恢复', `从备份文件恢复数据，备份时间: ${backupData.exportTime}`);
+                showNotification('数据恢复成功', 'success');
+            } catch (error) {
+                console.error('数据恢复失败:', error);
+                showNotification('数据恢复失败: ' + error.message, 'error');
+            }
+        }
+
+        function clearAllData() {
+            if (!confirm('确定要清空所有数据吗？此操作不可恢复！')) {
+                return;
+            }
+            
+            if (!confirm('再次确认：所有交易、律师、规则数据将被永久删除！')) {
+                return;
+            }
+            
+            bankTransactions = [];
+            screeningRules = [];
+            lawyerConfigs = [];
+            
+            localStorage.removeItem('bankTransactions');
+            localStorage.removeItem('screeningRules');
+            localStorage.removeItem('lawyerConfigs');
+            
+            renderRulesList();
+            renderLawyersList();
+            renderPendingTable();
+            updateSummary();
+            
+            logOperation('清空数据', '清空所有系统数据');
+            showNotification('所有数据已清空', 'warning');
+        }
+
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        function loadMockData() {
+            const mockLawyers = [
+                {
+                    id: 'lawyer1',
+                    name: '张律师',
+                    ratio: 70,
+                    account: '6222021234567890123',
+                    bank: '工商银行',
+                    createdAt: new Date().toISOString()
+                },
+                {
+                    id: 'lawyer2',
+                    name: '李律师',
+                    ratio: 80,
+                    account: '6222021234567890124',
+                    bank: '建设银行',
+                    createdAt: new Date().toISOString()
+                }
+            ];
+
+            const mockRules = [
+                {
+                    id: 'rule1',
+                    name: '大额交易筛选',
+                    condition: 'amount_greater',
+                    value: '10000',
+                    lawyerId: 'lawyer1',
+                    createdAt: new Date().toISOString()
+                },
+                {
+                    id: 'rule2',
+                    name: '小额交易筛选',
+                    condition: 'amount_less',
+                    value: '10000',
+                    lawyerId: 'lawyer2',
+                    createdAt: new Date().toISOString()
+                }
+            ];
+
+            const mockTransactions = [
+                {
+                    id: 'TXN001',
+                    transactionNo: 'TXN20260324001',
+                    account: '6222021234567890001',
+                    amount: 15000,
+                    description: '案件咨询费',
+                    date: '2026-03-24',
+                    status: 'pending',
+                    lawyerId: 'lawyer1',
+                    payoutRatio: 70,
+                    payoutAmount: 10500,
+                    createdAt: new Date().toISOString()
+                },
+                {
+                    id: 'TXN002',
+                    transactionNo: 'TXN20260324002',
+                    account: '6222021234567890002',
+                    amount: 5000,
+                    description: '合同审查费',
+                    date: '2026-03-24',
+                    status: 'pending',
+                    lawyerId: 'lawyer2',
+                    payoutRatio: 80,
+                    payoutAmount: 4000,
+                    createdAt: new Date().toISOString()
+                },
+                {
+                    id: 'TXN003',
+                    transactionNo: 'TXN20260324003',
+                    account: '6222021234567890003',
+                    amount: 25000,
+                    description: '诉讼代理费',
+                    date: '2026-03-24',
+                    status: 'pending',
+                    lawyerId: 'lawyer1',
+                    payoutRatio: 70,
+                    payoutAmount: 17500,
+                    createdAt: new Date().toISOString()
+                }
+            ];
+
+            lawyerConfigs = mockLawyers;
+            screeningRules = mockRules;
+            bankTransactions = mockTransactions;
+
+            localStorage.setItem('lawyerConfigs', JSON.stringify(lawyerConfigs));
+            localStorage.setItem('screeningRules', JSON.stringify(screeningRules));
+            localStorage.setItem('bankTransactions', JSON.stringify(bankTransactions));
+
+            renderLawyersList();
+            renderRulesList();
+            renderPendingTable();
+            updateSummary();
+        }
+    </script>
+</body>
+</html>
